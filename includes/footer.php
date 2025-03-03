@@ -1,5 +1,6 @@
 <footer>
-        <p>&copy; 2024 VerdeQR - Todos los derechos reservados</p>
+        <p>&copy;</p>
     </footer>
+    <script src="../js/scripts.js"></script> <!-- Agregamos el script para interactividad -->
 </body>
 </html>

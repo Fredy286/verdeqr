@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerdeQR</title>
     <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="stylesheet" href="../css/admin.css"> <!-- Agregamos estilos específicos para el admin -->
 </head>
 <body>
     <header>

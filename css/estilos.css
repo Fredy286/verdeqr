@@ -1,0 +1,80 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF; /* Fondo blanco */
+    color: #333333; /* Texto oscuro */
+}
+
+a {
+    color: #28A745; /* Verde SENA */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Botones */
+.btn {
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #218838; /* Verde más oscuro al pasar el mouse */
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+th {
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+}
+
+/* Formularios */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    background-color: #F8F9FA; /* Fondo gris claro */
+}
+
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838; /* Verde más oscuro al pasar el mouse */
+}

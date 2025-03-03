@@ -1,0 +1,146 @@
+/* Panel de administrador */
+.sidebar {
+    width: 200px; /* Menú más delgado */
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    text-align: center; /* Centrar el texto */
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px; /* Texto más pequeño */
+    display: block;
+    padding: 10px 15px; /* Más espacio interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.sidebar ul li a:hover {
+    background-color: #218838; /* Verde más oscuro al pasar el mouse */
+}
+
+.sidebar .logout {
+    background-color: #218838; /* Verde más oscuro */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.sidebar .logout:hover {
+    background-color: #1e7e34; /* Verde aún más oscuro */
+}
+
+.content {
+    margin-left: 200px; /* Ajuste para el menú lateral más delgado */
+    padding: 20px;
+    background-color: #FFFFFF; /* Fondo blanco para el contenido */
+    color: #333333; /* Texto oscuro */
+}
+
+.topbar {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centrar el título */
+}
+
+.main-content {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #F8F9FA; /* Fondo gris claro */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-content h2 {
+    color: #28A745; /* Verde SENA para el título */
+    margin-bottom: 20px;
+    text-align: center; /* Centrar el título */
+}
+
+.main-content p {
+    color: #333333; /* Texto oscuro */
+    text-align: center; /* Centrar el texto */
+}
+
+/* Estilos para formularios */
+form {
+    max-width: 600px;
+    margin: 0 auto; /* Centrar el formulario */
+    padding: 20px;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #218838; /* Verde más oscuro al pasar el mouse */
+}
+
+/* Estilos para tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+table th {
+    background-color: #28A745; /* Verde SENA */
+    color: white;
+}
+
+table tr:hover {
+    background-color: #F8F9FA; /* Fondo gris claro al pasar el mouse */
+}
