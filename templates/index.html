@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    {% include 'sidebar.html' %}
+    <div class="content">
+        <h1>Bienvenido a VerdeQR</h1>
+        <p>Gestiona la información de árboles, centros, tipos de árbol y usos de árbol de manera eficiente.</p>
+        <div class="cards">
+            <div class="card">
+                <h2>Registrar Árbol</h2>
+                <p>Registra nuevos árboles en la base de datos.</p>
+                <a href="{{ url_for('arbol') }}" class="btn">Ir a Registrar Árbol</a>
+            </div>
+            <div class="card">
+                <h2>Centros</h2>
+                <p>Gestiona los centros registrados.</p>
+                <a href="{{ url_for('centro') }}" class="btn">Ir a Centros</a>
+            </div>
+            <div class="card">
+                <h2>Tipos de Árbol</h2>
+                <p>Administra los tipos de árbol disponibles.</p>
+                <a href="{{ url_for('tipo_arbol') }}" class="btn">Ir a Tipos de Árbol</a>
+            </div>
+            <div class="card">
+                <h2>Usos de Árbol</h2>
+                <p>Gestiona los usos de los árboles.</p>
+                <a href="{{ url_for('uso_arbol') }}" class="btn">Ir a Usos de Árbol</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

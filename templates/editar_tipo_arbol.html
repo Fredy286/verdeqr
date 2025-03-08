@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Tipo de Árbol</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h1>Editar Tipo de Árbol</h1>
+    <form method="POST" action="{{ url_for('editar_tipo_arbol', id=tipo_arbol.IDTipoArbol) }}">
+        <div class="form-group">
+            <label for="nombre_cientifico">Nombre Científico:</label>
+            <input type="text" id="nombre_cientifico" name="nombre_cientifico" value="{{ tipo_arbol.NombreCientifico }}" required>
+        </div>
+        <div class="form-group">
+            <label for="nombre_vulgar">Nombre Vulgar:</label>
+            <input type="text" id="nombre_vulgar" name="nombre_vulgar" value="{{ tipo_arbol.NombreVulgar }}" required>
+        </div>
+        <button type="submit" class="btn">Actualizar</button>
+    </form>
+</body>
+</html>

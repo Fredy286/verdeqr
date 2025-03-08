@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Centro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h1>Editar Centro</h1>
+    <form method="POST" action="{{ url_for('editar_centro', id=centro.IDCentro) }}">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ centro.Nombre }}" required>
+        </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion">{{ centro.Descripcion }}</textarea>
+        </div>
+        <button type="submit" class="btn">Actualizar</button>
+    </form>
+</body>
+</html>

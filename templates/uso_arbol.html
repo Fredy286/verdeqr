@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usos de Árbol</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h1>Usos de Árbol</h1>
+    <form method="POST" action="{{ url_for('uso_arbol') }}">
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" name="descripcion" required>
+        </div>
+        <button type="submit" class="btn">Guardar</button>
+    </form>
+
+    <h2>Lista de Usos de Árbol</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+        {% for uso in usos_arbol %}
+            <tr>
+                <td>{{ uso.IDUso }}</td>
+                <td>{{ uso.Descripcion }}</td>
+                <td>
+                    <a href="{{ url_for('editar_uso_arbol', id=uso.IDUso) }}" class="btn">Editar</a>
+                    <a href="{{ url_for('eliminar_uso_arbol', id=uso.IDUso) }}" class="btn" onclick="return confirm('¿Estás seguro de eliminar este uso de árbol?');">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

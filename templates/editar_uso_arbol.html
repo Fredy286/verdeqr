@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Uso de Árbol</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h1>Editar Uso de Árbol</h1>
+    <form method="POST" action="{{ url_for('editar_uso_arbol', id=uso_arbol.IDUso) }}">
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" name="descripcion" value="{{ uso_arbol.Descripcion }}" required>
+        </div>
+        <button type="submit" class="btn">Actualizar</button>
+    </form>
+</body>
+</html>

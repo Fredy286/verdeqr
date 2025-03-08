@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Árbol</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <h1>Registro de Árbol</h1>
+    <form method="POST" action="{{ url_for('arbol') }}">
+        <label for="nombre_cientifico">Nombre Científico:</label>
+        <input type="text" id="nombre_cientifico" name="nombre_cientifico" required><br>
+
+        <label for="nombre_vulgar">Nombre Vulgar:</label>
+        <input type="text" id="nombre_vulgar" name="nombre_vulgar"><br>
+
+        <label for="ubicacion_geografica">Ubicación Geográfica:</label>
+        <input type="text" id="ubicacion_geografica" name="ubicacion_geografica"><br>
+
+        <label for="caracteristicas">Características:</label>
+        <textarea id="caracteristicas" name="caracteristicas"></textarea><br>
+
+        <label for="servicio_ecosistemico">Servicio Ecosistémico:</label>
+        <input type="text" id="servicio_ecosistemico" name="servicio_ecosistemico"><br>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad"><br>
+
+        <label for="tipo_arbol">Tipo de Árbol:</label>
+        <select id="tipo_arbol" name="tipo_arbol" required>
+            {% for tipo in tipos_arbol %}
+                <option value="{{ tipo.IDTipoArbol }}">{{ tipo.NombreCientifico }} ({{ tipo.NombreVulgar }})</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="uso_arbol">Uso del Árbol:</label>
+        <select id="uso_arbol" name="uso_arbol" required>
+            {% for uso in usos_arbol %}
+                <option value="{{ uso.IDUso }}">{{ uso.Descripcion }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="tipo_bosque">Tipo de Bosque:</label>
+        <select id="tipo_bosque" name="tipo_bosque" required>
+            {% for bosque in tipos_bosque %}
+                <option value="{{ bosque.IDTipoBosque }}">{{ bosque.Descripcion }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="centro">Centro:</label>
+        <select id="centro" name="centro" required>
+            {% for centro in centros %}
+                <option value="{{ centro.IDCentro }}">{{ centro.Nombre }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" required>
+            {% for estado in estados %}
+                <option value="{{ estado.IDEstado }}">{{ estado.Descripcion }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
