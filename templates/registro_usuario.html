@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['CorreoElectronico'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Formulario para registrar usuarios -->
+        <div class="contenedor-seccion">
+            <h2>Registro de Usuario</h2>
+            <form id="registroForm" method="POST" action="{{ url_for('gestion_usuarios') }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="nombres">Nombres:</label>
+                    <input type="text" id="nombres" name="nombres" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" name="correo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" id="contrasena" name="contrasena" class="form-control" required>
+                    <small>La contraseña debe tener al menos 8 caracteres y una letra mayúscula</small>
+                </div>
+                <div class="form-group">
+                    <label for="validar_contrasena">Confirmar Contraseña:</label>
+                    <input type="password" id="validar_contrasena" name="validar_contrasena" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Registrar Usuario
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de usuarios registrados -->
+        <div class="contenedor-tabla">
+            <h2>Usuarios Registrados</h2>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.IDUsuario }}</td>
+                            <td>{{ usuario.Nombres }}</td>
+                            <td>{{ usuario.Apellidos }}</td>
+                            <td>{{ usuario.CorreoElectronico }}</td>
+                            <td>{{ usuario.Telefono }}</td>
+                            <td>{% if usuario.Estado == 1 %}Activo{% else %}Inactivo{% endif %}</td>
+                            <td class="acciones-cell">
+                                <div class="acciones-botones">
+                                    <a href="{{ url_for('editar_usuario', id=usuario.IDUsuario) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <form method="POST" action="{{ url_for('eliminar_usuario', id=usuario.IDUsuario) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Usuario registrado exitosamente');
+                    window.location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error al procesar el registro. Por favor, intenta nuevamente.');
+            });
+        });
+    </script>
+</body>
+</html>

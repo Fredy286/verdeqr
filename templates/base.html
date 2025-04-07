@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VerdeQR{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'flash_messages.html' %}
+    
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('principal') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                {% if 'Centro' in session.get('usuario', {}).get('roles', []) %}
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                {% endif %}
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                {% if session.get('usuario') and 'Administrador' in session['usuario'].get('roles', []) %}
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="user-section">
+            {% if session.get('usuario') %}
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['CorreoElectronico'] }}</span>
+                </div>
+            </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

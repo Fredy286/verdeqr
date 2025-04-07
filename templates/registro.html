@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - VerdeQR</title>
+   
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: block;
+            background-image: url("{{ url_for('static', filename='css/js/img/fregistro.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .contenedor-registro {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+        }
+
+        .formulario-registro {
+            background-color: rgba(255, 255, 255, 0.65);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 3;
+        }
+
+        .formulario-registro h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: clamp(1.5em, 4vw, 1.8em);
+        }
+
+        .formulario-registro .form-group {
+            margin-bottom: 15px;
+        }
+
+        .formulario-registro .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .formulario-registro .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: border-color 0.3s ease;
+        }
+
+        .formulario-registro .form-group input:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+
+        .formulario-registro .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            display: block;
+            margin: 20px auto 0;
+            width: auto;
+            position: relative;
+            z-index: 4;
+            transition: background-color 0.3s ease;
+        }
+
+        .formulario-registro .btn:hover {
+            background-color: #218838;
+        }
+
+        .formulario-registro p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .formulario-registro a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .formulario-registro a:hover {
+            text-decoration: underline;
+            color: #218838;
+        }
+
+        .formulario-registro .btn-inicio {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #333;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            display: inline-block;
+            margin: 0 0 20px 0;
+            width: auto;
+            position: relative;
+            z-index: 4;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .formulario-registro .btn-inicio:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .formulario-registro .form-columns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .contenedor-registro {
+                padding: 15px;
+            }
+
+            .formulario-registro {
+                padding: 20px;
+            }
+
+            .formulario-registro .form-columns {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .formulario-registro .form-group input {
+                padding: 10px;
+            }
+
+            .formulario-registro .btn {
+                padding: 10px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contenedor-registro {
+                padding: 10px;
+            }
+
+            .formulario-registro {
+                padding: 15px;
+            }
+
+            .formulario-registro .form-group input {
+                padding: 8px;
+            }
+
+            .formulario-registro .btn {
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="register-page">
+    <div class="contenedor-registro">
+        <div class="formulario-registro">
+            <h1>Registro</h1>
+            <a href="{{ url_for('inicio') }}" class="btn-inicio">Inicio</a>
+            <form method="POST" action="{{ url_for('registro') }}" id="registroForm">
+                <div class="form-columns">
+                    <div class="form-group">
+                        <label for="nombres">Nombres:</label>
+                        <input type="text" id="nombres" name="nombres" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" id="apellidos" name="apellidos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo electrónico:</label>
+                        <input type="email" id="correo" name="correo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasena">Contraseña:</label>
+                        <input type="password" id="contrasena" name="contrasena" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="validar_contrasena">Confirmar contraseña:</label>
+                        <input type="password" id="validar_contrasena" name="validar_contrasena" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <p>¿Ya tienes una cuenta? <a href="{{ url_for('iniciar_sesion') }}">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registroForm = document.getElementById('registroForm');
+            
+            registroForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const contrasena = document.getElementById('contrasena').value;
+                const validarContrasena = document.getElementById('validar_contrasena').value;
+                
+                if (contrasena !== validarContrasena) {
+                    showErrorModal('Error de Registro', 'Las contraseñas no coinciden');
+                    return;
+                }
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showModalNotification(
+                            'Registro Exitoso',
+                            '¡Bienvenido a VerdeQR!',
+                            'success',
+                            'fas fa-tree'
+                        );
+                        setTimeout(() => {
+                            window.location.href = data.redirect || '/iniciar_sesion';
+                        }, 2000);
+                    } else {
+                        showErrorModal('Error de Registro', data.message);
+                    }
+                })
+                .catch(error => {
+                    showErrorModal('Error de Registro', 'Error al procesar el registro. Por favor, intenta nuevamente.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

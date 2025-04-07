@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Barra Superior -->
+    <header class="header-principal">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="buscador">
+            <input type="text" placeholder="Buscar árboles silvestres...">
+            <button type="button" title="Buscar"><i class="fas fa-search"></i></button>
+        </div>
+        <nav class="menu-principal">
+            <ul>
+                <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                <li><a href="#arboles">Árboles</a></li>
+                <li><a href="#centros">Centros</a></li>
+                <li><a href="#sugerencias">Sugerencias</a></li>
+                {% if 'usuario' in session %}
+                <li><a href="{{ url_for('gestion') }}">Gestión</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="usuario" onclick="window.location.href='{{ url_for('perfil') }}'">
+            <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Icono de Usuario">
+            <div class="info-usuario">
+                <div class="nombre-usuario">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
+                <div class="correo-usuario">{{ session['usuario']['CorreoElectronico'] }}</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección de Bienvenida -->
+    <section class="bienvenida">
+        <div class="contenido-bienvenida">
+            <h1>Bienvenido, <span>{{ session['usuario']['Nombres'] }}</span></h1>
+            <div class="texto-destacado">
+                <p>Explora el fascinante mundo de los árboles con VerdeQR. Nuestra plataforma te permite descubrir, aprender y contribuir al conocimiento y conservación de la flora colombiana.</p>
+                <p>Conoce las características, usos y curiosidades de cada especie, y únete a nuestra comunidad de amantes de la naturaleza.</p>
+            </div>
+            <div class="estadisticas">
+                <div class="estadistica">
+                    <h3>+250</h3>
+                    <p>Árboles registrados</p>
+                </div>
+                <div class="estadistica">
+                    <h3>+50</h3>
+                    <p>Especies únicas</p>
+                </div>
+                <div class="estadistica">
+                    <h3>+10</h3>
+                    <p>Centros participantes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Árboles Destacados -->
+    <section id="arboles" class="arboles-destacados">
+        <div class="titulo-seccion">
+            <h2>Árboles Destacados</h2>
+            <p>Descubre nuestra colección de árboles nativos y sus características únicas</p>
+        </div>
+        <div class="grid-arboles">
+            <!-- Ceiba -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/ceiba.png') }}" alt="Ceiba">
+                    <div class="hover-info">
+                        <h4>Ceiba Pentandra</h4>
+                        <p>Árbol sagrado en muchas culturas</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Ceiba <span>(Ceiba Pentandra)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> Puede alcanzar hasta 70m de altura</p>
+                        <p><i class="fas fa-leaf"></i> Hojas compuestas de 5-9 folíolos</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Común en regiones cálidas</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=3) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Guayacán -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
+                    <div class="hover-info">
+                        <h4>Tabebuia chrysantha</h4>
+                        <p>Famosa por su floración amarilla</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Guayacán <span>(Tabebuia chrysantha)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> Altura promedio de 15-25m</p>
+                        <p><i class="fas fa-leaf"></i> Florece entre diciembre y marzo</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Región Caribe y valles interandinos</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=2) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Roble -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
+                    <div class="hover-info">
+                        <h4>Quercus humboldtii</h4>
+                        <p>El roble andino colombiano</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Roble <span>(Quercus humboldtii)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> Crece entre 20-25m de altura</p>
+                        <p><i class="fas fa-leaf"></i> Hojas alternas, simples</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Bosques andinos (2000-3200 msnm)</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=4) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Palma de cera -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/palma.jpg') }}" alt="Palma de cera">
+                    <div class="hover-info">
+                        <h4>Ceroxylon quindiuense</h4>
+                        <p>Árbol nacional de Colombia</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Palma de cera <span>(Ceroxylon quindiuense)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> La palma más alta del mundo (hasta 60m)</p>
+                        <p><i class="fas fa-leaf"></i> Hojas pinnadas de 2m de largo</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Eje cafetero y Andes centrales</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=5) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Samán -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/saman.jpg') }}" alt="Samán">
+                    <div class="hover-info">
+                        <h4>Samanea saman</h4>
+                        <p>El "árbol de la lluvia"</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Samán <span>(Samanea saman)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> Copa amplia de hasta 50m de diámetro</p>
+                        <p><i class="fas fa-leaf"></i> Hojas bipinnadas, sensibles a la luz</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Valles cálidos y zonas bajas</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=6) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Caoba -->
+            <div class="arbol-card">
+                <div class="imagen-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/caoba.jpg') }}" alt="Caoba">
+                    <div class="hover-info">
+                        <h4>Swietenia macrophylla</h4>
+                        <p>Madera preciosa tropical</p>
+                    </div>
+                </div>
+                <div class="info-arbol">
+                    <h3>Caoba <span>(Swietenia macrophylla)</span></h3>
+                    <div class="detalles">
+                        <p><i class="fas fa-tree"></i> Alcanza 30-40m de altura</p>
+                        <p><i class="fas fa-leaf"></i> Hojas paripinnadas</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Amazonía y Orinoquía</p>
+                    </div>
+                    <a href="{{ url_for('ver_arbol', id=7) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Centros -->
+    <section id="centros" class="centros">
+        <div class="titulo-seccion">
+            <h2>Nuestros Centros</h2>
+            <p>Conoce los centros SENA que participan en este proyecto de conservación</p>
+        </div>
+        <div class="info-centros">
+            <div class="texto-centros">
+                <h3>Una red de conocimiento y conservación</h3>
+                <p>El Servicio Nacional de Aprendizaje (SENA) es la institución pública más importante de Colombia en formación técnica y tecnológica. Con más de 117 centros de formación en todo el país, el SENA se ha unido a VerdeQR para promover la conservación de la biodiversidad arbórea colombiana.</p>
+                <p>Nuestros centros participantes cuentan con viveros, laboratorios y equipos especializados para la investigación y propagación de especies nativas. Los aprendices SENA desarrollan proyectos innovadores en silvicultura, ecología y manejo sostenible de bosques.</p>
+                <div class="estadisticas-centros">
+                    <div class="estadistica">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div>
+                            <h4>+500</h4>
+                            <p>Aprendices involucrados</p>
+                        </div>
+                    </div>
+                    <div class="estadistica">
+                        <i class="fas fa-seedling"></i>
+                        <div>
+                            <h4>+5,000</h4>
+                            <p>Árboles sembrados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="imagen-centros">
+                <img src="{{ url_for('static', filename='css/js/img/cdi.jpg') }}" alt="Centro SENA">
+            </div>
+        </div>
+        <div class="grid-centros">
+            <div class="centro-card">
+                <div class="imagen-centro">
+                    <img src="{{ url_for('static', filename='css/js/img/cdi.jpg') }}" alt="Centro de Innovación">
+                    <div class="overlay">
+                        <h4>Centro de Innovación</h4>
+                    </div>
+                </div>
+                <div class="info-centro">
+                    <h3>Centro de Innovación de Gestión Empresarial y Cultural</h3>
+                    <div class="ubicacion">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Valledupar, Cesar</p>
+                    </div>
+                    <p>Especializado en desarrollo sostenible y tecnologías ambientales. Cuenta con laboratorios de biotecnología y viveros experimentales.</p>
+                    <a href="#" class="btn">Ver proyectos <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="centro-card">
+                <div class="imagen-centro">
+                    <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="Centro Biotecnológico">
+                    <div class="overlay">
+                        <h4>Centro Biotecnológico</h4>
+                    </div>
+                </div>
+                <div class="info-centro">
+                    <h3>Centro Biotecnológico del Caribe</h3>
+                    <div class="ubicacion">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Barranquilla, Atlántico</p>
+                    </div>
+                    <p>Pionero en investigación de especies nativas y propagación vegetativa. Desarrolla técnicas innovadoras de cultivo in vitro.</p>
+                    <a href="#" class="btn">Ver proyectos <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Sugerencias -->
+    <section id="sugerencias" class="sugerencias">
+        <div class="titulo-seccion">
+            <h2>Sugerencias de la Comunidad</h2>
+            <p>Comparte tus ideas y experiencias con otros amantes de la naturaleza</p>
+        </div>
+        
+        <div class="contenedor-sugerencias">
+            <!-- Formulario para enviar sugerencias -->
+            <div class="formulario-sugerencias">
+                <div class="formulario-contenido">
+                    <h3>Comparte tu Sugerencia</h3>
+                    <form id="formSugerencia" method="POST" action="{{ url_for('registrar_sugerencia') }}">
+                        <div class="form-group">
+                            <label for="sugerencia">Tu Sugerencia:</label>
+                            <textarea id="sugerencia" name="sugerencia" placeholder="Comparte tus ideas, experiencias o sugerencias para mejorar nuestra comunidad..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-enviar">
+                            <i class="fas fa-paper-plane"></i> Enviar Sugerencia
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista de sugerencias -->
+            <div class="sugerencias-lista">
+                <h3>Últimas Sugerencias</h3>
+                <div class="carrusel-container">
+                    <button class="carrusel-btn prev" title="Sugerencias anteriores" onclick="cambiarSugerencias(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carrusel-sugerencias">
+                        {% if sugerencias %}
+                            {% for sugerencia in sugerencias %}
+                            <div class="sugerencia-card">
+                                <div class="sugerencia-header">
+                                    <div class="usuario-info">
+                                        <i class="fas fa-user-circle"></i>
+                                        <span class="nombre">{{ sugerencia.Nombre }}</span>
+                                    </div>
+                                    <div class="fecha">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ sugerencia.Fecha.strftime('%d/%m/%Y') }}
+                                    </div>
+                                </div>
+                                <div class="sugerencia-contenido">
+                                    {{ sugerencia.Sugerencia }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="sin-sugerencias">
+                                <i class="fas fa-comments"></i>
+                                <p>Aún no hay sugerencias. ¡Sé el primero en compartir una!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button class="carrusel-btn next" title="Siguientes sugerencias" onclick="cambiarSugerencias(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSugerencia = document.getElementById('formSugerencia');
+            
+            formSugerencia.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showModalNotification(
+                            'Sugerencia Enviada',
+                            '¡Gracias por tu sugerencia!',
+                            'success',
+                            'fas fa-tree'
+                        );
+                        // Agregar la nueva sugerencia al carrusel
+                        const carrusel = document.querySelector('.carrusel-sugerencias');
+                        const nuevaSugerencia = document.createElement('div');
+                        nuevaSugerencia.className = 'sugerencia-card';
+                        nuevaSugerencia.innerHTML = `
+                            <div class="sugerencia-header">
+                                <div class="usuario-info">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span class="nombre">${data.nuevaSugerencia.Nombre}</span>
+                                </div>
+                                <div class="fecha">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    ${data.nuevaSugerencia.Fecha}
+                                </div>
+                            </div>
+                            <div class="sugerencia-contenido">
+                                ${data.nuevaSugerencia.Sugerencia}
+                            </div>
+                        `;
+                        carrusel.insertBefore(nuevaSugerencia, carrusel.firstChild);
+                        // Limpiar el formulario
+                        formSugerencia.reset();
+                    } else {
+                        showModalNotification(
+                            'Error al Enviar Sugerencia',
+                            data.message,
+                            'error',
+                            'fas fa-exclamation-circle'
+                        );
+                    }
+                })
+                .catch(error => {
+                    showModalNotification(
+                        'Error al Enviar Sugerencia',
+                        'Error al procesar la sugerencia. Por favor, intenta nuevamente.',
+                        'error',
+                        'fas fa-exclamation-circle'
+                    );
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .formulario-sugerencias {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+        .formulario-contenido {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .formulario-sugerencias h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .formulario-sugerencias label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .formulario-sugerencias textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .formulario-sugerencias textarea:focus {
+            border-color: white;
+            outline: none;
+        }
+
+        .formulario-sugerencias textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-enviar {
+            background: white;
+            color: #2c3e50;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem auto 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-enviar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .carrusel-container {
+            position: relative;
+            overflow: hidden;
+            padding: 0 40px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .carrusel-sugerencias {
+            display: flex;
+            gap: 20px;
+            transition: transform 0.5s ease-in-out;
+            will-change: transform;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .sugerencia-card {
+            flex: 0 0 calc(20% - 20px);
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateX(100%);
+            position: relative;
+            min-width: 200px;
+        }
+
+        .sugerencia-card.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .carrusel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2c3e50;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            margin: 0;
+        }
+
+        .carrusel-btn:hover {
+            background: #3498db;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carrusel-btn.prev {
+            left: 0;
+        }
+
+        .carrusel-btn.next {
+            right: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+        }
+
+        .alert-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideInRight 0.5s ease-out, fadeOut 0.5s ease-out 4.5s forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Estilos para el botón de usuario */
+        .usuario {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .usuario img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        
+        .info-usuario {
+            text-align: left;
+        }
+        
+        .nombre-usuario {
+            font-weight: bold;
+        }
+        
+        .correo-usuario {
+            font-size: 0.8em;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carrusel = document.querySelector('.carrusel-sugerencias');
+            const sugerencias = document.querySelectorAll('.sugerencia-card');
+            const totalSugerencias = sugerencias.length;
+            const cardsPerPage = 5;
+            const totalPages = Math.ceil(totalSugerencias / cardsPerPage);
+            let currentPage = 0;
+            let autoChangeInterval;
+
+            function mostrarSugerencias(page) {
+                // Ocultar todas las sugerencias
+                sugerencias.forEach(card => {
+                    card.style.display = 'none';
+                    card.classList.remove('active');
+                });
+
+                // Mostrar las sugerencias de la página actual
+                const start = page * cardsPerPage;
+                const end = Math.min(start + cardsPerPage, totalSugerencias);
+                
+                // Crear un contenedor para las sugerencias activas
+                const activeContainer = document.createElement('div');
+                activeContainer.style.display = 'flex';
+                activeContainer.style.gap = '20px';
+                activeContainer.style.width = '100%';
+                activeContainer.style.justifyContent = 'center';
+                
+                for (let i = start; i < end; i++) {
+                    if (sugerencias[i]) {
+                        const card = sugerencias[i];
+                        card.style.display = 'block';
+                        card.classList.add('active');
+                        card.style.animation = 'none';
+                        card.offsetHeight; // Forzar reflow
+                        card.style.animation = 'slideIn 0.5s ease forwards';
+                        card.style.animationDelay = `${(i - start) * 0.1}s`;
+                        activeContainer.appendChild(card);
+                    }
+                }
+                
+                // Limpiar y actualizar el carrusel
+                carrusel.innerHTML = '';
+                carrusel.appendChild(activeContainer);
+            }
+
+            window.cambiarSugerencias = function(direction) {
+                const newPage = currentPage + direction;
+                if (newPage >= 0 && newPage < totalPages) {
+                    currentPage = newPage;
+                } else if (newPage >= totalPages) {
+                    currentPage = 0;
+                } else if (newPage < 0) {
+                    currentPage = totalPages - 1;
+                }
+                
+                mostrarSugerencias(currentPage);
+                
+                // Reiniciar el intervalo
+                clearInterval(autoChangeInterval);
+                autoChangeInterval = setInterval(() => {
+                    if (currentPage < totalPages - 1) {
+                        cambiarSugerencias(1);
+                    } else {
+                        currentPage = 0;
+                        mostrarSugerencias(0);
+                    }
+                }, 5000);
+            };
+
+            // Iniciar el cambio automático
+            autoChangeInterval = setInterval(() => {
+                if (currentPage < totalPages - 1) {
+                    cambiarSugerencias(1);
+                } else {
+                    currentPage = 0;
+                    mostrarSugerencias(0);
+                }
+            }, 5000);
+
+            // Mostrar primera página al cargar
+            mostrarSugerencias(0);
+        });
+    </script>
+
+    <!-- Pie de Página -->
+    <footer class="footer-principal">
+        <div class="contenido-footer">
+            <div class="logo-footer">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+                <p>Plataforma de conservación y conocimiento de la flora colombiana</p>
+            </div>
+            <div class="enlaces-footer">
+                <div class="columna">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                        <li><a href="#arboles">Árboles</a></li>
+                        <li><a href="#centros">Centros</a></li>
+                        <li><a href="#sugerencias">Sugerencias</a></li>
+                    </ul>
+                </div>
+                <div class="columna">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><a href="#">Soporte técnico</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                        <li><a href="#">Reportar problema</a></li>
+                        <li><a href="#">Sugerencias</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="redes-sociales">
+                <h4>Síguenos</h4>
+                <div class="iconos-redes">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="derechos">
+            <p>&copy; 2024 VerdeQR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

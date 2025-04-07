@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --color-primario: #28a745;
+            --color-secundario: #218838;
+            --color-fondo: #f8f9fa;
+            --color-texto: #333;
+            --color-texto-claro: #666;
+            --sombra: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor principal sin márgenes -->
+    <div class="perfil-container">
+        <!-- Header con portada a ancho completo -->
+        <div class="perfil-header">
+            <!-- Portada que ocupa todo el ancho -->
+            <div class="portada-full">
+                <img src="{{ url_for('static', filename='css/js/img/portada.jpg') }}" alt="Portada de perfil" class="portada-img">
+                <div class="portada-overlay"></div>
+            </div>
+            
+            <!-- Controles de navegación flotantes -->
+            <div class="perfil-controls">
+                <a href="{{ url_for('principal') }}" class="btn-control">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('gestion') }}" class="btn-control admin-only">
+                    <i class="fas fa-cog"></i>
+                </a>
+                {% endif %}
+            </div>
+            
+            <!-- Avatar centrado perfectamente en la portada -->
+            <div class="avatar-centrado">
+                <div class="avatar-wrapper">
+                    <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Avatar del usuario" class="avatar-img">
+                    <button class="avatar-edit" onclick="document.getElementById('avatar-input').click()" title="Cambiar foto de perfil">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <input type="file" id="avatar-input" style="display: none;">
+                </div>
+            </div>
+        </div>
+
+            
+        
+
+        <!-- Información principal -->
+        <div class="perfil-content">
+            <div class="perfil-info">
+                <h1>{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</h1>
+                <div class="user-meta">
+                    <span class="user-role">
+                        <i class="fas fa-user-tag"></i>
+                        {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                        Administrador
+                        {% else %}
+                        Usuario
+                        {% endif %}
+                    </span>
+                    <span class="user-email"><i class="fas fa-envelope"></i> {{ session['usuario']['CorreoElectronico'] }}</span>
+                    {% if session['usuario']['Telefono'] %}
+                    <span class="user-phone"><i class="fas fa-phone"></i> {{ session['usuario']['Telefono'] }}</span>
+                    {% endif %}
+                    <span class="user-date"><i class="far fa-calendar-alt"></i> Registrado el {{ fecha_registro }}</span>
+                </div>
+            </div>
+
+            <!-- Estadísticas solo para admin -->
+            {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jjhon123@gmail.com' %}
+            <div class="admin-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>{{ arboles_registrados }}</h3>
+                            <p>Árboles registrados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>{{ qrs_generados }}</h3>
+                            <p>QRs generados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>{{ sugerencias_enviadas }}</h3>
+                            <p>Sugerencias</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Pestañas de navegación -->
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="info">
+                    <i class="fas fa-user"></i> Información
+                </button>
+                <button class="tab-btn" data-tab="settings">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+            </div>
+
+            <!-- Contenido de las pestañas -->
+            <div class="tab-content active" id="info-tab">
+                <div class="info-section">
+                    <h2><i class="fas fa-info-circle"></i> Detalles del perfil</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label><i class="fas fa-id-card"></i> Nombres completos</label>
+                            <p>{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</p>
+                        </div>
+                        <div class="info-item">
+                            <label><i class="fas fa-at"></i> Correo electrónico</label>
+                            <p>{{ session['usuario']['CorreoElectronico'] }}</p>
+                        </div>
+                        {% if session['usuario']['Telefono'] %}
+                        <div class="info-item">
+                            <label><i class="fas fa-mobile-alt"></i> Teléfono</label>
+                            <p>{{ session['usuario']['Telefono'] }}</p>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <label><i class="far fa-calendar-alt"></i> Fecha de registro</label>
+                            <p>{{ fecha_registro }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="settings-tab">
+                <div class="settings-section">
+                    <h2><i class="fas fa-user-edit"></i> Editar perfil</h2>
+                    <form class="profile-form" method="POST" action="{{ url_for('perfil') }}">
+                        <div class="form-group">
+                            <label for="nombres">Nombres</label>
+                            <input type="text" id="nombres" name="nombres" value="{{ session['usuario']['Nombres'] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos</label>
+                            <input type="text" id="apellidos" name="apellidos" value="{{ session['usuario']['Apellidos'] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="text" id="telefono" name="telefono" value="{{ session['usuario']['Telefono'] or '' }}">
+                        </div>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Guardar cambios
+                        </button>
+                    </form>
+
+                    <div class="security-section">
+                        <h2><i class="fas fa-lock"></i> Seguridad</h2>
+                        <button class="btn-change-password" onclick="mostrarModalCambioContrasena()">
+                            <i class="fas fa-key"></i> Cambiar contraseña
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de cerrar sesión centrado al final -->
+    <div class="logout-container">
+        <button type="button" class="btn-logout" onclick="cerrarSesion()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
+    </div>
+
+    <style>
+        .logout-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+        }
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+        .btn-logout i {
+            margin-right: 8px;
+        }
+    </style>
+
+    <!-- Modal para cambiar contraseña -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal('password-modal')">&times;</span>
+            <h2><i class="fas fa-key"></i> Cambiar contraseña</h2>
+            <form id="password-form" method="POST" action="{{ url_for('cambiar_contrasena') }}">
+                <div class="form-group">
+                    <label for="current-password">Contraseña actual</label>
+                    <input type="password" id="current-password" name="contrasena_actual" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Nueva contraseña</label>
+                    <input type="password" id="new-password" name="nueva_contrasena" required>
+                    <small>Mínimo 8 caracteres, 1 mayúscula y 1 número</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar nueva contraseña</label>
+                    <input type="password" id="confirm-password" name="confirmar_contrasena" required>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Actualizar contraseña
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad de pestañas
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remover clase active de todos los botones
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // Añadir clase active al botón clickeado
+                    button.classList.add('active');
+                    
+                    // Ocultar todos los contenidos
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Mostrar el contenido correspondiente
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Función para mostrar modal de cambio de contraseña
+            window.mostrarModalCambioContrasena = function() {
+                document.getElementById('password-modal').style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevenir scroll
+            };
+            
+            // Función para cerrar modales
+            window.cerrarModal = function(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+                document.body.style.overflow = 'auto'; // Restaurar scroll
+            };
+            
+            // Cerrar modal al hacer clic fuera del contenido
+            window.addEventListener('click', (e) => {
+                const modal = document.getElementById('password-modal');
+                if (e.target === modal) {
+                    cerrarModal('password-modal');
+                }
+            });
+            
+            // Función para cerrar sesión
+            window.cerrarSesion = function() {
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    window.location.href = "{{ url_for('cerrar_sesion') }}";
+                }
+            };
+            
+            // Efecto de pulso para el avatar
+            const avatarWrapper = document.querySelector('.avatar-wrapper');
+            setTimeout(() => {
+                avatarWrapper.classList.add('pulse');
+                setTimeout(() => {
+                    avatarWrapper.classList.remove('pulse');
+                }, 2000);
+            }, 1000);
+            
+            // Funcionalidad para cambiar avatar (simulada)
+            const avatarInput = document.getElementById('avatar-input');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        alert('Esta funcionalidad es simulada. El cambio de avatar se implementará en una futura actualización.');
+                    }
+                });
+            }
+            
+            // Validación del formulario de cambio de contraseña
+            const passwordForm = document.getElementById('password-form');
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', (e) => {
+                    const newPassword = document.getElementById('new-password').value;
+                    const confirmPassword = document.getElementById('confirm-password').value;
+                    
+                    // Validar que las contraseñas coincidan
+                    if (newPassword !== confirmPassword) {
+                        e.preventDefault();
+                        alert('Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
+                    }
+                    
+                    // Validar complejidad de la contraseña
+                    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+                    if (!passwordRegex.test(newPassword)) {
+                        e.preventDefault();
+                        alert('La contraseña debe tener al menos 8 caracteres, 1 mayúscula y 1 número.');
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+</body>
+</html>

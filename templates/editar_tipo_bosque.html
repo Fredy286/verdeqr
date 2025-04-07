@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tipo de Bosque - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['CorreoElectronico'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="contenedor-seccion">
+            <h2>Editar Tipo de Bosque</h2>
+            <form method="POST" action="{{ url_for('editar_tipo_bosque', id=tipo_bosque.IDTipoBosque) }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" required>{{ tipo_bosque.Descripcion }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        <option value="1" {% if tipo_bosque.Estado == 1 %}selected{% endif %}>Activo</option>
+                        <option value="2" {% if tipo_bosque.Estado == 2 %}selected{% endif %}>Inactivo</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <a href="{{ url_for('tipo_bosque') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+</body>
+</html> 

@@ -1,0 +1,651 @@
+:root {
+    --primary-color: #27ae60;
+    --secondary-color: #e8f5e9;
+    --text-color: #2c3e50;
+    --border-color: #e0e0e0;
+    --background-light: #f5f5f5;
+    --menu-bg: #2c3e50;
+    --menu-text: #ffffff;
+    --menu-hover: #34495e;
+}
+
+/* Estilos generales */
+body {
+    background-image: url('../css/js/img/fgestion.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+/* Sidebar */
+.header-principal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background: var(--menu-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    width: 50px !important;
+    height: 50px !important;
+    object-fit: contain;
+    max-width: 50px !important;
+    max-height: 50px !important;
+}
+
+.menu-principal {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+#menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#menu li {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    color: var(--menu-text);
+    text-decoration: none;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#menu li a:hover {
+    background-color: var(--menu-hover);
+}
+
+#menu li a i {
+    width: 20px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.user-section {
+    margin-top: auto;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    max-width: 40px !important;
+    max-height: 40px !important;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 14px;
+    color: var(--menu-text);
+    font-weight: bold;
+}
+
+.user-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Contenedor principal */
+.container {
+    margin-left: 200px;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    width: calc(100% - 200px);
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-section, .content-section {
+    display: none;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem auto;
+    width: 90%;
+    max-width: 1200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+    position: relative;
+    z-index: 2;
+}
+
+.welcome-section.active, .content-section.active {
+    display: block;
+}
+
+/* Título principal de bienvenida */
+.welcome-section .titulo-centrado {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-color);
+    font-size: 2.2rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.titulo-centrado:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Título principal del formulario */
+.titulo-formulario {
+    color: #ffffff !important;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: relative;
+    z-index: 2;
+    display: block !important;
+}
+
+/* Restaurar estilos originales de las etiquetas de formulario */
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+/* Títulos de sección */
+.contenedor-seccion h2 {
+    color: #ffffff !important;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: relative;
+    z-index: 2;
+    display: block !important;
+}
+
+.features {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features li {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.features li i {
+    color: var(--primary-color);
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* Contenedor de sección */
+.contenedor-seccion {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 25px;
+    margin: 30px 100px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    width: calc(100% - 200px);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Contenedor de tabla */
+.contenedor-tabla {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 25px;
+    margin: 30px 50px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    width: calc(100% - 100px);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ajuste específico para la tabla de sugerencias */
+.sugerencias .contenedor-tabla {
+    max-width: 2000px;
+    width: calc(100% - 40px);
+    margin: 30px 20px;
+}
+
+.formulario-gestion {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #2c3e50;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    background-color: white;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232c3e50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: none;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-sm {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+/* Tablas */
+.tabla-contenedor {
+    overflow-x: auto !important;
+    max-width: 100% !important;
+    margin: 0;
+    padding: 0;
+}
+
+.tabla-contenedor table {
+    width: 100% !important;
+    min-width: 1300px !important;
+    table-layout: fixed !important;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+/* Ajuste específico para la tabla de sugerencias */
+.sugerencias .tabla-contenedor table {
+    min-width: 1800px !important;
+}
+
+.tabla-contenedor th,
+.tabla-contenedor td {
+    padding: 8px !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    border: 1px solid #2c3e50;
+    vertical-align: middle;
+    max-width: 150px !important;
+}
+
+.tabla-contenedor th {
+    background-color: #2c3e50;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 12px !important;
+    white-space: nowrap !important;
+}
+
+/* Ajustes específicos para columnas */
+.tabla-contenedor th:nth-child(1) { width: 5% !important; } /* ID */
+.tabla-contenedor th:nth-child(2) { width: 12% !important; } /* Nombre Científico */
+.tabla-contenedor th:nth-child(3) { width: 12% !important; } /* Nombre Vulgar */
+.tabla-contenedor th:nth-child(4) { width: 10% !important; } /* Ubicación */
+.tabla-contenedor th:nth-child(5) { width: 12% !important; } /* Características */
+.tabla-contenedor th:nth-child(6) { width: 12% !important; } /* Servicio Ecosistémico */
+.tabla-contenedor th:nth-child(7) { width: 5% !important; } /* Cantidad */
+.tabla-contenedor th:nth-child(8) { width: 10% !important; } /* Tipo de Árbol */
+.tabla-contenedor th:nth-child(9) { width: 10% !important; } /* Uso del Árbol */
+.tabla-contenedor th:nth-child(10) { width: 10% !important; } /* Tipo de Bosque */
+.tabla-contenedor th:nth-child(11) { width: 10% !important; } /* Centro */
+.tabla-contenedor th:nth-child(12) { width: 8% !important; } /* Estado */
+.tabla-contenedor th:nth-child(13) { width: 20% !important; } /* Acciones */
+
+.tabla-contenedor tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.tabla-contenedor tr:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #f1c40f;
+    color: #2c3e50;
+}
+
+.badge-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Media Queries */
+@media screen and (max-width: 992px) {
+    .header-principal {
+        width: 180px;
+    }
+    
+    .container {
+        margin-left: 180px;
+        width: calc(100% - 180px);
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-principal {
+        width: 60px;
+        padding: 5px;
+    }
+    
+    .container {
+        margin-left: 60px;
+        width: calc(100% - 60px);
+        padding: 10px;
+    }
+
+    #menu li a span {
+        display: none;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .user-avatar {
+        margin-right: 0;
+    }
+}
+
+/* Estilo específico para el ícono del botón de tipo de bosque */
+.tipo-bosque-btn i {
+    color: #ffffff !important;
+    display: inline-block !important;
+    margin-right: 8px;
+    font-size: 1.2em;
+    opacity: 1 !important;
+}
+
+/* Asegurar que los botones muestren sus íconos */
+.btn i {
+    color: #ffffff !important;
+    display: inline-block !important;
+    margin-right: 8px;
+    font-size: 1.2em;
+    opacity: 1 !important;
+}
+
+/* Estilo específico para el botón de tipo de bosque */
+.tipo-bosque-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Estilos para botones de acción */
+.acciones-cell {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-width: 180px !important;
+    padding: 8px !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+}
+
+.acciones-botones {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+    padding: 0 10px !important;
+}
+
+.btn-sm {
+    padding: 4px 8px !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.2rem !important;
+    white-space: nowrap !important;
+    min-width: 70px !important;
+    text-align: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 !important;
+    max-width: 100px !important;
+}
+
+/* Estilos para las notificaciones */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.back-to-main {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button i {
+    margin-right: 8px;
+}
+
+.back-button:hover {
+    background-color: #219653;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-decoration: none;
+}

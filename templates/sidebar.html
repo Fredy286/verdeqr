@@ -1,12 +1,42 @@
-<div class="sidebar">
-    <div class="logo">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo VerdeQR">
-    </div>
-    <ul>
-        <li><a href="{{ url_for('index') }}">Inicio</a></li>
-        <li><a href="{{ url_for('arbol') }}">Registrar Árbol</a></li>
-        <li><a href="{{ url_for('centro') }}">Centros</a></li>
-        <li><a href="{{ url_for('tipo_arbol') }}">Tipos de Árbol</a></li>
-        <li><a href="{{ url_for('uso_arbol') }}">Usos de Árbol</a></li>
-    </ul>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Menú lateral -->
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i> Árbol</a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-school"></i> Centros</a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-leaf"></i> Tipos de Árbol</a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-recycle"></i> Usos de Árbol</a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-forest"></i> Tipos de Bosque</a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler-combined"></i> Medidas</a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i> QR</a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comment"></i> Sugerencias</a></li>
+            </ul>
+        </nav>
+
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['CorreoElectronico'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+</body>
+</html>

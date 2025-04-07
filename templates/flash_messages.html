@@ -1,0 +1,123 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}" data-type="{{ category }}">
+                    <i class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'error' %}fa-times-circle{% elif category == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                    <button type="button" class="flash-close">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <style>
+            .flash-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                max-width: 400px;
+            }
+            
+            .flash-message {
+                margin-bottom: 10px;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                animation: slideIn 0.3s ease forwards;
+                position: relative;
+            }
+            
+            .flash-success {
+                background-color: #d4edda;
+                border-left: 4px solid #28a745;
+                color: #155724;
+            }
+            
+            .flash-error {
+                background-color: #f8d7da;
+                border-left: 4px solid #dc3545;
+                color: #721c24;
+            }
+            
+            .flash-warning {
+                background-color: #fff3cd;
+                border-left: 4px solid #ffc107;
+                color: #856404;
+            }
+            
+            .flash-info {
+                background-color: #d1ecf1;
+                border-left: 4px solid #17a2b8;
+                color: #0c5460;
+            }
+            
+            .flash-message i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+            
+            .flash-close {
+                background: none;
+                border: none;
+                color: inherit;
+                font-size: 1.2rem;
+                cursor: pointer;
+                margin-left: auto;
+                opacity: 0.7;
+                transition: opacity 0.2s;
+            }
+            
+            .flash-close:hover {
+                opacity: 1;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Cerrar mensajes al hacer clic en el botón de cerrar
+                document.querySelectorAll('.flash-close').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const message = this.parentElement;
+                        message.style.animation = 'fadeOut 0.3s forwards';
+                        setTimeout(() => {
+                            message.remove();
+                        }, 300);
+                    });
+                });
+                
+                // Auto-cerrar mensajes después de 5 segundos
+                setTimeout(() => {
+                    document.querySelectorAll('.flash-message').forEach(message => {
+                        message.style.animation = 'fadeOut 0.3s forwards';
+                        setTimeout(() => {
+                            message.remove();
+                        }, 300);
+                    });
+                }, 5000);
+            });
+        </script>
+    {% endif %}
+{% endwith %} 

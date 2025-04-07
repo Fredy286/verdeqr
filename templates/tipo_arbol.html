@@ -2,42 +2,165 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tipos de Árbol</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipos de Árbol - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Tipos de Árbol</h1>
-    <form method="POST" action="{{ url_for('tipo_arbol') }}">
-        <div class="form-group">
-            <label for="nombre_cientifico">Nombre Científico:</label>
-            <input type="text" id="nombre_cientifico" name="nombre_cientifico" required>
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
         </div>
-        <div class="form-group">
-            <label for="nombre_vulgar">Nombre Vulgar:</label>
-            <input type="text" id="nombre_vulgar" name="nombre_vulgar" required>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
         </div>
-        <button type="submit" class="btn">Guardar</button>
-    </form>
+    </header>
 
-    <h2>Lista de Tipos de Árbol</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nombre Científico</th>
-            <th>Nombre Vulgar</th>
-            <th>Acciones</th>
-        </tr>
-        {% for tipo in tipos_arbol %}
-            <tr>
-                <td>{{ tipo.IDTipoArbol }}</td>
-                <td>{{ tipo.NombreCientifico }}</td>
-                <td>{{ tipo.NombreVulgar }}</td>
-                <td>
-                    <a href="{{ url_for('editar_tipo_arbol', id=tipo.IDTipoArbol) }}" class="btn">Editar</a>
-                    <a href="{{ url_for('eliminar_tipo_arbol', id=tipo.IDTipoArbol) }}" class="btn" onclick="return confirm('¿Estás seguro de eliminar este tipo de árbol?');">Eliminar</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    <main class="container">
+        <!-- Formulario para registrar tipos de árbol -->
+        <div class="contenedor-seccion">
+            <h2>Tipo de Árbol</h2>
+            <form method="POST" action="{{ url_for('tipo_arbol') }}" class="formulario-gestion" id="tipoArbolForm">
+                <div class="form-group">
+                    <label for="nombreCientifico">Nombre Científico:</label>
+                    <input type="text" id="nombreCientifico" name="nombreCientifico" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombreVulgar">Nombre Vulgar:</label>
+                    <input type="text" id="nombreVulgar" name="nombreVulgar" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de tipos de árbol registrados -->
+        <div class="contenedor-tabla">
+            <h2>Tipos de Árbol Registrados</h2>
+            <div class="tabla-contenedor">
+                <table class="tabla-gestion">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Científico</th>
+                            <th>Nombre Vulgar</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tipo in tipos_arbol %}
+                        <tr>
+                            <td>{{ tipo.IDTipoArbol }}</td>
+                            <td>{{ tipo.NombreCientifico }}</td>
+                            <td>{{ tipo.NombreVulgar }}</td>
+                            <td>
+                                <span class="badge {{ 'badge-success' if tipo.Estado == 1 else 'badge-danger' }}">
+                                    {{ 'Activo' if tipo.Estado == 1 else 'Inactivo' }}
+                                </span>
+                            </td>
+                            <td class="acciones-cell">
+                                <div class="acciones-botones">
+                                    <a href="{{ url_for('editar_tipo_arbol', id=tipo.IDTipoArbol) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                    <a href="{{ url_for('eliminar_tipo_arbol', id=tipo.IDTipoArbol) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este tipo de árbol?');">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('tipoArbolForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccessModal('Tipo de Árbol Registrado', 'El tipo de árbol ha sido registrado correctamente.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showErrorModal('Error al Registrar', data.message || 'Error al registrar el tipo de árbol.');
+                    }
+                })
+                .catch(error => {
+                    showErrorModal('Error al Registrar', 'Error al procesar el registro. Por favor, intenta nuevamente.');
+                });
+            });
+        });
+
+        function confirmarEliminacion(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este tipo de árbol?')) {
+                fetch(`/tipo_arbol/eliminar/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccessModal('Tipo de Árbol Eliminado', 'El tipo de árbol ha sido eliminado correctamente.');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showErrorModal('Error al Eliminar', data.message || 'Error al eliminar el tipo de árbol.');
+                    }
+                })
+                .catch(error => {
+                    showErrorModal('Error al Eliminar', 'Error al procesar la eliminación. Por favor, intenta nuevamente.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

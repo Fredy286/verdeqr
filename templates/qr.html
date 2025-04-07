@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar QR - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Formulario para generar QR -->
+        <div class="contenedor-seccion">
+            <h2>Generar Código QR</h2>
+            <form method="POST" action="{{ url_for('qr') }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="arbol">Seleccionar Árbol:</label>
+                    <select id="arbol" name="arbol" class="form-control" required>
+                        {% for arbol in arboles %}
+                        <option value="{{ arbol.IDArbol }}">{{ arbol.NombreCientifico }} ({{ arbol.NombreVulgar }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-qrcode"></i> Generar QR
+                </button>
+            </form>
+        </div>
+
+        <!-- Mostrar QR generado -->
+        {% if qr_data %}
+        <div class="contenedor-seccion">
+            <h2>QR Generado</h2>
+            <div class="qr-container">
+                <img src="data:image/png;base64,{{ qr_data }}" alt="Código QR" class="qr-image">
+                <div class="qr-info">
+                    <p><strong>Árbol:</strong> {{ arbol_seleccionado.NombreCientifico }} ({{ arbol_seleccionado.NombreVulgar }})</p>
+                    <p><strong>Ubicación:</strong> {{ arbol_seleccionado.UbicacionGeografica }}</p>
+                    <a href="data:image/png;base64,{{ qr_data }}" download="qr_arbol_{{ arbol_seleccionado.IDArbol }}.png" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Descargar QR
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>

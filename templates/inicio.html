@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+</head>
+<body>
+    <!-- Menú superior fijo -->
+    <header class="menu-superior">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="buscador">
+            <input type="text" placeholder="Buscar árboles silvestres...">
+        </div>
+        <div class="botones">
+            {% if 'usuario' in session %}
+                {% if session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                    <a href="{{ url_for('gestion') }}" class="btn">Ir a Gestión</a>
+                {% endif %}
+                <a href="{{ url_for('perfil') }}" class="btn" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" style="width: 32px; height: 32px; border-radius: 50%;">
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
+                        <div style="font-size: 0.8em;">{{ session['usuario']['CorreoElectronico'] }}</div>
+                    </div>
+                </a>
+            {% else %}
+                <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
+                <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Primera pantalla: Código QR -->
+    <div class="contenido-principal">
+        <h1 style="margin-top: 60px;">¡Identificar árboles silvestres!</h1>
+        <h3>Identifica árboles silvestres al instante. Explora consejos e información sobre la vida de los árboles que te rodean.</h3>
+        <p style="margin-top: 20px; color: #666; font-size: 1rem;">
+            Con VerdeQR, puedes escanear códigos QR para obtener información detallada sobre los árboles que encuentres en tu camino.
+        </p>
+
+        <!-- Cuadro con código QR -->
+        <div class="cuadro-qr">
+            <img src="{{ url_for('static', filename='css/js/img/qr.png') }}" alt="Código QR">
+            <p class="texto-verde">Identificar aquí</p>
+            <p>Abre la cámara de tu dispositivo y escanea el código QR.</p>
+            <p class="nota">Asegúrate de que la imagen del código QR sea lo más nítida posible.</p>
+        </div>
+    </div>
+
+   
+
+    <!-- Segunda pantalla: Información con imagen a la derecha -->
+    <div class="segunda-pantalla">
+        <div class="texto">
+            <h1>Identifica árboles al instante con QR</h1>
+            <h3>Escanea el código QR para identificar árboles al instante, obteniendo información rápida sobre su uso, características, nombre científico, etc.</h3>
+        </div>
+        <div class="imagen">
+            <img src="{{ url_for('static', filename='css/js/img/cel.jpg') }}" alt="Celular con QR">
+        </div>
+    </div>
+
+  
+
+    <!-- Tercera pantalla: Árboles Populares -->
+    <div class="tercera-pantalla">
+        <h1 style="text-align: center;">Árboles Populares</h1>
+        <h3 style="text-align: center;">Explora árboles populares y aprende a identificarlos</h3>
+
+        <!-- Contenedor de columnas -->
+        <div class="grid-container-arboles">
+            <!-- Columna 1 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/ceiba.png') }}" alt="Ceiba">
+                <h2><strong>Árbol de Ceiba (Ceiba Pentandra)</strong></h2>
+                <p>Uno de los árboles más grandes y emblemáticos de Colombia...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 2 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
+                <h2><strong>Guayacán (Tabebuia chrysantha)</strong></h2>
+                <p>Conocido por sus flores amarillas y su madera dura...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 3 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
+                <h2><strong>Roble (Quercus humboldtii)</strong></h2>
+                <p>Un árbol nativo de los Andes colombianos...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 4 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/palma.jpg') }}" alt="Palma de Cera">
+                <h2><strong>Palma de Cera (Ceroxylon quindiuense)</strong></h2>
+                <p>El árbol nacional de Colombia y la palma más alta del mundo...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 5 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/saman.jpg') }}" alt="Samán">
+                <h2><strong>Samán (Samanea saman)</strong></h2>
+                <p>Conocido por su amplia copa y sus frutos...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 6 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/caoba.jpg') }}" alt="Caoba">
+                <h2><strong>Caoba (Swietenia macrophylla)</strong></h2>
+                <p>Valorado por su madera de alta calidad...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 7 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
+                <h2><strong>Cedro (Cedrela odorata)</strong></h2>
+                <p>Un árbol maderable muy apreciado en Colombia...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+            <!-- Columna 8 -->
+            <div class="grid-item-arbol">
+                <img src="{{ url_for('static', filename='css/js/img/mango.jpg') }}" alt="Mango">
+                <h2><strong>Mango (Mangifera indica)</strong></h2>
+                <p>Un árbol frutal muy común en Colombia...</p>
+                <a href="#" class="btn">Leer más</a>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Cuarta pantalla: Explora Árboles por Tipo -->
+    <div class="cuarta-pantalla">
+        <h1>Explora Árboles por Tipo</h1>
+        <h3>Descubre los tipos de árboles que se ajustan a tus preferencias y necesidades, y aprende a identificarlos.</h3>
+
+        <!-- Contenedor de columnas -->
+        <div class="grid-container-tipos">
+            <!-- Columna 1: Guayacán -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Guayacán (Tabebuia chrysantha)</h2>
+                    <p>Árbol de floración amarilla brillante, típico de las zonas cálidas y secas de Colombia, especialmente en la región caribeña.</p>
+                    <p>🌳 150 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 2: Cedro -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Cedro (Cedrela montana)</h2>
+                    <p>Árbol de gran tamaño que crece en las montañas, apreciado por su madera dura y resistente, utilizada en la construcción.</p>
+                    <p>🌳 120 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 3: Arrayán -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/arrayan.jpg') }}" alt="Arrayan">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Arrayán (Myrciaria dubia)</h2>
+                    <p>Árbol de corteza naranja o rojiza, con frutos comestibles. Se encuentra en zonas tropicales y subtropicales.</p>
+                    <p>🌳 80 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 4: Teca -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/teca.jpg') }}" alt="Teca">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Teca (Tectona grandis)</h2>
+                    <p>Árbol de gran tamaño, originario del sudeste asiático, que se adapta bien en Colombia y es valorado por su madera de alta calidad.</p>
+                    <p>🌳 90 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 5: Chachafruto -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/chachafruto.jpg') }}" alt="Chachafruto">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Chachafruto (Inga edulis)</h2>
+                    <p>Árbol de zonas tropicales con frutos dulces y comestibles. Se encuentra en regiones cálidas y subandinas.</p>
+                    <p>🌳 70 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 6: Pino de montaña -->
+            <div class="grid-item-tipo">
+                <div class="imagen-tipo">
+                    <img src="{{ url_for('static', filename='css/js/img/pino.jpg') }}" alt="Pino de montaña">
+                </div>
+                <div class="texto-tipo">
+                    <h2>Pino de montaña (Podocarpus oleifolius)</h2>
+                    <p>Crece en zonas altas y frías de los Andes, su madera es utilizada en construcción y fabricación de papel.</p>
+                    <p>🌳 60 especies</p>
+                    <div class="flecha">
+                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <!-- Quinta pantalla: Explora Árboles por Centro -->
+    <div class="quinta-pantalla">
+        <h1>Explora Árboles por Centro</h1>
+        <h3>Una ayuda para descubrir los árboles de los centros.</h3>
+
+        <!-- Contenedor de imágenes -->
+        <div class="grid-container-centros">
+            <!-- Imagen 1: CIGEC -->
+            <div class="grid-item-centro">
+                <img src="{{ url_for('static', filename='css/js/img/cdi.jpg') }}" alt="Centro de Innovación de Gestión Empresarial y Cultural">
+                <div class="texto-centro">
+                    <h2>Centro de Innovación de Gestión Empresarial y Cultural</h2>
+                </div>
+            </div>
+
+            <!-- Imagen 2: CBC -->
+            <div class="grid-item-centro">
+                <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="Centro Biotecnológico del Caribe">
+                <div class="texto-centro">
+                    <h2>Centro Biotecnológico del Caribe</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+
+    <!-- Sección de Beneficios -->
+    <div class="beneficios-pantalla">
+        <h1>Beneficios de la Identificación de Árboles Silvestres con Códigos QR</h1>
+        <h3>Descubre cómo esta tecnología puede ayudar al medio ambiente y a la educación</h3>
+        
+        <div class="grid-container-beneficios">
+            <!-- Beneficio 1 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h2>Conciencia Ambiental</h2>
+                <p>Este proyecto fomenta la conciencia ambiental al permitir que las personas conozcan las especies de árboles que los rodean.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Conciencia Ambiental</h3>
+                    <p>Interactúa con el código QR y descubre datos fascinantes sobre cada árbol para aumentar tu conocimiento del entorno natural.</p>
+                </div>
+            </div>
+            
+            <!-- Beneficio 2 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2>Educación y Aprendizaje</h2>
+                <p>La aplicación web ofrece información detallada sobre cada especie, incluyendo su nombre científico, usos y características.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Educación y Aprendizaje</h3>
+                    <p>Explora los datos técnicos de los árboles de manera sencilla y accesible para enriquecer tu conocimiento de la flora local.</p>
+                </div>
+            </div>
+            
+            <!-- Beneficio 3 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <h2>Conservación de la Biodiversidad</h2>
+                <p>Al identificar y caracterizar los árboles, se promueve su conservación y se evita la degradación de los ecosistemas.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Conservación de la Biodiversidad</h3>
+                    <p>Descubre cómo cada árbol contribuye a la biodiversidad y los importantes servicios ecosistémicos que proporciona.</p>
+                </div>
+            </div>
+            
+            <!-- Beneficio 4 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h2>Tecnología al Servicio del Medio Ambiente</h2>
+                <p>El uso de códigos QR hace que la identificación de árboles sea rápida, eficiente y accesible para todos.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Tecnología al Servicio del Medio Ambiente</h3>
+                    <p>Escanea y obtén información al instante sobre cualquier árbol, aprovechando la tecnología para conocer mejor tu entorno.</p>
+                </div>
+            </div>
+            
+            <!-- Beneficio 5 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-universal-access"></i>
+                </div>
+                <h2>Inclusión y Accesibilidad</h2>
+                <p>La aplicación incluye módulos inclusivos para que personas con distintas capacidades puedan disfrutar del aprendizaje.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Inclusión y Accesibilidad</h3>
+                    <p>Diseñada para ser accesible y fácil de usar por personas de todas las edades y capacidades, facilitando el aprendizaje universal.</p>
+                </div>
+            </div>
+            
+            <!-- Beneficio 6 -->
+            <div class="grid-item-beneficio">
+                <div class="beneficio-icono">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h2>Contribución a la Comunidad</h2>
+                <p>Al capacitar a los usuarios en el uso de la plataforma, se fomenta la participación comunitaria en la protección del medio ambiente.</p>
+                <div class="tooltip-beneficio">
+                    <h3>Contribución a la Comunidad</h3>
+                    <p>Aprende a usar la aplicación y contribuye al cuidado de los árboles de tu comunidad a través de la educación y la concientización.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer con redes sociales y derechos -->
+    <footer class="footer">
+        <div class="footer-contenido">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+            </div>
+            
+            <div class="footer-redes">
+                <a href="#" class="footer-red">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="footer-red">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="footer-red">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="footer-red">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="footer-red">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+            
+            <div class="footer-enlaces">
+                <a href="#">Política de Privacidad</a>
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Contacto</a>
+                <a href="#">Acerca de Nosotros</a>
+            </div>
+            
+            <div class="footer-derechos">
+                <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+                <p>Desarrollado con <i class="fas fa-heart" style="color: var(--color-acento);"></i> por el equipo de VerdeQR</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón de gestión -->
+    {% if session['loggedin'] %}
+    <a href="{{ url_for('gestion') }}" class="btn-gestion">
+        <i class="fas fa-cog"></i> Ir a Gestión
+    </a>
+    {% endif %}
+</body>
+</html>

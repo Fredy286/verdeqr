@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugerencias - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Formulario para registrar sugerencias -->
+        <div class="contenedor-seccion">
+            <h2>Registrar Sugerencia</h2>
+            <form method="POST" action="{{ url_for('registrar_sugerencia') }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="sugerencia">Sugerencia:</label>
+                    <textarea id="sugerencia" name="sugerencia" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Registrar Sugerencia
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de sugerencias -->
+        <div class="contenedor-seccion">
+            <h2>Gestión de Sugerencias</h2>
+            
+            <div class="table-container">
+                <table class="table-gestion">
+                    <thead>
+                        <tr>
+                            <th class="text-center border-right">ID</th>
+                            <th class="text-center border-right">Nombre</th>
+                            <th class="text-center border-right">Email</th>
+                            <th class="text-center border-right">Sugerencia</th>
+                            <th class="text-center border-right">Fecha</th>
+                            <th class="text-center border-right">Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sugerencia in sugerencias %}
+                        <tr class="table-row">
+                            <td class="text-center border-right">{{ sugerencia.IDSugerencia }}</td>
+                            <td class="text-center border-right">{{ sugerencia.Nombre }}</td>
+                            <td class="text-center border-right">{{ sugerencia.Email }}</td>
+                            <td class="text-center border-right">{{ sugerencia.Sugerencia }}</td>
+                            <td class="text-center border-right">{{ sugerencia.Fecha }}</td>
+                            <td class="text-center border-right">
+                                <span class="badge {% if sugerencia.Estado == 1 %}badge-success{% else %}badge-secondary{% endif %}">
+                                    {{ sugerencia.EstadoDescripcion }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('eliminar_sugerencia', id=sugerencia.IDSugerencia) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta sugerencia?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <select class="form-select form-select-sm estado-sugerencia" 
+                                            data-id="{{ sugerencia.IDSugerencia }}"
+                                            aria-label="Cambiar estado de la sugerencia">
+                                        <option value="1" {% if sugerencia.Estado == 1 %}selected{% endif %}>Activo</option>
+                                        <option value="2" {% if sugerencia.Estado == 2 %}selected{% endif %}>Inactivo</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selects = document.querySelectorAll('.estado-sugerencia');
+        
+        selects.forEach(select => {
+            select.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const nuevoEstado = this.value;
+                
+                fetch(`/sugerencias/actualizar/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `estado=${nuevoEstado}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar el badge de estado
+                        const badge = this.closest('tr').querySelector('.badge');
+                        badge.className = `badge ${nuevoEstado == 1 ? 'badge-success' : 'badge-secondary'}`;
+                        badge.textContent = nuevoEstado == 1 ? 'Activo' : 'Inactivo';
+                        
+                        // Mostrar notificación de éxito
+                        showNotification(data.message, 'success');
+                    } else {
+                        showNotification(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Error al actualizar el estado', 'error');
+                });
+            });
+        });
+    });
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+    </script>
+</body>
+</html>
