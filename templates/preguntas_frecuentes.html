@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer_inicio.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .contenido-pagina {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .contenido-pagina h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.2rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .faq-container {
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: #e9ecef;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-answer p {
+            margin: 0;
+            padding: 15px 0;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .faq-item.active .faq-question {
+            background-color: #e9ecef;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 15px 20px;
+        }
+
+        .faq-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .faq-category {
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .faq-category:hover, .faq-category.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-container input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .footer-principal {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <!-- Menú superior simple -->
+    <header class="menu-simple" style="background-color: #2c3e50; color: white; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); position: fixed; width: 100%; top: 0; z-index: 1000; height: 60px;">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" style="height: 40px; width: 40px; border-radius: 50%; object-fit: cover;">
+        </div>
+        <div class="botones" style="display: flex; align-items: center; gap: 15px; margin-right: auto; margin-left: 20px;">
+            <a href="{{ url_for('soporte_tecnico') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;"><i class="fas fa-headset"></i> Soporte técnico</a>
+            <a href="{{ url_for('reportar_problema') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;"><i class="fas fa-bug"></i> Reportar problema</a>
+            <a href="{{ url_for('inicio') }}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: all 0.2s ease;"><i class="fas fa-home"></i> Volver a inicio</a>
+        </div>
+        <div class="usuario-botones" style="display: flex; align-items: center; gap: 10px;">
+            {% if 'usuario' in session %}
+                <a href="{{ url_for('perfil') }}" class="btn" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" style="width: 32px; height: 32px; border-radius: 50%;">
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
+                        <div style="font-size: 0.8em;">{{ session['usuario']['Correo'] }}</div>
+                    </div>
+                </a>
+            {% else %}
+                <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
+                <a href="{{ url_for('registro_usuario') }}" class="btn btn-registro">Registrarse</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="contenido-pagina">
+        <h1>Preguntas Frecuentes</h1>
+
+        <div class="search-container">
+            <input type="text" id="faqSearch" placeholder="Buscar preguntas frecuentes...">
+        </div>
+
+        <div class="faq-categories">
+            <div class="faq-category active" data-category="all">Todas</div>
+            <div class="faq-category" data-category="general">General</div>
+            <div class="faq-category" data-category="cuenta">Cuenta</div>
+            <div class="faq-category" data-category="arboles">Árboles</div>
+            <div class="faq-category" data-category="qr">Códigos QR</div>
+            <div class="faq-category" data-category="tecnico">Soporte Técnico</div>
+        </div>
+
+        <div class="faq-container">
+            <!-- Preguntas generales -->
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    ¿Qué es VerdeQR?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>VerdeQR es una plataforma dedicada a la conservación y conocimiento de la flora colombiana. Permite a los usuarios explorar información sobre árboles nativos, escanear códigos QR para obtener detalles específicos, y contribuir al conocimiento colectivo mediante sugerencias y reportes.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    ¿Cómo puedo empezar a usar VerdeQR?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Para comenzar a usar VerdeQR, simplemente regístrate creando una cuenta con tu correo electrónico. Una vez registrado, podrás acceder a todas las funcionalidades de la plataforma, como explorar árboles, escanear códigos QR, y hacer sugerencias.</p>
+                </div>
+            </div>
+
+            <!-- Preguntas sobre cuenta -->
+            <div class="faq-item" data-category="cuenta">
+                <div class="faq-question">
+                    ¿Cómo puedo cambiar mi contraseña?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Para cambiar tu contraseña, inicia sesión en tu cuenta, ve a tu perfil haciendo clic en tu nombre de usuario en la esquina superior derecha, y selecciona la opción "Editar perfil". Allí encontrarás la opción para cambiar tu contraseña.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="cuenta">
+                <div class="faq-question">
+                    ¿Puedo eliminar mi cuenta?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Sí, puedes eliminar tu cuenta en cualquier momento. Para hacerlo, ve a tu perfil, selecciona "Editar perfil" y busca la opción "Eliminar cuenta" al final de la página. Ten en cuenta que esta acción es irreversible y perderás todos tus datos asociados.</p>
+                </div>
+            </div>
+
+            <!-- Preguntas sobre árboles -->
+            <div class="faq-item" data-category="arboles">
+                <div class="faq-question">
+                    ¿Cómo puedo buscar un árbol específico?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Puedes buscar árboles específicos utilizando la barra de búsqueda ubicada en la parte superior de la página. Ingresa el nombre del árbol o alguna característica y presiona el botón de búsqueda. También puedes explorar los árboles por categorías o centros en la página principal.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="arboles">
+                <div class="faq-question">
+                    ¿Puedo sugerir un nuevo árbol para la base de datos?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Sí, puedes sugerir nuevos árboles para nuestra base de datos. Ve a la sección de "Sugerencias" y completa el formulario con toda la información relevante sobre el árbol que deseas sugerir. Nuestro equipo revisará la información y, si es aprobada, se añadirá a la base de datos.</p>
+                </div>
+            </div>
+
+            <!-- Preguntas sobre códigos QR -->
+            <div class="faq-item" data-category="qr">
+                <div class="faq-question">
+                    ¿Cómo funcionan los códigos QR en VerdeQR?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Los códigos QR en VerdeQR están vinculados a árboles específicos en nuestra base de datos. Al escanear un código QR con la función de escaneo de la aplicación, serás dirigido a la página de información detallada de ese árbol, donde podrás ver sus características, imágenes, ubicación y más.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="qr">
+                <div class="faq-question">
+                    ¿Puedo generar mis propios códigos QR para árboles?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Los usuarios administradores pueden generar códigos QR para árboles registrados en la plataforma. Si eres un usuario regular y deseas un código QR para un árbol específico, puedes contactar con el soporte técnico o sugerir la creación del código QR a través de la sección de sugerencias.</p>
+                </div>
+            </div>
+
+            <!-- Preguntas técnicas -->
+            <div class="faq-item" data-category="tecnico">
+                <div class="faq-question">
+                    ¿Qué hago si la aplicación no funciona correctamente?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Si experimentas problemas con la aplicación, intenta primero actualizar la página o cerrar sesión y volver a iniciarla. Si el problema persiste, puedes reportarlo a través de la sección "Reportar problema" o contactar directamente con nuestro soporte técnico.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="tecnico">
+                <div class="faq-question">
+                    ¿VerdeQR funciona en todos los dispositivos?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>VerdeQR está diseñado para funcionar en la mayoría de los dispositivos modernos, incluyendo computadoras, tablets y smartphones. La plataforma es responsiva y se adapta a diferentes tamaños de pantalla. Para una mejor experiencia, recomendamos usar navegadores actualizados como Chrome, Firefox, Safari o Edge.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer class="footer-principal">
+        <div class="contenido-footer">
+            <div class="logo-footer">
+                <div class="logo-circular">
+                    <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+                </div>
+                <p>Plataforma de conservación y conocimiento de la flora colombiana</p>
+            </div>
+            <div class="enlaces-footer">
+                <div class="columna">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                        <li><a href="{{ url_for('principal') }}#arboles">Árboles</a></li>
+                        <li><a href="{{ url_for('principal') }}#centros">Centros</a></li>
+                        <li><a href="{{ url_for('principal') }}#sugerencias">Sugerencias</a></li>
+                    </ul>
+                </div>
+                <div class="columna">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><a href="{{ url_for('soporte_tecnico') }}">Soporte técnico</a></li>
+                        <li><a href="{{ url_for('preguntas_frecuentes') }}">Preguntas frecuentes</a></li>
+                        <li><a href="{{ url_for('reportar_problema') }}">Reportar problema</a></li>
+                        <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="redes-sociales">
+                <h4>Síguenos</h4>
+                <div class="iconos-redes">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="derechos">
+            <p>&copy; 2024 VerdeQR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manejo de las preguntas frecuentes
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+
+                question.addEventListener('click', () => {
+                    // Toggle active class
+                    item.classList.toggle('active');
+                });
+            });
+
+            // Filtrado por categorías
+            const categories = document.querySelectorAll('.faq-category');
+
+            categories.forEach(category => {
+                category.addEventListener('click', () => {
+                    // Remove active class from all categories
+                    categories.forEach(cat => cat.classList.remove('active'));
+
+                    // Add active class to clicked category
+                    category.classList.add('active');
+
+                    const selectedCategory = category.dataset.category;
+
+                    // Show/hide items based on category
+                    faqItems.forEach(item => {
+                        if (selectedCategory === 'all' || item.dataset.category === selectedCategory) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Búsqueda de preguntas
+            const searchInput = document.getElementById('faqSearch');
+
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

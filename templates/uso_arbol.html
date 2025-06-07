@@ -5,31 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usos de Árbol - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
         <nav class="menu-principal">
             <ul id="menu">
                 <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
                 <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
                 <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
-                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
                 <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
                 <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
-                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
                 <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
                 <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
                 <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             </ul>
         </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
                 <div class="user-info">
                     <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
                     <span class="user-email">{{ session['usuario']['Correo'] }}</span>
@@ -42,10 +52,370 @@
         <!-- Formulario para registrar usos de árbol -->
         <div class="contenedor-seccion">
             <h2>Uso de Árbol</h2>
-            <form method="POST" action="{{ url_for('uso_arbol') }}" class="formulario-gestion">
+            <form method="POST" action="{{ url_for('uso_arbol') }}" class="formulario-gestion" id="usoArbolForm">
                 <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <input type="text" id="descripcion" name="descripcion" class="form-control" required>
+                    <label for="especie">Especie:</label>
+                    <select id="especie" name="especie" class="form-control" required>
+                        {% for esp in especies %}
+                        <option value="{{ esp.IDEspecie }}">{{ esp.NombreCientifico }} ({{ esp.NombreVulgar }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría de Uso:</label>
+                    <select id="categoria" name="categoria" class="form-control" required onchange="mostrarCamposEspecificos()">
+                        <option value="">Seleccione una categoría</option>
+                        <option value="Maderable">Maderable</option>
+                        <option value="Comestible">Comestible</option>
+                        <option value="Medicinal">Medicinal</option>
+                        <option value="Ornamental">Ornamental</option>
+                        <option value="Artesanal">Artesanal</option>
+                        <option value="Agroforestal">Agroforestal</option>
+                        <option value="RestauracionEcologica">Restauración Ecológica</option>
+                        <option value="CulturalCeremonial">Cultural/Ceremonial</option>
+                        <option value="Melifero">Melífero</option>
+                        <option value="ProteccionAmbiental">Protección Ambiental</option>
+                        <option value="Tintoreo">Tintóreo</option>
+                        <option value="Oleaginoso">Oleaginoso</option>
+                        <option value="Biocombustible">Biocombustible</option>
+                    </select>
+                </div>
+
+                <!-- Campos específicos para Maderable -->
+                <div id="campos-maderable" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Maderable</h4>
+                    <div class="form-group">
+                        <label for="dureza">Dureza:</label>
+                        <select id="dureza" name="dureza" class="form-control">
+                            <option value="Blanda">Blanda</option>
+                            <option value="Media">Media</option>
+                            <option value="Dura">Dura</option>
+                            <option value="Muy Dura">Muy Dura</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resistencia">Resistencia:</label>
+                        <select id="resistencia" name="resistencia" class="form-control">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Muy Alta">Muy Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uso_final">Uso Final:</label>
+                        <input type="text" id="uso_final" name="uso_final" class="form-control" placeholder="Ej: Construcción, Muebles, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Comestible -->
+                <div id="campos-comestible" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Comestible</h4>
+                    <div class="form-group">
+                        <label for="parte_comestible">Parte Comestible:</label>
+                        <select id="parte_comestible" name="parte_comestible" class="form-control">
+                            <option value="Fruto">Fruto</option>
+                            <option value="Semilla">Semilla</option>
+                            <option value="Hoja">Hoja</option>
+                            <option value="Flor">Flor</option>
+                            <option value="Raíz">Raíz</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="forma_consumo">Forma de Consumo:</label>
+                        <textarea id="forma_consumo" name="forma_consumo" class="form-control" rows="2" placeholder="Ej: Crudo, Cocido, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_nutricional">Valor Nutricional:</label>
+                        <textarea id="valor_nutricional" name="valor_nutricional" class="form-control" rows="2" placeholder="Ej: Rico en vitamina C, proteínas, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Medicinal -->
+                <div id="campos-medicinal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Medicinal</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada">Parte Utilizada:</label>
+                        <select id="parte_utilizada" name="parte_utilizada" class="form-control">
+                            <option value="Hoja">Hoja</option>
+                            <option value="Raíz">Raíz</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Fruto">Fruto</option>
+                            <option value="Semilla">Semilla</option>
+                            <option value="Flor">Flor</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="preparacion">Preparación:</label>
+                        <textarea id="preparacion" name="preparacion" class="form-control" rows="2" placeholder="Ej: Infusión, Cataplasma, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedades_tratadas">Enfermedades Tratadas:</label>
+                        <textarea id="enfermedades_tratadas" name="enfermedades_tratadas" class="form-control" rows="2" placeholder="Ej: Dolor de cabeza, Fiebre, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Ornamental -->
+                <div id="campos-ornamental" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Ornamental</h4>
+                    <div class="form-group">
+                        <label for="caracteristicas_esteticas">Características Estéticas:</label>
+                        <textarea id="caracteristicas_esteticas" name="caracteristicas_esteticas" class="form-control" rows="2" placeholder="Ej: Flores vistosas, follaje colorido, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion_recomendada">Ubicación Recomendada:</label>
+                        <input type="text" id="ubicacion_recomendada" name="ubicacion_recomendada" class="form-control" placeholder="Ej: Jardines, parques, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_jardineria">Tipo de Jardinería:</label>
+                        <input type="text" id="tipo_jardineria" name="tipo_jardineria" class="form-control" placeholder="Ej: Paisajismo, jardines verticales, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="coloracion_estacional">Coloración Estacional:</label>
+                        <textarea id="coloracion_estacional" name="coloracion_estacional" class="form-control" rows="2" placeholder="Ej: Cambios de color en otoño, floración en primavera, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Artesanal -->
+                <div id="campos-artesanal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Artesanal</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada_artesanal">Parte Utilizada:</label>
+                        <select id="parte_utilizada_artesanal" name="parte_utilizada_artesanal" class="form-control">
+                            <option value="Madera">Madera</option>
+                            <option value="Fibras">Fibras</option>
+                            <option value="Semillas">Semillas</option>
+                            <option value="Hojas">Hojas</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_artesania">Tipo de Artesanía:</label>
+                        <input type="text" id="tipo_artesania" name="tipo_artesania" class="form-control" placeholder="Ej: Cestería, tallado, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tecnicas_elaboracion">Técnicas de Elaboración:</label>
+                        <textarea id="tecnicas_elaboracion" name="tecnicas_elaboracion" class="form-control" rows="2" placeholder="Ej: Tejido, tallado, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="comunidades_artesanales">Comunidades Artesanales:</label>
+                        <input type="text" id="comunidades_artesanales" name="comunidades_artesanales" class="form-control" placeholder="Ej: Comunidades indígenas, artesanos locales, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Agroforestal -->
+                <div id="campos-agroforestal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Agroforestal</h4>
+                    <div class="form-group">
+                        <label for="sistema_agroforestal">Sistema Agroforestal:</label>
+                        <input type="text" id="sistema_agroforestal" name="sistema_agroforestal" class="form-control" placeholder="Ej: Silvopastoril, agrosilvopastoril, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="beneficios_asociados">Beneficios Asociados:</label>
+                        <textarea id="beneficios_asociados" name="beneficios_asociados" class="form-control" rows="2" placeholder="Ej: Fijación de nitrógeno, sombra, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cultivos_compatibles">Cultivos Compatibles:</label>
+                        <input type="text" id="cultivos_compatibles" name="cultivos_compatibles" class="form-control" placeholder="Ej: Café, cacao, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="funcion_principal">Función Principal:</label>
+                        <input type="text" id="funcion_principal" name="funcion_principal" class="form-control" placeholder="Ej: Barrera rompevientos, sombra, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Restauración Ecológica -->
+                <div id="campos-restauracionecologica" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso para Restauración Ecológica</h4>
+                    <div class="form-group">
+                        <label for="ecosistema_objetivo">Ecosistema Objetivo:</label>
+                        <input type="text" id="ecosistema_objetivo" name="ecosistema_objetivo" class="form-control" placeholder="Ej: Bosque andino, páramo, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="funcion_ecologica">Función Ecológica:</label>
+                        <textarea id="funcion_ecologica" name="funcion_ecologica" class="form-control" rows="2" placeholder="Ej: Recuperación de suelos, hábitat para fauna, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="especies_asociadas">Especies Asociadas:</label>
+                        <input type="text" id="especies_asociadas" name="especies_asociadas" class="form-control" placeholder="Ej: Otras plantas, animales, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tasa_crecimiento">Tasa de Crecimiento:</label>
+                        <select id="tasa_crecimiento" name="tasa_crecimiento" class="form-control">
+                            <option value="Lenta">Lenta</option>
+                            <option value="Media">Media</option>
+                            <option value="Rápida">Rápida</option>
+                            <option value="Muy Rápida">Muy Rápida</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Cultural/Ceremonial -->
+                <div id="campos-culturalceremonial" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Cultural/Ceremonial</h4>
+                    <div class="form-group">
+                        <label for="grupo_etnico">Grupo Étnico:</label>
+                        <input type="text" id="grupo_etnico" name="grupo_etnico" class="form-control" placeholder="Ej: Muisca, Wayuu, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_ceremonia">Tipo de Ceremonia:</label>
+                        <input type="text" id="tipo_ceremonia" name="tipo_ceremonia" class="form-control" placeholder="Ej: Ritual, celebración, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="significado_cultural">Significado Cultural:</label>
+                        <textarea id="significado_cultural" name="significado_cultural" class="form-control" rows="2" placeholder="Ej: Simbolismo, importancia cultural, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="parte_utilizada_cultural">Parte Utilizada:</label>
+                        <select id="parte_utilizada_cultural" name="parte_utilizada_cultural" class="form-control">
+                            <option value="Árbol completo">Árbol completo</option>
+                            <option value="Hojas">Hojas</option>
+                            <option value="Flores">Flores</option>
+                            <option value="Frutos">Frutos</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Raíz">Raíz</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Melífero -->
+                <div id="campos-melifero" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Melífero</h4>
+                    <div class="form-group">
+                        <label for="tipo_miel">Tipo de Miel:</label>
+                        <input type="text" id="tipo_miel" name="tipo_miel" class="form-control" placeholder="Ej: Monofloral, multifloral, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="epoca_floracion">Época de Floración:</label>
+                        <input type="text" id="epoca_floracion" name="epoca_floracion" class="form-control" placeholder="Ej: Primavera, verano, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="calidad_polen">Calidad del Polen:</label>
+                        <select id="calidad_polen" name="calidad_polen" class="form-control">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Muy Alta">Muy Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="atraccion_polinizadores">Atracción de Polinizadores:</label>
+                        <textarea id="atraccion_polinizadores" name="atraccion_polinizadores" class="form-control" rows="2" placeholder="Ej: Abejas, mariposas, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Protección Ambiental -->
+                <div id="campos-proteccionambiental" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso para Protección Ambiental</h4>
+                    <div class="form-group">
+                        <label for="tipo_proteccion">Tipo de Protección:</label>
+                        <input type="text" id="tipo_proteccion" name="tipo_proteccion" class="form-control" placeholder="Ej: Control de erosión, protección de cuencas, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="beneficios_ambientales">Beneficios Ambientales:</label>
+                        <textarea id="beneficios_ambientales" name="beneficios_ambientales" class="form-control" rows="2" placeholder="Ej: Mejora de la calidad del aire, retención de agua, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="zonas_aplicacion">Zonas de Aplicación:</label>
+                        <input type="text" id="zonas_aplicacion" name="zonas_aplicacion" class="form-control" placeholder="Ej: Laderas, riberas, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="capacidad_captura_carbon">Capacidad de Captura de Carbono:</label>
+                        <input type="text" id="capacidad_captura_carbon" name="capacidad_captura_carbon" class="form-control" placeholder="Ej: Alta, media, baja, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Tintóreo -->
+                <div id="campos-tintoreo" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Tintóreo</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada_tintoreo">Parte Utilizada:</label>
+                        <select id="parte_utilizada_tintoreo" name="parte_utilizada_tintoreo" class="form-control">
+                            <option value="Hojas">Hojas</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Frutos">Frutos</option>
+                            <option value="Raíz">Raíz</option>
+                            <option value="Flores">Flores</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="color_obtenido">Color Obtenido:</label>
+                        <input type="text" id="color_obtenido" name="color_obtenido" class="form-control" placeholder="Ej: Rojo, amarillo, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="metodo_extraccion">Método de Extracción:</label>
+                        <textarea id="metodo_extraccion" name="metodo_extraccion" class="form-control" rows="2" placeholder="Ej: Cocción, maceración, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="usos_tintes">Usos de los Tintes:</label>
+                        <input type="text" id="usos_tintes" name="usos_tintes" class="form-control" placeholder="Ej: Textiles, artesanías, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Oleaginoso -->
+                <div id="campos-oleaginoso" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Oleaginoso</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada_oleaginoso">Parte Utilizada:</label>
+                        <select id="parte_utilizada_oleaginoso" name="parte_utilizada_oleaginoso" class="form-control">
+                            <option value="Semillas">Semillas</option>
+                            <option value="Frutos">Frutos</option>
+                            <option value="Nueces">Nueces</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_aceite">Tipo de Aceite:</label>
+                        <input type="text" id="tipo_aceite" name="tipo_aceite" class="form-control" placeholder="Ej: Comestible, cosmético, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="metodo_extraccion_aceite">Método de Extracción:</label>
+                        <textarea id="metodo_extraccion_aceite" name="metodo_extraccion_aceite" class="form-control" rows="2" placeholder="Ej: Prensado en frío, extracción con solventes, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="propiedades_aceite">Propiedades del Aceite:</label>
+                        <textarea id="propiedades_aceite" name="propiedades_aceite" class="form-control" rows="2" placeholder="Ej: Hidratante, nutritivo, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="aplicaciones_aceite">Aplicaciones del Aceite:</label>
+                        <input type="text" id="aplicaciones_aceite" name="aplicaciones_aceite" class="form-control" placeholder="Ej: Alimentación, cosmética, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Biocombustible -->
+                <div id="campos-biocombustible" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso para Biocombustible</h4>
+                    <div class="form-group">
+                        <label for="tipo_biocombustible">Tipo de Biocombustible:</label>
+                        <input type="text" id="tipo_biocombustible" name="tipo_biocombustible" class="form-control" placeholder="Ej: Biodiésel, bioetanol, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="poder_calorifico">Poder Calorífico:</label>
+                        <input type="text" id="poder_calorifico" name="poder_calorifico" class="form-control" placeholder="Ej: Alto, medio, bajo, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tasa_crecimiento_bio">Tasa de Crecimiento:</label>
+                        <select id="tasa_crecimiento_bio" name="tasa_crecimiento_bio" class="form-control">
+                            <option value="Lenta">Lenta</option>
+                            <option value="Media">Media</option>
+                            <option value="Rápida">Rápida</option>
+                            <option value="Muy Rápida">Muy Rápida</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rendimiento_por_hectarea">Rendimiento por Hectárea:</label>
+                        <input type="text" id="rendimiento_por_hectarea" name="rendimiento_por_hectarea" class="form-control" placeholder="Ej: Toneladas/hectárea, litros/hectárea, etc.">
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
@@ -62,7 +432,10 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Descripción</th>
+                            <th>Especie</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -70,12 +443,28 @@
                         {% for uso in usos %}
                         <tr>
                             <td>{{ uso.IDUso }}</td>
-                            <td>{{ uso.Descripcion }}</td>
+                            <td>{{ uso.EspecieNombre }}</td>
+                            <td>{{ uso.Nombre }}</td>
+                            <td>
+                                {% if uso.TipoUsoDetectado %}
+                                    {{ uso.TipoUsoDetectado }}
+                                {% else %}
+                                    {{ uso.Categoria }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if uso.Estado == 1 %}
+                                <span class="badge badge-success">Activo</span>
+                                {% else %}
+                                <span class="badge badge-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">
                                     <a href="{{ url_for('editar_uso_arbol', id=uso.IDUso) }}" class="btn btn-primary btn-sm">
                                         <i class="fas fa-edit"></i> Editar
                                     </a>
+
                                     <a href="{{ url_for('eliminar_uso_arbol', id=uso.IDUso) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este uso de árbol?');">
                                         <i class="fas fa-trash"></i> Eliminar
                                     </a>
@@ -88,5 +477,30 @@
             </div>
         </div>
     </main>
+
+    <script>
+        function mostrarCamposEspecificos() {
+            // Ocultar todos los campos específicos
+            document.querySelectorAll('.campos-especificos').forEach(function(el) {
+                el.style.display = 'none';
+            });
+
+            // Obtener la categoría seleccionada
+            var categoria = document.getElementById('categoria').value.toLowerCase();
+
+            // Mostrar los campos específicos para la categoría seleccionada
+            if (categoria) {
+                var camposDiv = document.getElementById('campos-' + categoria);
+                if (camposDiv) {
+                    camposDiv.style.display = 'block';
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página para manejar valores preseleccionados
+        document.addEventListener('DOMContentLoaded', function() {
+            mostrarCamposEspecificos();
+        });
+    </script>
 </body>
 </html>

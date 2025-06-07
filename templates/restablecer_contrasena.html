@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='css/js/img/fsesion.jpg') }}");
+        }
+
+        .contenedor-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+        }
+
+        .formulario-login {
+            background-color: rgba(255, 255, 255, 0.65);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 3;
+        }
+
+        .formulario-login h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: clamp(1.5em, 4vw, 1.8em);
+        }
+
+        .alert {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .formulario-login .form-group {
+            margin-bottom: 15px;
+        }
+
+        .formulario-login .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .formulario-login .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: border-color 0.3s ease;
+        }
+
+        .formulario-login .form-group input:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+
+        .formulario-login .form-group input[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .formulario-login .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+
+        .formulario-login .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            display: block;
+            margin: 20px auto 0;
+            width: auto;
+            position: relative;
+            z-index: 4;
+            transition: background-color 0.3s ease;
+        }
+
+        .formulario-login .btn:hover {
+            background-color: #218838;
+        }
+
+        .formulario-login p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .formulario-login a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .formulario-login a:hover {
+            text-decoration: underline;
+            color: #218838;
+        }
+
+        .formulario-login .btn-inicio {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #333;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            display: inline-block;
+            margin: 0 0 20px 0;
+            width: auto;
+            position: relative;
+            z-index: 4;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .formulario-login .btn-inicio:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .contenedor-login {
+                padding: 15px;
+            }
+
+            .formulario-login {
+                padding: 20px;
+            }
+
+            .formulario-login .form-group input {
+                padding: 10px;
+            }
+
+            .formulario-login .btn {
+                padding: 10px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contenedor-login {
+                padding: 10px;
+            }
+
+            .formulario-login {
+                padding: 15px;
+            }
+
+            .formulario-login .form-group input {
+                padding: 8px;
+            }
+
+            .formulario-login .btn {
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+    {% include 'flash_messages.html' %}
+    <div class="contenedor-auth">
+        <div class="formulario-auth">
+            <h1>Restablecer Contraseña</h1>
+            <a href="{{ url_for('inicio') }}" class="btn-inicio">Inicio</a>
+            <form method="POST" action="{{ url_for('restablecer_contrasena') }}" id="restablecerForm">
+                <div class="form-group">
+                    <label for="codigo">Código de verificación:</label>
+                    <input type="text" id="codigo" name="codigo" required>
+                    <small>Ingresa el código de 6 dígitos que recibiste por correo electrónico.</small>
+                </div>
+                <div class="form-group">
+                    <label for="contrasena">Nueva contraseña:</label>
+                    <input type="password" id="contrasena" name="contrasena" required>
+                    <small>La contraseña debe tener al menos 8 caracteres y una letra mayúscula.</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmar_contrasena">Confirmar contraseña:</label>
+                    <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                </div>
+                <button type="submit" class="btn">Restablecer Contraseña</button>
+            </form>
+            <button id="testButton" class="btn" style="margin-top: 10px; background-color: #007bff;" onclick="testSubmit()">Probar Envío</button>
+            <p><a href="{{ url_for('iniciar_sesion') }}">Volver a Iniciar Sesión</a></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        function testSubmit() {
+            const codigo = document.getElementById('codigo').value;
+            const contrasena = document.getElementById('contrasena').value;
+            const confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+
+            if (contrasena !== confirmarContrasena) {
+                showErrorModal('Error', 'Las contraseñas no coinciden');
+                return;
+            }
+
+            // Mostrar los valores que se van a enviar
+            console.log('Enviando datos:', {
+                codigo: codigo,
+                contrasena: contrasena,
+                confirmar_contrasena: confirmarContrasena
+            });
+
+            // Enviar solicitud directamente con fetch
+            fetch('/restablecer_contrasena', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    codigo: codigo,
+                    contrasena: contrasena,
+                    confirmar_contrasena: confirmarContrasena
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showModalNotification(
+                        'Contraseña Restablecida',
+                        'Tu contraseña ha sido restablecida exitosamente.',
+                        'success',
+                        'fas fa-check-circle'
+                    );
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 2000);
+                } else {
+                    showErrorModal('Error', data.message);
+                }
+            })
+            .catch(error => {
+                showErrorModal('Error', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+                console.error('Error:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const restablecerForm = document.getElementById('restablecerForm');
+
+            restablecerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const contrasena = document.getElementById('contrasena').value;
+                const confirmarContrasena = document.getElementById('confirmar_contrasena').value;
+
+                if (contrasena !== confirmarContrasena) {
+                    showErrorModal('Error', 'Las contraseñas no coinciden');
+                    return;
+                }
+
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showModalNotification(
+                            'Contraseña Restablecida',
+                            'Tu contraseña ha sido restablecida exitosamente.',
+                            'success',
+                            'fas fa-check-circle'
+                        );
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, 2000);
+                    } else {
+                        showErrorModal('Error', data.message);
+                    }
+                })
+                .catch(error => {
+                    showErrorModal('Error', 'Error al procesar la solicitud. Por favor, intenta nuevamente.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

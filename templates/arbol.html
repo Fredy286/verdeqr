@@ -5,31 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Árbol - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
         <nav class="menu-principal">
             <ul id="menu">
                 <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
                 <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
                 <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
-                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
                 <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
                 <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
-                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
                 <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
                 <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
                 <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             </ul>
         </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
                 <div class="user-info">
                     <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
                     <span class="user-email">{{ session['usuario']['Correo'] }}</span>
@@ -42,60 +53,31 @@
         <!-- Formulario para registrar árboles -->
         <div class="contenedor-seccion">
             <h2>Árbol</h2>
-            <form method="POST" action="{{ url_for('arbol') }}" class="formulario-gestion">
+            <form method="POST" action="{{ url_for('arbol') }}" class="formulario-gestion" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="nombre_cientifico">Nombre Científico:</label>
-                    <input type="text" id="nombre_cientifico" name="nombre_cientifico" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nombre_vulgar">Nombre Vulgar:</label>
-                    <input type="text" id="nombre_vulgar" name="nombre_vulgar" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="ubicacion_geografica">Ubicación Geográfica:</label>
-                    <input type="text" id="ubicacion_geografica" name="ubicacion_geografica" class="form-control">
+                    <label for="especie">Especie:</label>
+                    <select id="especie" name="especie" class="form-control" required>
+                        {% for esp in especies %}
+                        <option value="{{ esp.IDEspecie }}">{{ esp.NombreCientifico }} ({{ esp.NombreVulgar }})</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="caracteristicas">Características:</label>
-                    <textarea id="caracteristicas" name="caracteristicas" class="form-control"></textarea>
+                    <textarea id="caracteristicas" name="caracteristicas" class="form-control" placeholder="Describa las características físicas del árbol"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="servicio_ecosistemico">Servicio Ecosistémico:</label>
-                    <input type="text" id="servicio_ecosistemico" name="servicio_ecosistemico" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="tipo_arbol">Tipo de Árbol:</label>
-                    <select id="tipo_arbol" name="tipo_arbol" class="form-control" required>
-                        {% for tipo in tipos_arbol %}
-                        <option value="{{ tipo.IDTipoArbol }}">{{ tipo.NombreCientifico }} ({{ tipo.NombreVulgar }})</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="uso_arbol">Uso del Árbol:</label>
-                    <select id="uso_arbol" name="uso_arbol" class="form-control" required>
-                        {% for uso in usos_arbol %}
-                        <option value="{{ uso.IDUso }}">{{ uso.Descripcion }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="servicios_ecosistemicos">Servicios Ecosistémicos:</label>
+                    <textarea id="servicios_ecosistemicos" name="servicios_ecosistemicos" class="form-control" placeholder="Describa los servicios ecosistémicos que proporciona este árbol"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="tipo_bosque">Tipo de Bosque:</label>
                     <select id="tipo_bosque" name="tipo_bosque" class="form-control" required>
                         {% for bosque in tipos_bosque %}
-                        <option value="{{ bosque.IDTipoBosque }}">{{ bosque.Descripcion }}</option>
+                        <option value="{{ bosque.IDTipoBosque }}">{{ bosque.Nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -104,16 +86,27 @@
                     <label for="centro">Centro:</label>
                     <select id="centro" name="centro" class="form-control" required>
                         {% for centro in centros %}
-                        <option value="{{ centro.IDCentro }}">{{ centro.Nombre }}</option>
+                        <option value="{{ centro.IDCentro }}">{{ centro.NombreCentro }}</option>
                         {% endfor %}
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagen">Imagen del Árbol:</label>
+                    <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*">
+                    <small class="form-text text-muted">Selecciona una imagen del árbol (opcional). Formatos permitidos: JPG, PNG, GIF.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" placeholder="Breve descripción del árbol"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="estado">Estado:</label>
                     <select id="estado" name="estado" class="form-control" required>
                         {% for estado in estados %}
-                        <option value="{{ estado.IDEstado }}">{{ estado.Descripcion }}</option>
+                        <option value="{{ estado.IDEstado }}">{{ estado.NombreEstado }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -132,17 +125,13 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre Científico</th>
+                            <th>Especie</th>
                             <th>Nombre Vulgar</th>
-                            <th>Ubicación</th>
+                            <th>Descripción</th>
                             <th>Características</th>
-                            <th>Servicio Ecosistémico</th>
-                            <th>Cantidad</th>
-                            <th>Tipo de Árbol</th>
-                            <th>Uso</th>
+                            <th>Servicios Ecosistémicos</th>
                             <th>Tipo de Bosque</th>
                             <th>Centro</th>
-                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -150,17 +139,13 @@
                         {% for arbol in arboles %}
                         <tr>
                             <td>{{ arbol.IDArbol }}</td>
-                            <td>{{ arbol.NombreCientifico }}</td>
-                            <td>{{ arbol.NombreVulgar }}</td>
-                            <td>{{ arbol.UbicacionGeografica }}</td>
-                            <td>{{ arbol.Caracteristicas }}</td>
-                            <td>{{ arbol.ServicioEcosistemico }}</td>
-                            <td>{{ arbol.Cantidad }}</td>
-                            <td>{{ arbol.TipoArbolNombreCientifico }} ({{ arbol.TipoArbolNombreVulgar }})</td>
-                            <td>{{ arbol.UsoArbolDescripcion }}</td>
-                            <td>{{ arbol.TipoBosqueDescripcion }}</td>
+                            <td>{{ arbol.EspecieNombreCientifico }}</td>
+                            <td>{{ arbol.EspecieNombreVulgar }}</td>
+                            <td>{{ arbol.Descripcion|default('No disponible')|truncate(50) }}</td>
+                            <td>{{ arbol.Caracteristicas|default('No disponible')|truncate(50) }}</td>
+                            <td>{{ arbol.ServiciosEcosistemicos|default('No disponible')|truncate(50) }}</td>
+                            <td>{{ arbol.TipoBosqueNombre }}</td>
                             <td>{{ arbol.CentroNombre }}</td>
-                            <td>{{ arbol.EstadoDescripcion }}</td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">
                                     <a href="{{ url_for('editar_arbol', id=arbol.IDArbol) }}" class="btn btn-primary btn-sm">

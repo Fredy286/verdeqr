@@ -1,0 +1,128 @@
+/* Estilos específicos para la sección de especies en pantallas grandes */
+
+/* Contenedor principal de especies */
+@media (min-width: 1400px) {
+  .cuarta-pantalla {
+    max-width: 1600px !important;
+    padding: 80px 40px !important;
+  }
+
+  .grid-container-tipos {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 40px !important;
+    max-width: 1500px !important;
+    margin: 0 auto !important;
+  }
+
+  .grid-item-tipo {
+    height: 220px !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .imagen-tipo {
+    width: 220px !important;
+    min-width: 220px !important;
+    height: 100% !important;
+  }
+
+  .imagen-tipo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .texto-tipo {
+    width: calc(100% - 220px) !important;
+    padding: 25px 30px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  .texto-tipo h2 {
+    font-size: 1.4rem !important;
+    margin-bottom: 15px !important;
+    padding-right: 40px !important;
+  }
+
+  .texto-tipo p {
+    font-size: 1.1rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 10px !important;
+    padding-right: 40px !important;
+  }
+
+  .flecha {
+    bottom: 25px !important;
+    right: 25px !important;
+  }
+
+  .flecha img {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+/* Pantallas extremadamente grandes */
+@media (min-width: 2000px) {
+  .cuarta-pantalla {
+    max-width: 2000px !important;
+  }
+
+  .grid-container-tipos {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 1800px !important;
+  }
+
+  .grid-item-tipo {
+    height: 250px !important;
+  }
+
+  .imagen-tipo {
+    width: 250px !important;
+    min-width: 250px !important;
+  }
+
+  .texto-tipo {
+    width: calc(100% - 250px) !important;
+    padding: 30px 40px !important;
+  }
+
+  .texto-tipo h2 {
+    font-size: 1.6rem !important;
+  }
+
+  .texto-tipo p {
+    font-size: 1.2rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .flecha img {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
+
+/* Pantallas ultra anchas */
+@media (min-width: 2500px) {
+  .cuarta-pantalla {
+    max-width: 2400px !important;
+  }
+
+  .grid-container-tipos {
+    max-width: 2200px !important;
+  }
+
+  .grid-item-tipo {
+    height: 280px !important;
+  }
+
+  .imagen-tipo {
+    width: 280px !important;
+    min-width: 280px !important;
+  }
+
+  .texto-tipo {
+    width: calc(100% - 280px) !important;
+  }
+}

@@ -283,13 +283,11 @@ body::before {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 25px;
-    margin: 30px 100px;
+    margin: 30px auto;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    width: calc(100% - 200px);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 70%;
+    max-width: 700px;
 }
 
 /* Contenedor de tabla */
@@ -298,13 +296,11 @@ body::before {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 25px;
-    margin: 30px 50px;
+    margin: 30px auto;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    width: calc(100% - 100px);
-    max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 85%;
+    max-width: 1200px;
 }
 
 /* Ajuste específico para la tabla de sugerencias */
@@ -315,9 +311,11 @@ body::before {
 }
 
 .formulario-gestion {
-    width: 100%;
-    max-width: 100%;
+    width: 90%;
+    max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .form-group {
@@ -368,6 +366,9 @@ select.form-control {
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
     border: none;
     gap: 8px;
 }
@@ -413,9 +414,58 @@ select.form-control {
     font-size: 0.85rem;
 }
 
-/* Ajuste específico para la tabla de sugerencias */
-.sugerencias .tabla-contenedor table {
-    min-width: 1800px !important;
+/* Ajustes específicos para la tabla de sugerencias */
+.table-container {
+    margin: 40px auto !important;
+    width: 95% !important;
+    max-width: 1100px !important;
+    overflow-x: auto !important;
+    padding: 20px !important;
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.table-gestion {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 20px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    border: 2px solid #000 !important;
+}
+
+.table-gestion th {
+    background-color: #2c3e50 !important;
+    color: white !important;
+    padding: 15px !important;
+    text-align: left !important;
+    font-weight: bold !important;
+    border: 2px solid #000 !important;
+    font-size: 1rem !important;
+}
+
+.table-gestion td {
+    padding: 15px !important;
+    border: 1px solid #000 !important;
+    vertical-align: middle !important;
+    font-size: 0.95rem !important;
+}
+
+.table-gestion tr:nth-child(even) {
+    background-color: rgba(240, 240, 240, 0.9) !important;
+}
+
+.table-gestion tr:hover {
+    background-color: rgba(230, 230, 230, 1) !important;
+}
+
+/* Ajustes específicos para la página de sugerencias */
+.contenedor-seccion.sugerencias-container {
+    width: 90% !important;
+    max-width: 1200px !important;
+    margin: 40px auto !important;
+    padding: 30px !important;
 }
 
 .tabla-contenedor th,
@@ -490,24 +540,107 @@ select.form-control {
 }
 
 /* Media Queries */
+/* Para pantallas grandes */
+@media screen and (min-width: 1400px) {
+    .container {
+        max-width: 1400px;
+        margin-left: 220px;
+        width: calc(100% - 220px);
+    }
+
+    .header-principal {
+        width: 220px;
+    }
+
+    .welcome-section, .content-section {
+        padding: 2.5rem;
+        max-width: 1400px;
+    }
+
+    .titulo-centrado {
+        font-size: 2.2rem;
+    }
+
+    .features ul li {
+        font-size: 1.1rem;
+    }
+
+    .form-control {
+        padding: 14px 18px;
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+    }
+
+    /* Mejoras adicionales para pantallas grandes */
+    .formulario-gestion {
+        max-width: 800px;
+        padding: 30px;
+    }
+
+    .tabla-contenedor table {
+        font-size: 1.1rem;
+    }
+
+    .tabla-contenedor th,
+    .tabla-contenedor td {
+        padding: 15px 20px;
+    }
+
+    #menu li a {
+        font-size: 1.1rem;
+        padding: 14px 18px;
+    }
+
+    #menu li a i {
+        font-size: 1.2rem;
+    }
+
+    .user-name {
+        font-size: 1.1rem;
+    }
+
+    .user-email {
+        font-size: 0.9rem;
+    }
+}
+
+/* Para tablets */
 @media screen and (max-width: 992px) {
     .header-principal {
         width: 180px;
     }
-    
+
     .container {
         margin-left: 180px;
         width: calc(100% - 180px);
         padding: 15px;
     }
+
+    .welcome-section, .content-section {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .titulo-centrado {
+        font-size: 1.8rem;
+    }
+
+    .features ul li {
+        font-size: 0.95rem;
+    }
 }
 
+/* Para móviles grandes */
 @media screen and (max-width: 768px) {
     .header-principal {
         width: 60px;
         padding: 5px;
     }
-    
+
     .container {
         margin-left: 60px;
         width: calc(100% - 60px);
@@ -524,6 +657,94 @@ select.form-control {
 
     .user-avatar {
         margin-right: 0;
+    }
+
+    .welcome-section, .content-section {
+        padding: 1.2rem;
+        width: 98%;
+    }
+
+    .titulo-centrado {
+        font-size: 1.5rem;
+    }
+
+    .features ul li {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    .tabla-contenedor {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* Para móviles pequeños */
+@media screen and (max-width: 480px) {
+    .header-principal {
+        width: 50px;
+    }
+
+    .container {
+        margin-left: 50px;
+        width: calc(100% - 50px);
+        padding: 8px;
+    }
+
+    .logo {
+        width: 40px !important;
+        height: 40px !important;
+        max-width: 40px !important;
+        max-height: 40px !important;
+    }
+
+    #menu li a {
+        padding: 10px;
+    }
+
+    #menu li a i {
+        font-size: 14px;
+        margin-right: 0;
+    }
+
+    .welcome-section, .content-section {
+        padding: 1rem;
+        width: 100%;
+        margin: 1rem auto;
+    }
+
+    .titulo-centrado {
+        font-size: 1.3rem;
+    }
+
+    .features ul li {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
 
@@ -648,4 +869,134 @@ select.form-control {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: white;
     text-decoration: none;
+}
+
+/* Estilos para la página de QR */
+.qr-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.qr-image {
+    max-width: 200px;
+    margin-right: 20px;
+}
+
+.qr-info {
+    flex: 1;
+}
+
+/* Estilos para la tabla de QRs guardados */
+.table-responsive {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 15px;
+}
+
+.table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--secondary-color);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    margin-right: 5px;
+}
+
+/* Estilos para la página de ver QR */
+.qr-details-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.qr-image-container {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-image {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.qr-actions {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.qr-info-container {
+    flex: 2;
+    min-width: 300px;
+}
+
+.info-group {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.info-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.info-group span {
+    display: block;
+    color: var(--text-color);
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .qr-details-container {
+        flex-direction: column;
+    }
+
+    .qr-image-container, .qr-info-container {
+        width: 100%;
+    }
 }

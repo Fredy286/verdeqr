@@ -163,14 +163,11 @@ h1, h2, h3, h4, h5, h6 {
   object-fit: cover;
 }
 
-.avatar-edit {
+.avatar-edit, .avatar-delete {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: var(--color-primario);
   color: white;
   display: flex;
   align-items: center;
@@ -181,12 +178,30 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
-.avatar-wrapper:hover .avatar-edit {
+.avatar-edit {
+  bottom: 5px;
+  right: 5px;
+  background-color: var(--color-primario);
+}
+
+.avatar-delete {
+  bottom: 5px;
+  left: 5px;
+  background-color: #dc3545; /* Color rojo para eliminar */
+}
+
+.avatar-wrapper:hover .avatar-edit,
+.avatar-wrapper:hover .avatar-delete {
   opacity: 1;
 }
 
 .avatar-edit:hover {
   background-color: var(--color-secundario);
+  transform: scale(1.1);
+}
+
+.avatar-delete:hover {
+  background-color: #c82333; /* Rojo más oscuro al hacer hover */
   transform: scale(1.1);
 }
 
@@ -574,6 +589,64 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.3s ease;
 }
 
+/* Avatar expandido */
+.avatar-wrapper {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.avatar-wrapper:hover {
+  transform: scale(1.03);
+}
+
+#avatar-modal .modal-content {
+  max-width: 500px;
+  padding: 20px;
+  text-align: center;
+}
+
+#avatar-expandido {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: var(--sombra);
+}
+
+.avatar-modal-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-avatar {
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: var(--color-primario);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: var(--transicion);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-avatar:hover {
+  background-color: var(--color-secundario);
+  transform: scale(1.05);
+}
+
+.btn-avatar.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-avatar.btn-danger:hover {
+  background-color: #c82333;
+}
+
 .modal-content {
   background-color: white;
   max-width: 500px;
@@ -643,69 +716,183 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Media queries para responsividad */
+/* Para pantallas grandes */
+@media (min-width: 1400px) {
+  .perfil-container {
+    max-width: 1400px;
+  }
+
+  .perfil-header {
+    height: 350px;
+  }
+
+  .avatar-wrapper {
+    width: 160px;
+    height: 160px;
+  }
+
+  .avatar-centrado {
+    bottom: -80px;
+  }
+
+  .perfil-content {
+    padding: 100px 40px 40px;
+  }
+
+  .perfil-info h1 {
+    font-size: 2.2rem;
+  }
+
+  .perfil-info p {
+    font-size: 1.1rem;
+  }
+
+  .info-grid,
+  .stats-grid {
+    gap: 25px;
+  }
+
+  .info-item h3,
+  .stats-item h3 {
+    font-size: 1.3rem;
+  }
+
+  .info-item p,
+  .stats-item p {
+    font-size: 1.1rem;
+  }
+}
+
+/* Para tablets */
+@media (max-width: 992px) {
+  .perfil-header {
+    height: 280px;
+  }
+
+  .avatar-centrado {
+    bottom: -65px;
+  }
+
+  .avatar-wrapper {
+    width: 130px;
+    height: 130px;
+  }
+
+  .perfil-content {
+    padding: 80px 25px 25px;
+  }
+
+  .perfil-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .info-grid,
+  .stats-grid {
+    gap: 15px;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+  }
+}
+
+/* Para móviles grandes */
 @media (max-width: 768px) {
   .perfil-header {
     height: 250px;
   }
-  
+
   .avatar-centrado {
     bottom: -60px;
   }
-  
+
   .avatar-wrapper {
     width: 120px;
     height: 120px;
   }
-  
+
   .perfil-content {
     padding: 70px 20px 20px;
   }
-  
+
   .info-grid,
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .user-meta {
     flex-direction: column;
     gap: 10px;
     align-items: center;
   }
-  
+
   .modal-content {
     width: 90%;
   }
+
+  .perfil-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tab-btn {
+    margin: 5px;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .perfil-controls {
+    top: 10px;
+    left: 10px;
+  }
 }
 
+/* Para móviles pequeños */
 @media (max-width: 480px) {
   .perfil-header {
     height: 200px;
   }
-  
+
   .avatar-wrapper {
     width: 100px;
     height: 100px;
   }
-  
+
   .avatar-centrado {
     bottom: -50px;
   }
-  
+
   .perfil-content {
     padding: 60px 15px 15px;
   }
-  
+
   .perfil-info h1 {
     font-size: 1.5rem;
   }
-  
+
   .btn-control {
     width: 36px;
     height: 36px;
   }
-  
+
   .tab-btn {
-    padding: 10px 15px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .info-item h3,
+  .stats-item h3 {
+    font-size: 1rem;
+  }
+
+  .info-item p,
+  .stats-item p {
+    font-size: 0.9rem;
+  }
+
+  .avatar-edit {
+    width: 30px;
+    height: 30px;
     font-size: 0.9rem;
   }
 }
@@ -745,4 +932,4 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-} 
+}

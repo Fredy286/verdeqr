@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #2c3e50;
+            --color-secundario: #34495e;
+            --color-acento: #28a745;
+            --color-texto: #333;
+            --color-texto-claro: #666;
+            --color-fondo: #f8f9fa;
+            --color-tarjeta: #ffffff;
+            --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transicion: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
+
+        /* Menú superior simple */
+        .menu-simple {
+            background-color: var(--color-primario);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--sombra);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .menu-simple .botones {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .menu-simple .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-simple .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-acento);
+            transition: var(--transicion);
+            margin-right: 10px;
+        }
+
+        .menu-simple .logo img:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .menu-simple .botones a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transicion);
+            display: inline-block;
+        }
+
+        .menu-simple .botones a:hover {
+            background-color: var(--color-acento);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Contenedor principal */
+        .terminos-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: var(--color-tarjeta);
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+        }
+
+        .terminos-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .terminos-container h2 {
+            color: var(--color-acento);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .terminos-container p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .terminos-container ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .terminos-container li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .fecha-actualizacion {
+            font-style: italic;
+            color: #666;
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .volver-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: var(--transicion);
+            font-weight: 500;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Footer simple */
+        .footer-simple {
+            background-color: #1a2a3a; /* Azul oscuro */
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-simple a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transicion);
+        }
+
+        .footer-simple a:hover {
+            background-color: var(--color-acento);
+            color: white;
+        }
+
+        .footer-simple p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .heart-icon {
+            color: var(--color-acento);
+        }
+
+        /* Botones flotantes */
+        .botones-flotantes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-flotante {
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-flotante i {
+            margin-right: 8px;
+        }
+
+        .btn-flotante:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-principal {
+            background-color: #3498db; /* Azul para distinguirlo */
+        }
+
+        .btn-principal:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-gestion {
+            background-color: var(--color-acento);
+        }
+
+        .btn-gestion:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú superior simple -->
+    <header class="menu-simple">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="botones">
+            <a href="{{ url_for('inicio') }}"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('principal') }}"><i class="fas fa-tree"></i> Ver Árboles</a>
+            <a href="{{ url_for('contacto') }}"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="{{ url_for('acerca_de') }}"><i class="fas fa-info-circle"></i> Acerca de Nosotros</a>
+            <a href="{{ url_for('politica_privacidad') }}"><i class="fas fa-shield-alt"></i> Política de Privacidad</a>
+            {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('gestion') }}"><i class="fas fa-cog"></i> Gestión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="terminos-container">
+        <h1>Términos y Condiciones</h1>
+
+        <p>Bienvenido a VerdeQR. Estos términos y condiciones describen las reglas y regulaciones para el uso del sitio web de VerdeQR, ubicado en verdeqr.com.</p>
+
+        <p>Al acceder a este sitio web, asumimos que aceptas estos términos y condiciones en su totalidad. No continúes usando el sitio web de VerdeQR si no aceptas todos los términos y condiciones establecidos en esta página.</p>
+
+        <h2>Licencia</h2>
+
+        <p>A menos que se indique lo contrario, VerdeQR y/o sus licenciantes poseen los derechos de propiedad intelectual de todo el material en VerdeQR. Todos los derechos de propiedad intelectual están reservados. Puedes ver y/o imprimir páginas desde verdeqr.com para tu uso personal sujeto a las restricciones establecidas en estos términos y condiciones.</p>
+
+        <p>No debes:</p>
+
+        <ul>
+            <li>Republicar material de verdeqr.com</li>
+            <li>Vender, alquilar o sublicenciar material de verdeqr.com</li>
+            <li>Reproducir, duplicar o copiar material de verdeqr.com</li>
+            <li>Redistribuir contenido de VerdeQR (a menos que el contenido esté específicamente hecho para redistribuirse)</li>
+        </ul>
+
+        <h2>Comentarios de Usuario</h2>
+
+        <p>Ciertas partes de este sitio web ofrecen la oportunidad a los usuarios de publicar e intercambiar opiniones e información en determinadas áreas. VerdeQR no filtra, edita, publica o revisa los comentarios antes de su presencia en el sitio web. Los comentarios no reflejan los puntos de vista y opiniones de VerdeQR, sus agentes y/o afiliados. Los comentarios reflejan los puntos de vista y opiniones de la persona que publica sus puntos de vista y opiniones.</p>
+
+        <p>VerdeQR se reserva el derecho de monitorear todos los comentarios y eliminar los que puedan considerarse inapropiados, ofensivos o que incumplan estos Términos y Condiciones.</p>
+
+        <h2>Hipervínculos a nuestro contenido</h2>
+
+        <p>Las siguientes organizaciones pueden vincular a nuestro sitio web sin aprobación previa por escrito:</p>
+
+        <ul>
+            <li>Agencias gubernamentales</li>
+            <li>Motores de búsqueda</li>
+            <li>Organizaciones de noticias</li>
+            <li>Distribuidores de directorios en línea pueden vincular a nuestro sitio web de la misma manera que hacen hipervínculos a los sitios web de otras empresas que figuran en la lista</li>
+            <li>Empresas acreditadas en todo el sistema, excepto organizaciones sin fines de lucro, centros comerciales de caridad y grupos de recaudación de fondos de caridad que no pueden hacer hipervínculos a nuestro sitio web</li>
+        </ul>
+
+        <h2>Reserva de Derechos</h2>
+
+        <p>Nos reservamos el derecho de solicitarte que elimines todos los enlaces o cualquier enlace en particular a nuestro sitio web. Aprobamos los enlaces a nuestro sitio web si estos: (a) no son engañosos; (b) no implican falsamente patrocinio, respaldo o aprobación del enlazante y sus productos o servicios; y (c) encajan en el contexto del sitio del enlazante.</p>
+
+        <h2>Responsabilidad del contenido</h2>
+
+        <p>No seremos responsables de ningún contenido que aparezca en tu sitio web. Aceptas protegernos y defendernos contra todas las reclamaciones que se generen en tu sitio web. Ningún enlace(s) debe aparecer en ningún sitio web que pueda interpretarse como difamatorio, obsceno o criminal, o que infrinja, de otra manera viole o defienda la infracción u otra violación de los derechos de terceros.</p>
+
+        <h2>Eliminación de enlaces de nuestro sitio web</h2>
+
+        <p>Si encuentras algún enlace en nuestro sitio que sea ofensivo por cualquier motivo, puedes contactarnos e informarnos en cualquier momento. Consideraremos las solicitudes para eliminar enlaces, pero no estamos obligados a hacerlo ni a responder directamente.</p>
+
+        <h2>Descargo de responsabilidad</h2>
+
+        <p>En la medida máxima permitida por la ley aplicable, excluimos todas las representaciones, garantías y condiciones relacionadas con nuestro sitio web y el uso de este sitio web. Nada en este descargo de responsabilidad:</p>
+
+        <ul>
+            <li>Limitará o excluirá nuestra responsabilidad o la tuya por muerte o lesiones personales</li>
+            <li>Limitará o excluirá nuestra responsabilidad o la tuya por fraude o tergiversación fraudulenta</li>
+            <li>Limitará cualquiera de nuestras responsabilidades o las tuyas de cualquier manera que no esté permitida por la ley aplicable</li>
+            <li>Excluirá cualquiera de nuestras responsabilidades o las tuyas que no puedan ser excluidas según la ley aplicable</li>
+        </ul>
+
+        <p class="fecha-actualizacion">Estos términos y condiciones fueron actualizados por última vez el 15 de mayo de 2023.</p>
+
+        <a href="{{ url_for('inicio') }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver a inicio</a>
+    </div>
+
+    <!-- Footer simple -->
+    <footer class="footer-simple">
+        <div>
+            <a href="{{ url_for('inicio') }}">Inicio</a>
+            <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+            <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+            <a href="{{ url_for('contacto') }}">Contacto</a>
+            <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
+        </div>
+        <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+        <p>Desarrollado con <i class="fas fa-heart heart-icon"></i> por el equipo de VerdeQR</p>
+    </footer>
+
+    <!-- Botones flotantes -->
+    {% if 'usuario' in session %}
+    <div class="botones-flotantes">
+        <a href="{{ url_for('inicio') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-home"></i> Ir a Inicio
+        </a>
+        <a href="{{ url_for('principal') }}" class="btn-flotante btn-gestion">
+            <i class="fas fa-tree"></i> Ir a Principal
+        </a>
+    </div>
+    {% endif %}
+</body>
+</html>

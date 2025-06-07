@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Uso - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('usos_por_especie') }}" class="active"><i class="fas fa-sitemap"></i><span>Usos por Especie</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombre'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="contenedor-seccion">
+            <h2>Agregar Uso para {{ especie.NombreCientifico }}</h2>
+            <p><em>{{ especie.NombreVulgar }}</em></p>
+            
+            <form method="POST" action="{{ url_for('agregar_uso', especie_id=especie.IDEspecie) }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="nombre">Nombre del Uso:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria" class="form-control" required onchange="mostrarCamposEspecificos()">
+                        <option value="">Seleccione una categoría</option>
+                        <option value="Maderable">Maderable</option>
+                        <option value="Comestible">Comestible</option>
+                        <option value="Medicinal">Medicinal</option>
+                        <option value="Ornamental">Ornamental</option>
+                        <option value="Artesanal">Artesanal</option>
+                        <option value="Agroforestal">Agroforestal</option>
+                        <option value="RestauracionEcologica">Restauración Ecológica</option>
+                        <option value="CulturalCeremonial">Cultural/Ceremonial</option>
+                        <option value="Melifero">Melífero</option>
+                        <option value="ProteccionAmbiental">Protección Ambiental</option>
+                        <option value="Tintoreo">Tintóreo</option>
+                        <option value="Oleaginoso">Oleaginoso</option>
+                        <option value="Biocombustible">Biocombustible</option>
+                    </select>
+                </div>
+                
+                <!-- Campos específicos para Maderable -->
+                <div id="campos-maderable" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Maderable</h4>
+                    <div class="form-group">
+                        <label for="dureza">Dureza:</label>
+                        <select id="dureza" name="dureza" class="form-control">
+                            <option value="Blanda">Blanda</option>
+                            <option value="Media">Media</option>
+                            <option value="Dura">Dura</option>
+                            <option value="Muy Dura">Muy Dura</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resistencia">Resistencia:</label>
+                        <select id="resistencia" name="resistencia" class="form-control">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Muy Alta">Muy Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uso_final">Uso Final:</label>
+                        <input type="text" id="uso_final" name="uso_final" class="form-control" placeholder="Ej: Construcción, muebles, etc.">
+                    </div>
+                </div>
+                
+                <!-- Campos específicos para Comestible -->
+                <div id="campos-comestible" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Comestible</h4>
+                    <div class="form-group">
+                        <label for="parte_comestible">Parte Comestible:</label>
+                        <select id="parte_comestible" name="parte_comestible" class="form-control">
+                            <option value="Frutos">Frutos</option>
+                            <option value="Hojas">Hojas</option>
+                            <option value="Semillas">Semillas</option>
+                            <option value="Raíces">Raíces</option>
+                            <option value="Flores">Flores</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Savia">Savia</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="forma_consumo">Forma de Consumo:</label>
+                        <input type="text" id="forma_consumo" name="forma_consumo" class="form-control" placeholder="Ej: Crudo, cocido, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_nutricional">Valor Nutricional:</label>
+                        <textarea id="valor_nutricional" name="valor_nutricional" class="form-control" rows="2" placeholder="Ej: Rico en vitamina C, proteínas, etc."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Campos específicos para Medicinal -->
+                <div id="campos-medicinal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Medicinal</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada">Parte Utilizada:</label>
+                        <select id="parte_utilizada" name="parte_utilizada" class="form-control">
+                            <option value="Hojas">Hojas</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Raíz">Raíz</option>
+                            <option value="Frutos">Frutos</option>
+                            <option value="Semillas">Semillas</option>
+                            <option value="Flores">Flores</option>
+                            <option value="Savia">Savia</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="preparacion">Preparación:</label>
+                        <textarea id="preparacion" name="preparacion" class="form-control" rows="2" placeholder="Ej: Infusión, decocción, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedades_tratadas">Enfermedades Tratadas:</label>
+                        <textarea id="enfermedades_tratadas" name="enfermedades_tratadas" class="form-control" rows="2" placeholder="Ej: Dolor de cabeza, Fiebre, etc."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Campos específicos para Ornamental -->
+                <div id="campos-ornamental" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Ornamental</h4>
+                    <div class="form-group">
+                        <label for="caracteristicas_esteticas">Características Estéticas:</label>
+                        <textarea id="caracteristicas_esteticas" name="caracteristicas_esteticas" class="form-control" rows="2" placeholder="Ej: Flores vistosas, follaje colorido, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion_recomendada">Ubicación Recomendada:</label>
+                        <input type="text" id="ubicacion_recomendada" name="ubicacion_recomendada" class="form-control" placeholder="Ej: Jardines, parques, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_jardineria">Tipo de Jardinería:</label>
+                        <input type="text" id="tipo_jardineria" name="tipo_jardineria" class="form-control" placeholder="Ej: Paisajismo, jardines verticales, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="coloracion_estacional">Coloración Estacional:</label>
+                        <textarea id="coloracion_estacional" name="coloracion_estacional" class="form-control" rows="2" placeholder="Ej: Cambios de color en otoño, floración en primavera, etc."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Campos específicos para Artesanal -->
+                <div id="campos-artesanal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Artesanal</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada_artesanal">Parte Utilizada:</label>
+                        <select id="parte_utilizada_artesanal" name="parte_utilizada_artesanal" class="form-control">
+                            <option value="Madera">Madera</option>
+                            <option value="Fibras">Fibras</option>
+                            <option value="Semillas">Semillas</option>
+                            <option value="Hojas">Hojas</option>
+                            <option value="Corteza">Corteza</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_artesania">Tipo de Artesanía:</label>
+                        <input type="text" id="tipo_artesania" name="tipo_artesania" class="form-control" placeholder="Ej: Cestería, tallado, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tecnicas_elaboracion">Técnicas de Elaboración:</label>
+                        <textarea id="tecnicas_elaboracion" name="tecnicas_elaboracion" class="form-control" rows="2" placeholder="Ej: Tejido, tallado, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="comunidades_artesanales">Comunidades Artesanales:</label>
+                        <input type="text" id="comunidades_artesanales" name="comunidades_artesanales" class="form-control" placeholder="Ej: Comunidades indígenas, artesanos locales, etc.">
+                    </div>
+                </div>
+                
+                <!-- Incluir los campos específicos para las demás categorías -->
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                    <a href="{{ url_for('usos_por_especie') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>VerdeQR</h3>
+                <p>Sistema de gestión de árboles y códigos QR</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{{ url_for('principal') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+                    <li><a href="{{ url_for('acerca_de') }}">Acerca de</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>Email: info@verdeqr.com</p>
+                <p>Teléfono: +123 456 7890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 VerdeQR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        function mostrarCamposEspecificos() {
+            // Ocultar todos los campos específicos
+            const camposEspecificos = document.querySelectorAll('.campos-especificos');
+            camposEspecificos.forEach(campo => {
+                campo.style.display = 'none';
+            });
+            
+            // Mostrar los campos específicos según la categoría seleccionada
+            const categoria = document.getElementById('categoria').value;
+            if (categoria) {
+                const camposMostrar = document.getElementById('campos-' + categoria.toLowerCase());
+                if (camposMostrar) {
+                    camposMostrar.style.display = 'block';
+                }
+            }
+        }
+        
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', mostrarCamposEspecificos);
+    </script>
+</body>
+</html>

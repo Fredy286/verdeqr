@@ -12,6 +12,7 @@
   --color-tarjeta: #ffffff;
   --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
   --transicion: all 0.2s ease;
+  --contenedor-ancho-max: 1400px; /* Ancho máximo para contenedores */
 }
 
 /* Reset y estilos base */
@@ -21,12 +22,23 @@
   padding: 0;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: var(--color-fondo);
   color: var(--color-texto);
   line-height: 1.6;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100vw; /* Asegurar que ocupe todo el ancho de la ventana */
 }
 
 a {
@@ -46,12 +58,25 @@ img {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: var(--color-primario);
+  background-color: #1e5631;
   color: white;
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: var(--sombra);
+  width: 100vw;
+  left: 0;
+  right: 0;
+}
+
+/* Contenedor para centrar el contenido en pantallas grandes */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: var(--contenedor-ancho-max);
+  margin: 0 auto;
 }
 
 .header-principal .logo img {
@@ -74,20 +99,27 @@ img {
   align-items: center;
   background-color: white;
   border-radius: 30px;
-  padding: 5px 15px;
+  padding: 3px 12px;
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   margin: 10px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-principal .buscador form {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .header-principal .buscador input {
   background: transparent;
   border: none;
   color: var(--color-primario);
-  padding: 8px;
+  padding: 6px;
   width: 100%;
   font-size: 14px;
+  outline: none;
 }
 
 .header-principal .buscador input::placeholder {
@@ -100,6 +132,9 @@ img {
   color: var(--color-primario);
   cursor: pointer;
   font-size: 16px;
+  padding: 0 0 0 5px;
+  display: flex;
+  align-items: center;
 }
 
 /* Menú adaptable */
@@ -154,11 +189,13 @@ img {
 .bienvenida {
   padding: 60px 20px;
   text-align: center;
+  width: 100%;
 }
 
 .contenido-bienvenida {
-  max-width: 1200px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto;
+  width: 100%;
 }
 
 .bienvenida h1 {
@@ -185,9 +222,11 @@ img {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 15px;
   margin-top: 40px;
-  max-width: 800px;
+  max-width: var(--contenedor-ancho-max);
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .estadistica {
@@ -219,12 +258,14 @@ img {
 .arboles-destacados {
   padding: 60px 20px;
   background-color: var(--color-fondo);
+  width: 100%;
 }
 
 .titulo-seccion {
   text-align: center;
-  max-width: 800px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto 40px;
+  width: 100%;
 }
 
 .titulo-seccion h2 {
@@ -242,8 +283,9 @@ img {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-  max-width: 1200px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto;
+  width: 100%;
 }
 
 .arbol-card {
@@ -373,9 +415,11 @@ img {
 .info-centros {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto 40px;
   gap: 30px;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .texto-centros {
@@ -533,14 +577,16 @@ img {
 .sugerencias {
   padding: 60px 20px;
   background-color: var(--color-fondo);
+  width: 100%;
 }
 
 .contenedor-sugerencias {
-  max-width: 1200px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  width: 100%;
 }
 
 .formulario-sugerencias {
@@ -669,9 +715,10 @@ img {
 
 /* Pie de Página */
 .footer-principal {
-  background-color: var(--color-primario);
+  background-color: #1e5631;
   color: white;
   padding: 40px 20px 20px;
+  width: 100%;
 }
 
 .footer-principal p {
@@ -679,12 +726,13 @@ img {
 }
 
 .contenido-footer {
-  max-width: 1200px;
+  max-width: var(--contenedor-ancho-max);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .logo-footer img {
@@ -720,14 +768,16 @@ img {
 }
 
 .columna ul li a {
-  opacity: 0.8;
+  opacity: 0.9;
   transition: var(--transicion);
   font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .columna ul li a:hover {
   opacity: 1;
-  color: var(--color-acento);
+  color: white;
 }
 
 .redes-sociales h4 {
@@ -754,4 +804,292 @@ img {
 
 .derechos  {
     align-items: center;
+}
+
+/* Media Queries para Responsive Design */
+/* Para pantallas grandes */
+@media (min-width: 1400px) {
+  .bienvenida,
+  .arboles-destacados,
+  .centros,
+  .sugerencias,
+  .footer-principal {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bienvenida h1 {
+    font-size: 2.5rem;
+  }
+
+  .texto-destacado {
+    max-width: 1000px;
+    font-size: 1.1rem;
+  }
+
+  .estadistica h3 {
+    font-size: 2.2rem;
+  }
+
+  .titulo-seccion h2 {
+    font-size: 2.5rem;
+  }
+
+  .titulo-seccion p {
+    font-size: 1.2rem;
+  }
+
+  .grid-arboles {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  .arbol-card .info-arbol h3 {
+    font-size: 1.4rem;
+  }
+
+  .info-centros {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .texto-centros {
+    order: 1;
+    flex: 1;
+    padding-right: 40px;
+  }
+
+  .imagen-centros {
+    order: 2;
+    flex: 1;
+  }
+}
+
+/* Para tablets */
+@media (max-width: 992px) {
+  .header-principal {
+    padding: 8px 15px;
+  }
+
+  .header-principal .menu-principal ul {
+    gap: 10px;
+  }
+
+  .header-principal .menu-principal ul li a {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+  }
+
+  .bienvenida {
+    padding: 40px 15px;
+  }
+
+  .bienvenida h1 {
+    font-size: 1.8rem;
+  }
+
+  .texto-destacado {
+    font-size: 0.95rem;
+  }
+
+  .grid-arboles {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .arbol-card .info-arbol h3 {
+    font-size: 1.1rem;
+  }
+
+  .centro-card .info-centro h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Para móviles grandes */
+@media (max-width: 768px) {
+  .header-principal {
+    justify-content: center;
+  }
+
+  .header-principal .logo,
+  .header-principal .buscador,
+  .header-principal .menu-principal,
+  .header-principal .usuario {
+    width: 100%;
+    margin: 5px 0;
+    justify-content: center;
+  }
+
+  .header-principal .menu-principal ul {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .bienvenida h1 {
+    font-size: 1.6rem;
+  }
+
+  .estadisticas {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .estadistica h3 {
+    font-size: 1.5rem;
+  }
+
+  .titulo-seccion h2 {
+    font-size: 1.6rem;
+  }
+
+  .titulo-seccion p {
+    font-size: 0.9rem;
+  }
+
+  .grid-arboles {
+    grid-template-columns: 1fr;
+  }
+
+  .info-centros {
+    flex-direction: column;
+  }
+
+  .texto-centros h3 {
+    font-size: 1.5rem;
+  }
+
+  .grid-centros {
+    grid-template-columns: 1fr;
+  }
+
+  .sugerencias-container {
+    padding: 40px 15px;
+  }
+
+  .carrusel-sugerencias {
+    padding: 0;
+  }
+
+  .sugerencia-card {
+    padding: 15px;
+  }
+
+  .footer-principal {
+    padding: 40px 15px 20px;
+  }
+
+  .contenido-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo-footer {
+    margin-bottom: 20px;
+  }
+
+  .enlaces-footer {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* Para móviles pequeños */
+@media (max-width: 480px) {
+  .header-principal .logo img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .header-principal .usuario img {
+    height: 30px;
+    width: 30px;
+  }
+
+  .bienvenida h1 {
+    font-size: 1.4rem;
+  }
+
+  .texto-destacado {
+    font-size: 0.9rem;
+  }
+
+  .estadistica h3 {
+    font-size: 1.3rem;
+  }
+
+  .estadistica p {
+    font-size: 0.8rem;
+  }
+
+  .imagen-arbol {
+    height: 180px;
+  }
+
+  .hover-info h4 {
+    font-size: 1rem;
+  }
+
+  .hover-info p {
+    font-size: 0.8rem;
+  }
+
+  .arbol-card .info-arbol h3 {
+    font-size: 1rem;
+  }
+
+  .arbol-card .info-arbol .detalles p {
+    font-size: 0.8rem;
+  }
+
+  .centro-card .info-centro h3 {
+    font-size: 1.1rem;
+  }
+
+  .sugerencia-card .sugerencia-texto {
+    font-size: 0.9rem;
+  }
+
+  .sugerencia-card .sugerencia-autor {
+    font-size: 0.8rem;
+  }
+
+  .columna ul li a {
+    font-size: 0.8rem;
+  }
+}
+
+/* Estilos para el carrusel de sugerencias */
+.carrusel-container {
+  position: relative;
+  overflow: hidden;
+  padding: 0 40px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: var(--contenedor-ancho-max);
+  margin: 0 auto;
+}
+
+.carrusel-sugerencias {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sugerencia-card {
+  flex: 0 0 calc(20% - 20px);
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.5s ease;
+  opacity: 0;
+  transform: translateX(100%);
+  position: relative;
+  min-width: 200px;
+  max-width: 300px;
 }

@@ -1,0 +1,175 @@
+/* buttons.css - Estilos para botones */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #34495e;
+    --color-acento: #28a745;
+    --color-texto: #333;
+    --color-texto-claro: #666;
+    --color-fondo: #f8f9fa;
+    --color-tarjeta: #ffffff;
+    --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --sombra-fuerte: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --transicion: all 0.3s ease;
+}
+
+/* Estilos de botones */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--color-acento);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transicion);
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-warning {
+    background-color: #f39c12;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #d35400;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1.25rem;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-rounded {
+    border-radius: 50px;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--color-acento);
+    color: var(--color-acento);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-acento);
+    color: white;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-icon i {
+    font-size: 1.1em;
+}
+
+/* Media Queries para Responsive Design */
+/* Para pantallas grandes */
+@media (min-width: 1400px) {
+    .btn {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+    
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-lg {
+        padding: 16px 32px;
+        font-size: 1.4rem;
+    }
+}
+
+/* Para tablets */
+@media (max-width: 992px) {
+    .btn {
+        padding: 9px 18px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-lg {
+        padding: 11px 22px;
+        font-size: 1.15rem;
+    }
+}
+
+/* Para móviles */
+@media (max-width: 480px) {
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1.1rem;
+    }
+}

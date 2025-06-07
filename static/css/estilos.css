@@ -74,7 +74,7 @@ body {
     display: flex;
     flex-direction: column;
   }
-  
+
 .user-name {
     font-weight: bold;
 }
@@ -83,7 +83,7 @@ body {
     font-size: 0.8rem;
     opacity: 0.8;
   }
-  
+
 /* Estilos de las notificaciones */
 .notification-container {
     position: fixed;
@@ -198,23 +198,37 @@ body {
         flex-direction: column;
         padding: 1rem;
     }
-    
+
     .menu-principal {
         margin: 1rem 0;
     }
-    
+
     #menu {
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .user-section {
         margin-top: 1rem;
     }
-    
+
     .card-body {
         padding: 1rem;
     }
   }
-  
-  
+
+/* Estilos para el código QR */
+.qr-container {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.qr-image {
+    border: 1px solid #eee;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+}
+

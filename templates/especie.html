@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Especies - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Formulario para registrar especies -->
+        <div class="contenedor-seccion">
+            <h2>Especie</h2>
+            <form method="POST" action="{{ url_for('especie') }}" class="formulario-gestion">
+                <div class="form-group">
+                    <label for="nombre_cientifico">Nombre Científico:</label>
+                    <input type="text" id="nombre_cientifico" name="nombre_cientifico" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre_vulgar">Nombre Vulgar:</label>
+                    <input type="text" id="nombre_vulgar" name="nombre_vulgar" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control">
+                        <option value="1">Activo</option>
+                        <option value="2">Inactivo</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+
+        <!-- Lista de especies registradas -->
+        <div class="contenedor-tabla">
+            <h2>Especies Registradas</h2>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Científico</th>
+                            <th>Nombre Vulgar</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if especies %}
+                            {% for especie in especies %}
+                                <tr>
+                                    <td>{{ especie.IDEspecie }}</td>
+                                    <td>{{ especie.NombreCientifico }}</td>
+                                    <td>{{ especie.NombreVulgar }}</td>
+                                    <td>
+                                        <span class="badge {% if especie.Estado == 1 %}badge-success{% else %}badge-secondary{% endif %}">
+                                            {{ especie.EstadoNombre }}
+                                        </span>
+                                    </td>
+                                    <td class="acciones-cell">
+                                        <div class="acciones-botones">
+                                            <a href="{{ url_for('editar_especie', id=especie.IDEspecie) }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <a href="#" onclick="confirmarEliminar({{ especie.IDEspecie }}, '{{ especie.NombreCientifico }}')" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5">No hay especies registradas</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        // Mostrar notificaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar las notificaciones
+            initNotifications();
+        });
+
+        function confirmarEliminar(id, nombre) {
+            // Crear el contenido del modal
+            const modalContent = `
+                <div class="confirm-modal-content">
+                    <h3>¿Eliminar Especie?</h3>
+                    <p>¿Estás seguro de que deseas eliminar la especie <strong>"${nombre}"</strong>?</p>
+                    <p class="warning-text">Esta acción no se puede deshacer y eliminará todos los registros relacionados.</p>
+                    <div class="confirm-buttons">
+                        <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                        <button class="btn-confirm" onclick="eliminarEspecie(${id})">Eliminar</button>
+                    </div>
+                </div>
+            `;
+
+            // Mostrar el modal personalizado
+            showCustomModal(modalContent);
+        }
+
+        function eliminarEspecie(id) {
+            // Cerrar el modal
+            closeModal();
+
+            // Mostrar notificación de carga
+            showNotification('Eliminando especie...', 'loading');
+
+            // Redireccionar a la ruta de eliminación
+            setTimeout(() => {
+                window.location.href = `/especie/eliminar/${id}`;
+            }, 500);
+        }
+
+        function showCustomModal(content) {
+            // Crear el fondo del modal
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.id = 'customModal';
+
+            // Crear el contenedor del modal
+            const modalContainer = document.createElement('div');
+            modalContainer.className = 'modal-container';
+            modalContainer.innerHTML = content;
+
+            // Agregar el modal al overlay
+            modalOverlay.appendChild(modalContainer);
+
+            // Agregar el overlay al body
+            document.body.appendChild(modalOverlay);
+
+            // Animar la entrada del modal
+            setTimeout(() => {
+                modalOverlay.style.opacity = '1';
+                modalContainer.style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 300);
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos para el modal personalizado */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .confirm-modal-content h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .confirm-modal-content p {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .warning-text {
+            color: #e74c3c;
+            font-size: 0.9em;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel, .btn-confirm {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-confirm {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</body>
+</html>

@@ -5,31 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generar QR - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    {% include 'flash_messages.html' %}
+<body class="gestion-body">
+    <!-- Contenedor para las notificaciones -->
+    <div class="notification-container"></div>
+
+    <!-- Mensajes flash ocultos que serán procesados por JavaScript -->
+    <div style="display: none;" id="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message" data-type="{{ category }}" data-message="{{ message }}"></div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     <header class="header-principal">
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
         <nav class="menu-principal">
             <ul id="menu">
                 <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
                 <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
                 <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
-                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
                 <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
                 <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
-                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
                 <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
                 <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
                 <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             </ul>
         </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
                 <div class="user-info">
                     <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
                     <span class="user-email">{{ session['usuario']['Correo'] }}</span>
@@ -42,12 +66,12 @@
         <!-- Formulario para generar QR -->
         <div class="contenedor-seccion">
             <h2>Generar Código QR</h2>
-            <form method="POST" action="{{ url_for('qr') }}" class="formulario-gestion">
+            <form method="POST" action="{{ url_for('qr') }}" class="formulario-gestion" id="qrForm">
                 <div class="form-group">
-                    <label for="arbol">Seleccionar Árbol:</label>
-                    <select id="arbol" name="arbol" class="form-control" required>
+                    <label for="arbol_id">Seleccionar Árbol:</label>
+                    <select id="arbol_id" name="arbol_id" class="form-control" required>
                         {% for arbol in arboles %}
-                        <option value="{{ arbol.IDArbol }}">{{ arbol.NombreCientifico }} ({{ arbol.NombreVulgar }})</option>
+                        <option value="{{ arbol.IDArbol }}">{{ arbol.NombreCientifico }} ({{ arbol.NombreVulgar }}) - {{ arbol.NombreCentro }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -66,7 +90,7 @@
                 <img src="data:image/png;base64,{{ qr_data }}" alt="Código QR" class="qr-image">
                 <div class="qr-info">
                     <p><strong>Árbol:</strong> {{ arbol_seleccionado.NombreCientifico }} ({{ arbol_seleccionado.NombreVulgar }})</p>
-                    <p><strong>Ubicación:</strong> {{ arbol_seleccionado.UbicacionGeografica }}</p>
+                    <p><strong>Centro:</strong> {{ arbol_seleccionado.NombreCentro }}</p>
                     <a href="data:image/png;base64,{{ qr_data }}" download="qr_arbol_{{ arbol_seleccionado.IDArbol }}.png" class="btn btn-primary">
                         <i class="fas fa-download"></i> Descargar QR
                     </a>
@@ -74,6 +98,168 @@
             </div>
         </div>
         {% endif %}
+
+        <!-- Tabla de QRs guardados -->
+        <div class="contenedor-seccion">
+            <h2>QRs Guardados</h2>
+            {% if qrs_guardados and qrs_guardados|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Árbol</th>
+                            <th>Nombre Científico</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for qr in qrs_guardados %}
+                        <tr data-arbol-id="{{ qr.Arbol }}" {% if qr.Estado == 0 %}class="inactive-qr" style="opacity: 0.5;"{% endif %}>
+                            <td>{{ qr.IDQR }}</td>
+                            <td>{{ qr.Arbol }}</td>
+                            <td>{{ qr.NombreCientifico }} {% if qr.NombreVulgar %}({{ qr.NombreVulgar }}){% endif %}</td>
+                            <td>
+                                <a href="{{ url_for('ver_qr', id=qr.IDQR) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> Ver QR
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ qr.IDQR }}, '{{ qr.NombreCientifico }}')">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                                <form id="delete-form-{{ qr.IDQR }}" action="{{ url_for('eliminar_qr', id=qr.IDQR) }}" method="POST" style="display: none;"></form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <p>No hay códigos QR guardados. Genera un QR para un árbol para comenzar.</p>
+                <p>Si acabas de generar un QR y no aparece aquí, intenta recargar la página.</p>
+            </div>
+            {% endif %}
+        </div>
     </main>
+
+    <!-- Notificaciones -->
+    <div id="notification-container"></div>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    showNotification('{{ message }}', '{{ category }}');
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        // Función para confirmar eliminación de QR con modal animado
+        function confirmDelete(id, nombre) {
+            showModalNotification(
+                'Confirmar eliminación',
+                `¿Está seguro que desea eliminar el código QR para el árbol "${nombre}"?`,
+                'warning',
+                'fas fa-exclamation-triangle'
+            );
+
+            // Reemplazar el botón por defecto con botones personalizados
+            const modalButton = document.querySelector('.modal-notification-button');
+            const buttonContainer = modalButton.parentElement;
+            modalButton.remove();
+
+            // Crear botones de confirmar y cancelar
+            const confirmButton = document.createElement('button');
+            confirmButton.className = 'modal-notification-button confirm';
+            confirmButton.textContent = 'Eliminar';
+            confirmButton.style.backgroundColor = '#dc3545';
+            confirmButton.style.marginRight = '10px';
+
+            const cancelButton = document.createElement('button');
+            cancelButton.className = 'modal-notification-button cancel';
+            cancelButton.textContent = 'Cancelar';
+            cancelButton.style.backgroundColor = '#6c757d';
+
+            // Contenedor para los botones
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.style.display = 'flex';
+            buttonsDiv.style.justifyContent = 'center';
+            buttonsDiv.style.gap = '10px';
+
+            buttonsDiv.appendChild(confirmButton);
+            buttonsDiv.appendChild(cancelButton);
+            buttonContainer.appendChild(buttonsDiv);
+
+            // Eventos para los botones
+            confirmButton.addEventListener('click', () => {
+                document.querySelector(`#delete-form-${id}`).submit();
+                document.querySelector('.modal-notification').remove();
+            });
+
+            cancelButton.addEventListener('click', () => {
+                document.querySelector('.modal-notification').remove();
+            });
+        }
+
+        // Desactivamos el procesamiento automático de mensajes flash en notifications.js
+        // y lo manejamos manualmente aquí
+        document.addEventListener('DOMContentLoaded', function() {
+            // Desactivar el manejador automático de notifications.js
+            const originalAddEventListener = document.addEventListener;
+            document.addEventListener = function(type, listener, options) {
+                if (type === 'DOMContentLoaded' && listener.toString().includes('flashMessages')) {
+                    // No registrar el evento de notifications.js para mensajes flash
+                    return;
+                }
+                return originalAddEventListener.call(this, type, listener, options);
+            };
+
+            // Procesar nuestros mensajes flash personalizados
+            const flashMessages = document.querySelectorAll('#flash-messages .flash-message');
+            flashMessages.forEach(message => {
+                const type = message.dataset.type || 'info';
+                const messageText = message.dataset.message;
+                // Mostrar solo el mensaje descriptivo, sin el título genérico
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+
+                const icon = getIconForType(type);
+
+                notification.innerHTML = `
+                    <div class="notification-icon">${icon}</div>
+                    <div class="notification-content">
+                        <div class="notification-message">${messageText}</div>
+                    </div>
+                    <button class="notification-close">&times;</button>
+                `;
+
+                const container = document.querySelector('.notification-container') || createNotificationContainer();
+                container.appendChild(notification);
+
+                // Cerrar notificación al hacer clic en el botón
+                const closeButton = notification.querySelector('.notification-close');
+                closeButton.addEventListener('click', () => {
+                    notification.classList.add('slide-out');
+                    setTimeout(() => notification.remove(), 500);
+                });
+
+                // Cerrar automáticamente después de 8 segundos
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.classList.add('slide-out');
+                        setTimeout(() => notification.remove(), 500);
+                    }
+                }, 8000);
+            });
+
+            // Restaurar el addEventListener original
+            document.addEventListener = originalAddEventListener;
+
+            // Limpiar el contenedor de mensajes flash
+            document.getElementById('flash-messages').innerHTML = '';
+        });
+    </script>
 </body>
 </html>

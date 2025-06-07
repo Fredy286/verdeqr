@@ -1,0 +1,122 @@
+/* Estilos para avatares predeterminados */
+.default-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Avatar masculino con temática de naturaleza (árbol) */
+.default-avatar-male {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.default-avatar-male::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 60%;
+    background-color: #8D6E63;
+    border-radius: 5px 5px 0 0;
+    z-index: 1;
+}
+
+.default-avatar-male::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 40%;
+    background-color: #388E3C;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Avatar femenino con temática de naturaleza (flor) */
+.default-avatar-female {
+    background: linear-gradient(135deg, #E1BEE7, #9C27B0);
+}
+
+.default-avatar-female::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20%;
+    height: 50%;
+    background-color: #8D6E63;
+    z-index: 1;
+}
+
+.default-avatar-female::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle at center, #FFC107 20%, #E91E63 20%, #E91E63 40%, transparent 40%);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Pétalos de la flor */
+.default-avatar-female .petal {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background-color: #E91E63;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.default-avatar-female .petal:nth-child(1) {
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.default-avatar-female .petal:nth-child(2) {
+    top: 30%;
+    left: 15%;
+}
+
+.default-avatar-female .petal:nth-child(3) {
+    top: 30%;
+    right: 15%;
+}
+
+.default-avatar-female .petal:nth-child(4) {
+    bottom: 30%;
+    left: 15%;
+}
+
+.default-avatar-female .petal:nth-child(5) {
+    bottom: 30%;
+    right: 15%;
+}
+
+/* Animación suave para los avatares */
+@keyframes gentle-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.default-avatar::before,
+.default-avatar::after {
+    animation: gentle-pulse 3s infinite ease-in-out;
+}

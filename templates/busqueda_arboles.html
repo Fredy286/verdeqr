@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Búsqueda - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/principal.css') }}?v={{ range(1, 10000) | random }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}?v={{ range(1, 10000) | random }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fix_principal.css') }}?v={{ range(1, 10000) | random }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}?v={{ range(1, 10000) | random }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <!-- Barra Superior -->
+    <header class="header-principal">
+        <div class="header-container">
+            <div class="logo" onclick="window.location.href='{{ url_for('principal') }}'" style="cursor: pointer;">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+            </div>
+            <div class="buscador">
+                <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                    <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres..." value="{{ query }}">
+                    <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <script>
+                function validateSearch() {
+                    const searchInput = document.getElementById('searchInput');
+                    if (!searchInput.value.trim()) {
+                        // Si el campo está vacío, no envía el formulario
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+            <nav class="menu-principal">
+                <ul>
+                    <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('principal') }}#arboles">Árboles</a></li>
+                    <li><a href="{{ url_for('principal') }}#centros">Centros</a></li>
+                    <li><a href="{{ url_for('principal') }}#sugerencias">Sugerencias</a></li>
+                    {% if 'usuario' in session %}
+                    <li><a href="{{ url_for('gestion') }}">Gestión</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="usuario">
+                <a href="{{ url_for('inicio') }}" class="btn-menu">Inicio</a>
+                <a href="{{ url_for('principal') }}" class="btn-menu">Ver Árboles</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección de Resultados de Búsqueda -->
+    <section class="resultados-busqueda">
+        <div class="contenedor-resultados">
+            <div class="titulo-resultados">
+                <h1>Resultados de búsqueda para: "{{ query }}"</h1>
+                <p>Se encontraron {{ arboles|length }} resultados</p>
+            </div>
+
+            {% if arboles %}
+            <div class="grid-arboles">
+                {% for arbol in arboles %}
+                <div class="arbol-card">
+                    <div class="imagen-arbol">
+                        {% if arbol.Imagen %}
+                        <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.NombreCientifico }}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ arbol.NombreCientifico }}">
+                        {% endif %}
+                        <div class="hover-info">
+                            <h4>{{ arbol.NombreCientifico }}</h4>
+                            <p>{{ arbol.Descripcion if arbol.Descripcion else 'Especie nativa de Colombia' }}</p>
+                        </div>
+                    </div>
+                    <div class="info-arbol">
+                        <h3>{{ arbol.NombreVulgar if arbol.NombreVulgar else arbol.NombreCientifico }}
+                            <span>({{ arbol.NombreCientifico }})</span>
+                        </h3>
+                        <div class="detalles">
+                            <p><i class="fas fa-tree"></i> {{ arbol.Caracteristicas[:50] + '...' if arbol.Caracteristicas and arbol.Caracteristicas|length > 50 else arbol.Caracteristicas if arbol.Caracteristicas else 'Características no disponibles' }}</p>
+                            <p><i class="fas fa-leaf"></i> {{ arbol.ServicioEcosistemico[:50] + '...' if arbol.ServicioEcosistemico and arbol.ServicioEcosistemico|length > 50 else arbol.ServicioEcosistemico if arbol.ServicioEcosistemico else 'Servicios ecosistémicos no disponibles' }}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> {{ arbol.UbicacionGeografica if arbol.UbicacionGeografica else 'Ubicación no especificada' }}</p>
+                        </div>
+                        <a href="{{ url_for('ver_arbol', id=arbol.IDArbol) }}" class="btn">Explorar <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="sin-resultados">
+                <i class="fas fa-search"></i>
+                <h2>No se encontraron resultados</h2>
+                <p>Intenta con otros términos de búsqueda o explora nuestro catálogo completo de árboles.</p>
+                <a href="{{ url_for('inicio') }}" class="btn">Volver a inicio</a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Pie de Página -->
+    <footer class="footer-principal" style="background-color: #1a2a3a;">
+        <div class="contenido-footer" style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div class="logo-footer" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px;">
+                <h3 style="color: white; margin-bottom: 10px;">VerdeQR</h3>
+                <p style="color: #ccc; font-size: 0.9rem;">Plataforma de conservación y conocimiento de la flora colombiana</p>
+            </div>
+
+            <div class="enlaces-footer" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Enlaces rápidos</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('inicio') }}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Inicio</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Árboles</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}#centros" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Centros</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}#sugerencias" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Sugerencias</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Contacto</h4>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: #28a745;"></i> Calle 123, Bogotá, Colombia</p>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-phone" style="margin-right: 10px; color: #28a745;"></i> +57 123 456 7890</p>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-envelope" style="margin-right: 10px; color: #28a745;"></i> info@verdeqr.com</p>
+            </div>
+
+            <div class="redes-sociales" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Síguenos</h4>
+                <div style="display: flex; gap: 15px;">
+                    <a href="#" title="Facebook" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="YouTube" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; padding-top: 20px; padding-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
+            <p style="color: #ccc; font-size: 0.9rem; margin: 0;">&copy; 2024 VerdeQR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <style>
+        .resultados-busqueda {
+            padding: 60px 20px;
+            background-color: var(--color-fondo);
+        }
+
+        .contenedor-resultados {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .titulo-resultados {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .titulo-resultados h1 {
+            font-size: 2.5rem;
+            color: var(--color-primario);
+            margin-bottom: 10px;
+        }
+
+        .titulo-resultados p {
+            font-size: 1.2rem;
+            color: var(--color-texto-claro);
+        }
+
+        .sin-resultados {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--sombra);
+        }
+
+        .sin-resultados i {
+            font-size: 4rem;
+            color: var(--color-primario);
+            margin-bottom: 20px;
+        }
+
+        .sin-resultados h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--color-primario);
+        }
+
+        .sin-resultados p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: var(--color-texto-claro);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .sin-resultados .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--color-acento);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .sin-resultados .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+
+    <!-- Botones flotantes -->
+    {% if 'usuario' in session %}
+    <div class="botones-flotantes" style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000;">
+        <a href="{{ url_for('inicio') }}" class="btn-flotante" style="padding: 12px 20px; border-radius: 30px; background-color: #3498db; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+            <i class="fas fa-home" style="margin-right: 8px;"></i> Ir a Inicio
+        </a>
+        <a href="{{ url_for('principal') }}" class="btn-flotante" style="padding: 12px 20px; border-radius: 30px; background-color: #28a745; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+            <i class="fas fa-tree" style="margin-right: 8px;"></i> Ir a Principal
+        </a>
+    </div>
+    {% endif %}
+</body>
+</html>

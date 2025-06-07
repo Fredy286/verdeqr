@@ -5,34 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Uso de Árbol - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
         <nav class="menu-principal">
             <ul id="menu">
                 <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
                 <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
                 <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
-                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
                 <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
                 <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
-                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
                 <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
                 <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
                 <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             </ul>
         </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
                 <div class="user-info">
                     <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
-                    <span class="user-email">{{ session['usuario']['CorreoElectronico'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
                 </div>
             </a>
         </div>
@@ -43,16 +53,140 @@
             <h2>Editar Uso de Árbol</h2>
             <form method="POST" action="{{ url_for('editar_uso_arbol', id=uso_arbol.IDUso) }}" class="formulario-gestion">
                 <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" class="form-control" required>{{ uso_arbol.Descripcion }}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="estado">Estado:</label>
-                    <select id="estado" name="estado" class="form-control" required>
-                        <option value="1" {% if uso_arbol.Estado == 1 %}selected{% endif %}>Activo</option>
-                        <option value="2" {% if uso_arbol.Estado == 2 %}selected{% endif %}>Inactivo</option>
+                    <label for="especie">Especie:</label>
+                    <select id="especie" name="especie" class="form-control" required>
+                        {% for esp in especies %}
+                        <option value="{{ esp.IDEspecie }}" {% if esp.IDEspecie == uso_arbol.Especie %}selected{% endif %}>{{ esp.NombreCientifico }} ({{ esp.NombreVulgar }})</option>
+                        {% endfor %}
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" value="{{ uso_arbol.Nombre }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria" class="form-control" required onchange="mostrarCamposEspecificos()">
+                        <option value="Maderable" {% if uso_arbol.TipoUsoDetectado == 'Maderable' %}selected{% endif %}>Maderable</option>
+                        <option value="Comestible" {% if uso_arbol.TipoUsoDetectado == 'Comestible' %}selected{% endif %}>Comestible</option>
+                        <option value="Medicinal" {% if uso_arbol.TipoUsoDetectado == 'Medicinal' %}selected{% endif %}>Medicinal</option>
+                        <option value="Ornamental" {% if uso_arbol.TipoUsoDetectado == 'Ornamental' %}selected{% endif %}>Ornamental</option>
+                        <option value="Artesanal" {% if uso_arbol.TipoUsoDetectado == 'Artesanal' %}selected{% endif %}>Artesanal</option>
+                        <option value="Agroforestal" {% if uso_arbol.TipoUsoDetectado == 'Agroforestal' %}selected{% endif %}>Agroforestal</option>
+                        <option value="RestauracionEcologica" {% if uso_arbol.TipoUsoDetectado == 'RestauracionEcologica' %}selected{% endif %}>Restauración Ecológica</option>
+                        <option value="CulturalCeremonial" {% if uso_arbol.TipoUsoDetectado == 'CulturalCeremonial' %}selected{% endif %}>Cultural/Ceremonial</option>
+                        <option value="Melifero" {% if uso_arbol.TipoUsoDetectado == 'Melifero' %}selected{% endif %}>Melífero</option>
+                        <option value="ProteccionAmbiental" {% if uso_arbol.TipoUsoDetectado == 'ProteccionAmbiental' %}selected{% endif %}>Protección Ambiental</option>
+                        <option value="Tintoreo" {% if uso_arbol.TipoUsoDetectado == 'Tintoreo' %}selected{% endif %}>Tintóreo</option>
+                        <option value="Oleaginoso" {% if uso_arbol.TipoUsoDetectado == 'Oleaginoso' %}selected{% endif %}>Oleaginoso</option>
+                        <option value="Biocombustible" {% if uso_arbol.TipoUsoDetectado == 'Biocombustible' %}selected{% endif %}>Biocombustible</option>
+                        <option value="Otro" {% if uso_arbol.TipoUsoDetectado == 'Otro' %}selected{% endif %}>Otro</option>
+                    </select>
+                </div>
+
+                <!-- Campos específicos para Maderable -->
+                <div id="campos-maderable" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Maderable</h4>
+                    <div class="form-group">
+                        <label for="dureza">Dureza:</label>
+                        <select id="dureza" name="dureza" class="form-control">
+                            <option value="Blanda" {% if datos_especificos.maderable and datos_especificos.maderable.Dureza == 'Blanda' %}selected{% endif %}>Blanda</option>
+                            <option value="Media" {% if datos_especificos.maderable and datos_especificos.maderable.Dureza == 'Media' %}selected{% endif %}>Media</option>
+                            <option value="Dura" {% if datos_especificos.maderable and datos_especificos.maderable.Dureza == 'Dura' %}selected{% endif %}>Dura</option>
+                            <option value="Muy Dura" {% if datos_especificos.maderable and datos_especificos.maderable.Dureza == 'Muy Dura' %}selected{% endif %}>Muy Dura</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resistencia">Resistencia:</label>
+                        <select id="resistencia" name="resistencia" class="form-control">
+                            <option value="Baja" {% if datos_especificos.maderable and datos_especificos.maderable.Resistencia == 'Baja' %}selected{% endif %}>Baja</option>
+                            <option value="Media" {% if datos_especificos.maderable and datos_especificos.maderable.Resistencia == 'Media' %}selected{% endif %}>Media</option>
+                            <option value="Alta" {% if datos_especificos.maderable and datos_especificos.maderable.Resistencia == 'Alta' %}selected{% endif %}>Alta</option>
+                            <option value="Muy Alta" {% if datos_especificos.maderable and datos_especificos.maderable.Resistencia == 'Muy Alta' %}selected{% endif %}>Muy Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uso_final">Uso Final:</label>
+                        <input type="text" id="uso_final" name="uso_final" class="form-control" value="{{ datos_especificos.maderable.UsoFinal if datos_especificos.maderable else '' }}" placeholder="Ej: Construcción, muebles, etc.">
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Comestible -->
+                <div id="campos-comestible" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Comestible</h4>
+                    <div class="form-group">
+                        <label for="parte_comestible">Parte Comestible:</label>
+                        <select id="parte_comestible" name="parte_comestible" class="form-control">
+                            <option value="Frutos" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Frutos' %}selected{% endif %}>Frutos</option>
+                            <option value="Hojas" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Hojas' %}selected{% endif %}>Hojas</option>
+                            <option value="Semillas" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Semillas' %}selected{% endif %}>Semillas</option>
+                            <option value="Raíces" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Raíces' %}selected{% endif %}>Raíces</option>
+                            <option value="Flores" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Flores' %}selected{% endif %}>Flores</option>
+                            <option value="Corteza" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Corteza' %}selected{% endif %}>Corteza</option>
+                            <option value="Savia" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Savia' %}selected{% endif %}>Savia</option>
+                            <option value="Otra" {% if datos_especificos.comestible and datos_especificos.comestible.ParteComestible == 'Otra' %}selected{% endif %}>Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="forma_consumo">Forma de Consumo:</label>
+                        <input type="text" id="forma_consumo" name="forma_consumo" class="form-control" value="{{ datos_especificos.comestible.FormaConsumo if datos_especificos.comestible else '' }}" placeholder="Ej: Crudo, cocido, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_nutricional">Valor Nutricional:</label>
+                        <textarea id="valor_nutricional" name="valor_nutricional" class="form-control" rows="2" placeholder="Ej: Rico en vitamina C, proteínas, etc.">{{ datos_especificos.comestible.ValorNutricional if datos_especificos.comestible else '' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Medicinal -->
+                <div id="campos-medicinal" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Medicinal</h4>
+                    <div class="form-group">
+                        <label for="parte_utilizada">Parte Utilizada:</label>
+                        <select id="parte_utilizada" name="parte_utilizada" class="form-control">
+                            <option value="Hojas" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Hojas' %}selected{% endif %}>Hojas</option>
+                            <option value="Corteza" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Corteza' %}selected{% endif %}>Corteza</option>
+                            <option value="Raíz" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Raíz' %}selected{% endif %}>Raíz</option>
+                            <option value="Frutos" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Frutos' %}selected{% endif %}>Frutos</option>
+                            <option value="Semillas" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Semillas' %}selected{% endif %}>Semillas</option>
+                            <option value="Flores" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Flores' %}selected{% endif %}>Flores</option>
+                            <option value="Savia" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Savia' %}selected{% endif %}>Savia</option>
+                            <option value="Otra" {% if datos_especificos.medicinal and datos_especificos.medicinal.ParteUtilizada == 'Otra' %}selected{% endif %}>Otra</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="preparacion">Preparación:</label>
+                        <textarea id="preparacion" name="preparacion" class="form-control" rows="2" placeholder="Ej: Infusión, decocción, etc.">{{ datos_especificos.medicinal.Preparacion if datos_especificos.medicinal else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="enfermedades_tratadas">Enfermedades Tratadas:</label>
+                        <textarea id="enfermedades_tratadas" name="enfermedades_tratadas" class="form-control" rows="2" placeholder="Ej: Dolor de cabeza, Fiebre, etc.">{{ datos_especificos.medicinal.EnfermedadesTratadas if datos_especificos.medicinal else '' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Campos específicos para Ornamental -->
+                <div id="campos-ornamental" class="campos-especificos" style="display: none;">
+                    <h4>Información de Uso Ornamental</h4>
+                    <div class="form-group">
+                        <label for="caracteristicas_esteticas">Características Estéticas:</label>
+                        <textarea id="caracteristicas_esteticas" name="caracteristicas_esteticas" class="form-control" rows="2" placeholder="Ej: Flores vistosas, follaje colorido, etc.">{{ datos_especificos.ornamental.CaracteristicasEsteticas if datos_especificos.ornamental else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion_recomendada">Ubicación Recomendada:</label>
+                        <input type="text" id="ubicacion_recomendada" name="ubicacion_recomendada" class="form-control" value="{{ datos_especificos.ornamental.UbicacionRecomendada if datos_especificos.ornamental else '' }}" placeholder="Ej: Jardines, parques, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_jardineria">Tipo de Jardinería:</label>
+                        <input type="text" id="tipo_jardineria" name="tipo_jardineria" class="form-control" value="{{ datos_especificos.ornamental.TipoJardineria if datos_especificos.ornamental else '' }}" placeholder="Ej: Paisajismo, jardines verticales, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="coloracion_estacional">Coloración Estacional:</label>
+                        <textarea id="coloracion_estacional" name="coloracion_estacional" class="form-control" rows="2" placeholder="Ej: Cambios de color en otoño, floración en primavera, etc.">{{ datos_especificos.ornamental.ColoracionEstacional if datos_especificos.ornamental else '' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Aquí puedes agregar los campos específicos para las demás categorías -->
+
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Guardar Cambios
                 </button>
@@ -64,5 +198,26 @@
     </main>
 
     <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        function mostrarCamposEspecificos() {
+            // Ocultar todos los campos específicos
+            const camposEspecificos = document.querySelectorAll('.campos-especificos');
+            camposEspecificos.forEach(campo => {
+                campo.style.display = 'none';
+            });
+
+            // Mostrar los campos específicos según la categoría seleccionada
+            const categoria = document.getElementById('categoria').value;
+            if (categoria) {
+                const camposMostrar = document.getElementById('campos-' + categoria.toLowerCase());
+                if (camposMostrar) {
+                    camposMostrar.style.display = 'block';
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', mostrarCamposEspecificos);
+    </script>
 </body>
 </html>

@@ -17,7 +17,7 @@
             --color-texto-claro: #666;
             --sombra: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         body {
             margin: 0;
             padding: 0;
@@ -26,43 +26,73 @@
         }
     </style>
 </head>
-<body>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
     <!-- Contenedor principal sin márgenes -->
     <div class="perfil-container">
         <!-- Header con portada a ancho completo -->
         <div class="perfil-header">
             <!-- Portada que ocupa todo el ancho -->
             <div class="portada-full">
-                <img src="{{ url_for('static', filename='css/js/img/portada.jpg') }}" alt="Portada de perfil" class="portada-img">
+                <img src="{{ url_for('static', filename='css/js/img/pperfil.jpg') }}" alt="Portada de perfil" class="portada-img">
                 <div class="portada-overlay"></div>
             </div>
-            
+
             <!-- Controles de navegación flotantes -->
             <div class="perfil-controls">
                 <a href="{{ url_for('principal') }}" class="btn-control">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
                 <a href="{{ url_for('gestion') }}" class="btn-control admin-only">
                     <i class="fas fa-cog"></i>
                 </a>
                 {% endif %}
             </div>
-            
+
             <!-- Avatar centrado perfectamente en la portada -->
             <div class="avatar-centrado">
-                <div class="avatar-wrapper">
-                    <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Avatar del usuario" class="avatar-img">
-                    <button class="avatar-edit" onclick="document.getElementById('avatar-input').click()" title="Cambiar foto de perfil">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                    <input type="file" id="avatar-input" style="display: none;">
+                <div class="avatar-wrapper" onclick="expandirAvatar(this)">
+                    {% if session['usuario'].get('Imagen') %}
+                        <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Avatar del usuario" class="avatar-img">
+                    {% else %}
+                        {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Avatar del usuario" class="avatar-img">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Avatar del usuario" class="avatar-img">
+                        {% endif %}
+                    {% endif %}
+                    <div class="avatar-controls">
+                        <button type="button" class="avatar-edit" onclick="event.stopPropagation(); document.getElementById('avatar-input').click()" title="Cambiar foto de perfil">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button type="button" class="avatar-delete" onclick="event.stopPropagation(); eliminarAvatar()" title="Eliminar foto de perfil">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <input type="file" id="avatar-input" name="avatar" style="display: none;" accept="image/*">
+                </div>
+            </div>
+
+            <!-- Modal para mostrar la imagen expandida -->
+            <div id="avatar-modal" class="modal">
+                <span class="close-modal" onclick="cerrarModal('avatar-modal')">&times;</span>
+                <div class="modal-content">
+                    <img id="avatar-expandido" src="" alt="Avatar expandido">
+                    <div class="avatar-modal-controls">
+                        <button type="button" class="btn-avatar" onclick="document.getElementById('avatar-input').click()">
+                            <i class="fas fa-camera"></i> Cambiar foto
+                        </button>
+                        <button type="button" class="btn-avatar btn-danger" onclick="eliminarAvatar()">
+                            <i class="fas fa-trash"></i> Eliminar foto
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-            
-        
+
+
 
         <!-- Información principal -->
         <div class="perfil-content">
@@ -71,13 +101,13 @@
                 <div class="user-meta">
                     <span class="user-role">
                         <i class="fas fa-user-tag"></i>
-                        {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                        {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
                         Administrador
                         {% else %}
                         Usuario
                         {% endif %}
                     </span>
-                    <span class="user-email"><i class="fas fa-envelope"></i> {{ session['usuario']['CorreoElectronico'] }}</span>
+                    <span class="user-email"><i class="fas fa-envelope"></i> {{ session['usuario']['Correo'] }}</span>
                     {% if session['usuario']['Telefono'] %}
                     <span class="user-phone"><i class="fas fa-phone"></i> {{ session['usuario']['Telefono'] }}</span>
                     {% endif %}
@@ -85,40 +115,7 @@
                 </div>
             </div>
 
-            <!-- Estadísticas solo para admin -->
-            {% if 'usuario' in session and session['usuario']['CorreoElectronico'] == 'jjhon123@gmail.com' %}
-            <div class="admin-stats">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tree"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>{{ arboles_registrados }}</h3>
-                            <p>Árboles registrados</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-qrcode"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>{{ qrs_generados }}</h3>
-                            <p>QRs generados</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>{{ sugerencias_enviadas }}</h3>
-                            <p>Sugerencias</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+
 
             <!-- Pestañas de navegación -->
             <div class="profile-tabs">
@@ -141,17 +138,11 @@
                         </div>
                         <div class="info-item">
                             <label><i class="fas fa-at"></i> Correo electrónico</label>
-                            <p>{{ session['usuario']['CorreoElectronico'] }}</p>
+                            <p>{{ session['usuario']['Correo'] }}</p>
                         </div>
-                        {% if session['usuario']['Telefono'] %}
                         <div class="info-item">
                             <label><i class="fas fa-mobile-alt"></i> Teléfono</label>
-                            <p>{{ session['usuario']['Telefono'] }}</p>
-                        </div>
-                        {% endif %}
-                        <div class="info-item">
-                            <label><i class="far fa-calendar-alt"></i> Fecha de registro</label>
-                            <p>{{ fecha_registro }}</p>
+                            <p>{{ session['usuario']['Telefono'] if session['usuario']['Telefono'] else 'No registrado' }}</p>
                         </div>
                     </div>
                 </div>
@@ -160,7 +151,7 @@
             <div class="tab-content" id="settings-tab">
                 <div class="settings-section">
                     <h2><i class="fas fa-user-edit"></i> Editar perfil</h2>
-                    <form class="profile-form" method="POST" action="{{ url_for('perfil') }}">
+                    <form class="profile-form" method="POST" action="{{ url_for('perfil') }}" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nombres">Nombres</label>
                             <input type="text" id="nombres" name="nombres" value="{{ session['usuario']['Nombres'] }}" required>
@@ -168,6 +159,10 @@
                         <div class="form-group">
                             <label for="apellidos">Apellidos</label>
                             <input type="text" id="apellidos" name="apellidos" value="{{ session['usuario']['Apellidos'] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="correo">Correo electrónico</label>
+                            <input type="email" id="correo" name="correo" value="{{ session['usuario']['Correo'] }}" required>
                         </div>
                         <div class="form-group">
                             <label for="telefono">Teléfono</label>
@@ -219,6 +214,17 @@
         .btn-logout i {
             margin-right: 8px;
         }
+
+        /* Estilos para centrar los iconos en los botones */
+        .btn-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-control i {
+            vertical-align: middle;
+        }
     </style>
 
     <!-- Modal para cambiar contraseña -->
@@ -248,39 +254,98 @@
     </div>
 
     <script>
+        // Función para mostrar notificaciones usando el sistema existente
+        function showNotification(message, type = 'info') {
+            // Verificar si existe la función global de notificaciones
+            if (typeof window.showModalNotification === 'function') {
+                // Usar la función global si existe
+                let title = '';
+                let icon = '';
+
+                switch(type) {
+                    case 'success':
+                        title = 'Éxito';
+                        icon = 'fas fa-check-circle';
+                        break;
+                    case 'error':
+                        title = 'Error';
+                        icon = 'fas fa-exclamation-circle';
+                        break;
+                    case 'warning':
+                        title = 'Advertencia';
+                        icon = 'fas fa-exclamation-triangle';
+                        break;
+                    default:
+                        title = 'Información';
+                        icon = 'fas fa-info-circle';
+                }
+
+                window.showModalNotification(title, message, type, icon);
+            } else {
+                // Crear una notificación personalizada si no existe la función global
+                const notificationContainer = document.querySelector('.notification-container') || (() => {
+                    const container = document.createElement('div');
+                    container.className = 'notification-container';
+                    document.body.appendChild(container);
+                    return container;
+                })();
+
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <p>${message}</p>
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                notificationContainer.appendChild(notification);
+
+                // Auto-cerrar después de 5 segundos
+                setTimeout(() => {
+                    notification.classList.add('slide-out');
+                    setTimeout(() => notification.remove(), 500);
+                }, 5000);
+            }
+        }
+
         // Funcionalidad de pestañas
         document.addEventListener('DOMContentLoaded', () => {
             const tabButtons = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
-            
+
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     // Remover clase active de todos los botones
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     // Añadir clase active al botón clickeado
                     button.classList.add('active');
-                    
+
                     // Ocultar todos los contenidos
                     tabContents.forEach(content => content.classList.remove('active'));
-                    
+
                     // Mostrar el contenido correspondiente
                     const tabId = button.getAttribute('data-tab');
                     document.getElementById(`${tabId}-tab`).classList.add('active');
                 });
             });
-            
+
             // Función para mostrar modal de cambio de contraseña
             window.mostrarModalCambioContrasena = function() {
                 document.getElementById('password-modal').style.display = 'block';
                 document.body.style.overflow = 'hidden'; // Prevenir scroll
             };
-            
+
             // Función para cerrar modales
             window.cerrarModal = function(modalId) {
                 document.getElementById(modalId).style.display = 'none';
                 document.body.style.overflow = 'auto'; // Restaurar scroll
             };
-            
+
             // Cerrar modal al hacer clic fuera del contenido
             window.addEventListener('click', (e) => {
                 const modal = document.getElementById('password-modal');
@@ -288,14 +353,80 @@
                     cerrarModal('password-modal');
                 }
             });
-            
+
             // Función para cerrar sesión
             window.cerrarSesion = function() {
                 if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                     window.location.href = "{{ url_for('cerrar_sesion') }}";
                 }
             };
-            
+
+            // Función para expandir el avatar
+            window.expandirAvatar = function(element) {
+                const avatarImg = element.querySelector('.avatar-img');
+                const modal = document.getElementById('avatar-modal');
+                const avatarExpandido = document.getElementById('avatar-expandido');
+
+                // Establecer la imagen expandida
+                avatarExpandido.src = avatarImg.src;
+
+                // Mostrar el modal
+                modal.style.display = 'block';
+
+                // Evitar que el scroll de la página funcione mientras el modal está abierto
+                document.body.style.overflow = 'hidden';
+            };
+
+            // Función para cerrar el modal
+            window.cerrarModal = function(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            };
+
+            // Cerrar el modal al hacer clic fuera del contenido
+            window.onclick = function(event) {
+                const modal = document.getElementById('avatar-modal');
+                if (event.target === modal) {
+                    cerrarModal('avatar-modal');
+                }
+            };
+
+            // Función para eliminar el avatar
+            window.eliminarAvatar = function() {
+                if (confirm('¿Estás seguro de que deseas eliminar tu foto de perfil? Se asignará un avatar predeterminado.')) {
+                    fetch('{{ url_for("eliminar_avatar") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Actualizar la imagen del avatar directamente
+                            document.querySelector('.avatar-img').src = data.imagen_path;
+                            console.log('Ruta de la imagen predeterminada:', data.imagen_path);
+
+                            // Mostrar notificación de éxito
+                            showNotification('Avatar eliminado exitosamente', 'success');
+
+                            // Recargar la página para actualizar todos los avatares
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            showNotification('Error: ' + data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('Error al eliminar el avatar', 'error');
+                    });
+                }
+            };
+
             // Efecto de pulso para el avatar
             const avatarWrapper = document.querySelector('.avatar-wrapper');
             setTimeout(() => {
@@ -304,30 +435,67 @@
                     avatarWrapper.classList.remove('pulse');
                 }, 2000);
             }, 1000);
-            
-            // Funcionalidad para cambiar avatar (simulada)
+
+            // Funcionalidad para cambiar avatar
             const avatarInput = document.getElementById('avatar-input');
             if (avatarInput) {
                 avatarInput.addEventListener('change', (e) => {
                     if (e.target.files && e.target.files[0]) {
-                        alert('Esta funcionalidad es simulada. El cambio de avatar se implementará en una futura actualización.');
+                        // Mostrar vista previa de la imagen inmediatamente
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            document.querySelector('.avatar-img').src = event.target.result;
+                        }
+                        reader.readAsDataURL(e.target.files[0]);
+
+                        // Crear un FormData para enviar la imagen
+                        const formData = new FormData();
+                        formData.append('avatar', e.target.files[0]);
+
+                        // Mostrar indicador de carga
+                        showNotification('Subiendo imagen...', 'info');
+
+                        // Enviar la imagen al servidor mediante AJAX
+                        fetch('{{ url_for("actualizar_avatar") }}', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('Avatar actualizado exitosamente', 'success');
+                            } else {
+                                showNotification('Error: ' + data.message, 'error');
+                                // Revertir la vista previa si hay error
+                                const avatarSrc = '{{ url_for("static", filename=session["usuario"].get("Imagen") or "css/js/img/perfil.png") }}';
+                                document.querySelector('.avatar-img').src = avatarSrc;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showNotification('Error al subir la imagen', 'error');
+                            // Revertir la vista previa si hay error
+                            const avatarSrc = '{{ url_for("static", filename=session["usuario"].get("Imagen") or "css/js/img/perfil.png") }}';
+                            document.querySelector('.avatar-img').src = avatarSrc;
+                        });
                     }
                 });
             }
-            
+
             // Validación del formulario de cambio de contraseña
             const passwordForm = document.getElementById('password-form');
             if (passwordForm) {
                 passwordForm.addEventListener('submit', (e) => {
                     const newPassword = document.getElementById('new-password').value;
                     const confirmPassword = document.getElementById('confirm-password').value;
-                    
+
                     // Validar que las contraseñas coincidan
                     if (newPassword !== confirmPassword) {
                         e.preventDefault();
                         alert('Las contraseñas no coinciden. Por favor, inténtalo de nuevo.');
                     }
-                    
+
                     // Validar complejidad de la contraseña
                     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
                     if (!passwordRegex.test(newPassword)) {

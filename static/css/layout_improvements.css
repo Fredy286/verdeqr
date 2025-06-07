@@ -1,0 +1,385 @@
+/* layout_improvements.css - Mejoras específicas para la distribución de elementos */
+
+/* ===== MEJORAS PARA CENTROS ===== */
+.grid-centros {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 30px !important;
+  width: 100% !important;
+  max-width: var(--ultra-wide-content-width) !important;
+  margin: 0 auto !important;
+}
+
+/* Cuando solo hay un centro, centrarlo */
+.grid-centros:has(.centro-card:only-child) {
+  grid-template-columns: minmax(300px, 600px) !important;
+  justify-content: center !important;
+}
+
+/* ===== MEJORAS PARA ÁRBOLES DESTACADOS ===== */
+.grid-arboles {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 30px !important;
+  width: 100% !important;
+  max-width: var(--ultra-wide-content-width) !important;
+  margin: 0 auto !important;
+}
+
+/* Cuando solo hay un árbol, centrarlo */
+.grid-arboles:has(.arbol-card:only-child) {
+  grid-template-columns: minmax(300px, 400px) !important;
+  justify-content: center !important;
+}
+
+/* Cuando hay dos árboles, distribuirlos en dos columnas */
+.grid-arboles:has(.arbol-card:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+/* Cuando hay más de tres árboles, mantener tres columnas */
+.grid-arboles:has(.arbol-card:nth-child(3)) {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+/* ===== MEJORAS PARA SUGERENCIAS ===== */
+.contenedor-sugerencias {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 40px !important;
+  width: 100% !important;
+}
+
+.formulario-sugerencias,
+.sugerencias-lista {
+  width: 100% !important;
+}
+
+/* Mejorar el aspecto del formulario de sugerencias */
+.formulario-sugerencias {
+  background: linear-gradient(135deg, #2c3e50, #3498db) !important;
+  border-radius: 15px !important;
+  padding: 2rem !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+  transform: translateY(0) !important;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease !important;
+}
+
+.formulario-sugerencias:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
+}
+
+.formulario-contenido {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 12px !important;
+  padding: 2rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Mejorar las animaciones de las tarjetas de sugerencias */
+.sugerencia-card {
+  background: white !important;
+  border-radius: 10px !important;
+  padding: 1.5rem !important;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+  min-width: 200px !important;
+  opacity: 1 !important; /* Asegurar que sean visibles */
+  transform: none !important; /* Resetear cualquier transformación */
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Efecto de brillo en el borde al pasar el cursor */
+.sugerencia-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: -2px !important;
+  right: -2px !important;
+  bottom: -2px !important;
+  background: linear-gradient(45deg, #3498db, #2ecc71, #3498db) !important;
+  z-index: -2 !important;
+  border-radius: 12px !important;
+  opacity: 0 !important;
+  transition: opacity 0.5s ease !important;
+}
+
+/* Fondo blanco sobre el brillo */
+.sugerencia-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: white !important;
+  z-index: -1 !important;
+  border-radius: 9px !important;
+  transition: all 0.5s ease !important;
+}
+
+.sugerencia-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+  z-index: 5 !important;
+}
+
+.sugerencia-card:hover::before {
+  opacity: 1 !important;
+  animation: rotate 3s linear infinite !important;
+}
+
+.sugerencia-card:hover::after {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Mejorar la apariencia interna de las tarjetas */
+.sugerencia-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.sugerencia-card:hover .sugerencia-header {
+  border-bottom-color: rgba(52, 152, 219, 0.3) !important;
+}
+
+.usuario-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.usuario-info i {
+  font-size: 1.2rem !important;
+  color: #3498db !important;
+  transition: transform 0.3s ease !important;
+}
+
+.sugerencia-card:hover .usuario-info i {
+  transform: scale(1.2) !important;
+}
+
+.fecha {
+  font-size: 0.8rem !important;
+  color: #7f8c8d !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+}
+
+.fecha i {
+  color: #3498db !important;
+  transition: transform 0.3s ease !important;
+}
+
+.sugerencia-card:hover .fecha i {
+  transform: rotate(360deg) !important;
+  transition: transform 0.5s ease-in-out !important;
+}
+
+.sugerencia-contenido {
+  line-height: 1.5 !important;
+  color: #34495e !important;
+  transition: color 0.3s ease !important;
+}
+
+.sugerencia-card:hover .sugerencia-contenido {
+  color: #2c3e50 !important;
+}
+
+@keyframes rotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animaciones mejoradas */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  50% {
+    box-shadow: 0 5px 30px rgba(52, 152, 219, 0.3);
+  }
+  100% {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+}
+
+/* Aplicar animaciones a elementos específicos */
+.arbol-card, .centro-card {
+  animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: calc(var(--item-index, 0) * 0.1s);
+  opacity: 0;
+}
+
+.arbol-card:hover, .centro-card:hover {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Responsive para diferentes tamaños de pantalla */
+@media (max-width: 992px) {
+  .grid-arboles, .grid-centros {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .grid-arboles:has(.arbol-card:only-child),
+  .grid-centros:has(.centro-card:only-child) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-arboles, .grid-centros {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Estilos para los botones */
+.btn-enviar {
+  background: white !important;
+  color: #2c3e50 !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 30px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  margin: 1.5rem auto 0 !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.4s ease,
+              background-color 0.4s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Estilo específico para el botón Explorar en las tarjetas de árboles */
+.arbol-card .btn {
+  background: #28a745 !important; /* Fondo verde */
+  color: white !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 30px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  margin: 1.5rem auto 0 !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.4s ease,
+              background-color 0.4s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Estilo para otros botones */
+.btn:not(.arbol-card .btn) {
+  background: white !important;
+  color: #2c3e50 !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 30px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  margin: 1.5rem auto 0 !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.4s ease,
+              background-color 0.4s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn-enviar:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  background: #f8f9fa !important;
+}
+
+.arbol-card .btn:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  background: #218838 !important; /* Verde más oscuro al hacer hover */
+}
+
+.btn:not(.arbol-card .btn):hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  background: #f8f9fa !important;
+}
+
+.btn-enviar:active, .btn:active {
+  transform: translateY(-2px) !important;
+}
+
+/* Efecto de ondas para botones */
+.ripple-effect {
+  position: absolute !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  width: 100px !important;
+  height: 100px !important;
+  margin-top: -50px !important;
+  margin-left: -50px !important;
+  animation: ripple-animation 0.6s ease-out !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@keyframes ripple-animation {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}

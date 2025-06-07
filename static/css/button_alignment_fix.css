@@ -1,0 +1,70 @@
+/* Corrección para alinear los botones en la barra superior */
+.menu-superior .botones {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 40px; /* Altura fija para todos los botones */
+}
+
+.menu-superior .botones .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 16px;
+}
+
+/* Estilo específico para el botón de gestión */
+.menu-superior .botones .btn-gestion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Estilo específico para el botón de perfil */
+.menu-superior .botones .btn-perfil {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px; /* Mismo alto que los otros botones */
+    padding: 0 10px;
+    background-color: transparent !important; /* Mantener el fondo transparente */
+    border: none !important;
+}
+
+/* Contenedor de información de usuario */
+.menu-superior .botones .user-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 150px; /* Limitar el ancho */
+}
+
+/* Imagen de usuario */
+.menu-superior .botones .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+/* Nombre de usuario */
+.menu-superior .botones .user-name {
+    font-weight: bold;
+    line-height: 1.2;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Correo de usuario */
+.menu-superior .botones .user-email {
+    font-size: 0.75em;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

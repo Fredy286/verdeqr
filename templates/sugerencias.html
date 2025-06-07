@@ -5,31 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugerencias - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
         <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
         <nav class="menu-principal">
             <ul id="menu">
                 <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
                 <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
                 <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
-                <li><a href="{{ url_for('tipo_arbol') }}"><i class="fas fa-seedling"></i><span>Tipos de Árbol</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
                 <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
                 <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
-                <li><a href="{{ url_for('medidas_arbol') }}"><i class="fas fa-ruler"></i><span>Medidas</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
                 <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
                 <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
                 <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             </ul>
         </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" class="user-avatar">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
                 <div class="user-info">
                     <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
                     <span class="user-email">{{ session['usuario']['Correo'] }}</span>
@@ -62,41 +74,41 @@
         </div>
 
         <!-- Lista de sugerencias -->
-        <div class="contenedor-seccion">
+        <div class="contenedor-seccion sugerencias-container">
             <h2>Gestión de Sugerencias</h2>
-            
+
             <div class="table-container">
                 <table class="table-gestion">
                     <thead>
                         <tr>
-                            <th class="text-center border-right">ID</th>
-                            <th class="text-center border-right">Nombre</th>
-                            <th class="text-center border-right">Email</th>
-                            <th class="text-center border-right">Sugerencia</th>
-                            <th class="text-center border-right">Fecha</th>
-                            <th class="text-center border-right">Estado</th>
-                            <th class="text-center">Acciones</th>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Sugerencia</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for sugerencia in sugerencias %}
-                        <tr class="table-row">
-                            <td class="text-center border-right">{{ sugerencia.IDSugerencia }}</td>
-                            <td class="text-center border-right">{{ sugerencia.Nombre }}</td>
-                            <td class="text-center border-right">{{ sugerencia.Email }}</td>
-                            <td class="text-center border-right">{{ sugerencia.Sugerencia }}</td>
-                            <td class="text-center border-right">{{ sugerencia.Fecha }}</td>
-                            <td class="text-center border-right">
+                        <tr>
+                            <td>{{ sugerencia.IDSugerencia }}</td>
+                            <td>{{ sugerencia.Nombre }}</td>
+                            <td>{{ sugerencia.Email }}</td>
+                            <td>{{ sugerencia.Sugerencia }}</td>
+                            <td>{{ sugerencia.Fecha }}</td>
+                            <td>
                                 <span class="badge {% if sugerencia.Estado == 1 %}badge-success{% else %}badge-secondary{% endif %}">
-                                    {{ sugerencia.EstadoDescripcion }}
+                                    {{ sugerencia.EstadoNombre }}
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ url_for('eliminar_sugerencia', id=sugerencia.IDSugerencia) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta sugerencia?')">
-                                        <i class="fas fa-trash"></i>
+                            <td class="acciones-cell">
+                                <div class="acciones-botones">
+                                    <a href="{{ url_for('eliminar_sugerencia', id=sugerencia.IDSugerencia) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta sugerencia?')">
+                                        <i class="fas fa-trash"></i> Eliminar
                                     </a>
-                                    <select class="form-select form-select-sm estado-sugerencia" 
+                                    <select class="form-select estado-sugerencia"
                                             data-id="{{ sugerencia.IDSugerencia }}"
                                             aria-label="Cambiar estado de la sugerencia">
                                         <option value="1" {% if sugerencia.Estado == 1 %}selected{% endif %}>Activo</option>
@@ -112,15 +124,16 @@
         </div>
     </main>
 
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selects = document.querySelectorAll('.estado-sugerencia');
-        
+
         selects.forEach(select => {
             select.addEventListener('change', function() {
                 const id = this.dataset.id;
                 const nuevoEstado = this.value;
-                
+
                 fetch(`/sugerencias/actualizar/${id}`, {
                     method: 'POST',
                     headers: {
@@ -135,35 +148,37 @@
                         const badge = this.closest('tr').querySelector('.badge');
                         badge.className = `badge ${nuevoEstado == 1 ? 'badge-success' : 'badge-secondary'}`;
                         badge.textContent = nuevoEstado == 1 ? 'Activo' : 'Inactivo';
-                        
-                        // Mostrar notificación de éxito
-                        showNotification(data.message, 'success');
+
+                        // Mostrar notificación de éxito con el sistema de notificaciones animadas
+                        showSuccess(data.message);
                     } else {
-                        showNotification(data.message, 'error');
+                        showError(data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showNotification('Error al actualizar el estado', 'error');
+                    showError('Error al actualizar el estado');
                 });
             });
         });
-    });
 
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
-        notification.style.zIndex = '9999';
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
+        // Convertir los mensajes flash a notificaciones animadas
+        const flashMessages = document.querySelectorAll('.flash-message');
+        flashMessages.forEach(message => {
+            const type = message.dataset.type || 'info';
+            const messageText = message.textContent.trim();
+            if (type === 'success') {
+                showSuccess(messageText);
+            } else if (type === 'error') {
+                showError(messageText);
+            } else if (type === 'warning') {
+                showWarning(messageText);
+            } else {
+                showInfo(messageText);
+            }
+            message.remove();
+        });
+    });
     </script>
 </body>
 </html>

@@ -1,0 +1,288 @@
+/* responsive_fullwidth.css - Solución para adaptar la página a pantallas muy grandes */
+
+/* Variables para diferentes tamaños de pantalla */
+:root {
+  --max-content-width: 1400px;
+  --ultra-wide-content-width: 90vw; /* Para pantallas ultra anchas */
+  --padding-mobile: 15px;
+  --padding-tablet: 20px;
+  --padding-desktop: 30px;
+  --padding-large: 40px;
+  --padding-ultra: 60px;
+}
+
+/* Asegurar que todo el contenido ocupe el ancho completo */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Hacer que el header ocupe todo el ancho */
+.header-principal {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Contenedor del header adaptable */
+.header-container {
+  width: 100% !important;
+  max-width: var(--max-content-width) !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+/* Hacer que todas las secciones ocupen todo el ancho */
+.bienvenida,
+.arboles-destacados,
+.centros,
+.sugerencias,
+.footer-principal {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  padding-left: var(--padding-mobile) !important;
+  padding-right: var(--padding-mobile) !important;
+}
+
+/* Contenedores internos con ancho máximo */
+.contenido-bienvenida,
+.titulo-seccion,
+.grid-arboles,
+.info-centros,
+.grid-centros,
+.contenedor-sugerencias,
+.contenido-footer {
+  width: 100% !important;
+  max-width: var(--max-content-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Estadísticas centradas */
+.estadisticas {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+}
+
+/* Carrusel de sugerencias */
+.carrusel-container {
+  width: 100% !important;
+  max-width: var(--max-content-width) !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.carrusel-sugerencias {
+  display: flex !important;
+  gap: 15px !important;
+  width: 100% !important;
+}
+
+.sugerencia-card {
+  background: white !important;
+  border-radius: 10px !important;
+  padding: 20px !important;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Estilos para el cursor */
+.logo, .usuario {
+  cursor: pointer !important;
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media (min-width: 768px) {
+  .bienvenida,
+  .arboles-destacados,
+  .centros,
+  .sugerencias,
+  .footer-principal {
+    padding-left: var(--padding-tablet) !important;
+    padding-right: var(--padding-tablet) !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .bienvenida,
+  .arboles-destacados,
+  .centros,
+  .sugerencias,
+  .footer-principal {
+    padding-left: var(--padding-desktop) !important;
+    padding-right: var(--padding-desktop) !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .bienvenida,
+  .arboles-destacados,
+  .centros,
+  .sugerencias,
+  .footer-principal {
+    padding-left: var(--padding-large) !important;
+    padding-right: var(--padding-large) !important;
+  }
+}
+
+/* Pantallas extra grandes (1400px y superior) */
+@media (min-width: 1400px) {
+  .bienvenida,
+  .arboles-destacados,
+  .centros,
+  .sugerencias,
+  .footer-principal {
+    padding-left: var(--padding-ultra) !important;
+    padding-right: var(--padding-ultra) !important;
+  }
+  
+  .contenido-bienvenida,
+  .titulo-seccion,
+  .grid-arboles,
+  .info-centros,
+  .grid-centros,
+  .contenedor-sugerencias,
+  .contenido-footer,
+  .header-container,
+  .carrusel-container {
+    max-width: var(--ultra-wide-content-width) !important;
+  }
+}
+
+/* Pantallas ultra anchas (1800px y superior) */
+@media (min-width: 1800px) {
+  :root {
+    --ultra-wide-content-width: 1700px;
+  }
+}
+
+/* Pantallas extremadamente anchas (2400px y superior) */
+@media (min-width: 2400px) {
+  :root {
+    --ultra-wide-content-width: 2200px;
+  }
+}
+
+/* Asegurar que el footer ocupe todo el ancho */
+.footer-principal {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-top: auto !important;
+}
+
+/* Ajustes para el grid de árboles */
+.grid-arboles {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 20px !important;
+  width: 100% !important;
+}
+
+/* Ajustes para el grid de centros */
+.grid-centros {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 20px !important;
+  width: 100% !important;
+}
+
+/* Ajustes para el contenedor de sugerencias */
+.contenedor-sugerencias {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 30px !important;
+  width: 100% !important;
+}
+
+@media (min-width: 992px) {
+  .contenedor-sugerencias {
+    flex-direction: row !important;
+  }
+  
+  .formulario-sugerencias,
+  .sugerencias-lista {
+    flex: 1 !important;
+  }
+}
+
+/* Ajustes para los botones del carrusel */
+.carrusel-btn {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  background: #2c3e50 !important;
+  color: white !important;
+  border: none !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.carrusel-btn.prev {
+  left: 0 !important;
+}
+
+.carrusel-btn.next {
+  right: 0 !important;
+}
+
+/* Ajustes para las tarjetas de sugerencias */
+@media (max-width: 767px) {
+  .sugerencia-card {
+    flex: 0 0 calc(100% - 30px) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .sugerencia-card {
+    flex: 0 0 calc(50% - 15px) !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .sugerencia-card {
+    flex: 0 0 calc(33.333% - 15px) !important;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .sugerencia-card {
+    flex: 0 0 calc(25% - 15px) !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .sugerencia-card {
+    flex: 0 0 calc(20% - 15px) !important;
+  }
+}

@@ -5,37 +5,423 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - VerdeQR</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <!-- CSS mejorado que complementa el original -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio_enhanced.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/qr-scanner.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/button_alignment_fix.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/unified_buttons.css') }}">
+    <!-- Nuevo CSS para pantallas ultra anchas -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ultra_wide_responsive.css') }}">
+    <!-- CSS específico para la sección de especies en pantallas grandes -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/especies_large.css') }}">
+    <!-- Corrección responsiva específica para la sección "Explora árboles por especie" -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/especies_responsive_fix.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Estilos para el modal de bienvenida */
+        .welcome-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .welcome-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-modal {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .welcome-modal-overlay.active .welcome-modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .welcome-modal-header {
+            position: relative;
+            padding: 30px;
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .welcome-modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            animation: pulse-light 4s infinite;
+        }
+
+        @keyframes pulse-light {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        .welcome-modal-title {
+            position: relative;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .welcome-modal-subtitle {
+            position: relative;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .welcome-modal-body {
+            padding: 30px;
+            background-color: white;
+            color: #333;
+        }
+
+        .welcome-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .welcome-feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(52, 152, 219, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .welcome-modal-overlay.active .welcome-feature {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .welcome-feature:nth-child(1) { transition-delay: 0.1s; }
+        .welcome-feature:nth-child(2) { transition-delay: 0.2s; }
+        .welcome-feature:nth-child(3) { transition-delay: 0.3s; }
+
+        .welcome-feature:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-feature-icon {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .welcome-feature-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .welcome-feature-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .welcome-modal-footer {
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .welcome-cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #2ecc71, #3498db);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .welcome-cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
+        }
+
+        .welcome-cta-button.secondary {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .welcome-cta-button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+
+        .welcome-close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .welcome-close-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .welcome-close-button::before,
+        .welcome-close-button::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 2px;
+            background-color: white;
+        }
+
+        .welcome-close-button::before {
+            transform: rotate(45deg);
+        }
+
+        .welcome-close-button::after {
+            transform: rotate(-45deg);
+        }
+
+        .welcome-decoration {
+            position: absolute;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.05);
+            z-index: 0;
+        }
+
+        .welcome-decoration.top-left {
+            top: -20px;
+            left: -20px;
+            transform: rotate(-15deg);
+        }
+
+        .welcome-decoration.bottom-right {
+            bottom: -20px;
+            right: -20px;
+            transform: rotate(15deg);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-modal-title {
+                font-size: 2rem;
+            }
+
+            .welcome-modal-subtitle {
+                font-size: 1rem;
+            }
+
+            .welcome-features {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-feature {
+                padding: 10px;
+            }
+
+            .welcome-feature-icon {
+                font-size: 2rem;
+            }
+
+            .welcome-cta-button {
+                padding: 10px 20px;
+                font-size: 1rem;
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+
+    <!-- Modal de Bienvenida -->
+    <div class="welcome-modal-overlay" id="welcomeModal">
+        <div class="welcome-modal">
+            <button class="welcome-close-button" id="closeWelcomeModal"></button>
+
+            <div class="welcome-modal-header">
+                <i class="fas fa-tree welcome-decoration top-left"></i>
+                <h1 class="welcome-modal-title">¡Bienvenido a VerdeQR!</h1>
+                <p class="welcome-modal-subtitle">Un dendrólogo en tu bolsillo</p>
+                <i class="fas fa-leaf welcome-decoration bottom-right"></i>
+            </div>
+
+            <div class="welcome-modal-body">
+                <p style="font-size: 1.1rem; line-height: 1.6; text-align: center; margin-bottom: 20px;">
+                    VerdeQR es una plataforma innovadora que te permite identificar árboles silvestres mediante códigos QR,
+                    brindándote información detallada sobre cada especie y promoviendo la conservación de la biodiversidad.
+                </p>
+
+                <div class="welcome-features">
+                    <div class="welcome-feature">
+                        <i class="fas fa-qrcode welcome-feature-icon"></i>
+                        <h3 class="welcome-feature-title">Escaneo Instantáneo</h3>
+                        <p class="welcome-feature-text">Identifica árboles al instante escaneando códigos QR con tu dispositivo móvil.</p>
+                    </div>
+
+                    <div class="welcome-feature">
+                        <i class="fas fa-book-open welcome-feature-icon"></i>
+                        <h3 class="welcome-feature-title">Información Detallada</h3>
+                        <p class="welcome-feature-text">Accede a datos completos sobre características, usos y conservación de cada especie.</p>
+                    </div>
+
+                    <div class="welcome-feature">
+                        <i class="fas fa-globe-americas welcome-feature-icon"></i>
+                        <h3 class="welcome-feature-title">Conservación Ambiental</h3>
+                        <p class="welcome-feature-text">Contribuye al conocimiento y preservación de la biodiversidad de tu entorno.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="welcome-modal-footer">
+                {% if not 'usuario' in session %}
+                    <a href="{{ url_for('registro') }}" class="welcome-cta-button">Registrarme Ahora</a>
+                    <a href="{{ url_for('iniciar_sesion') }}" class="welcome-cta-button secondary">Iniciar Sesión</a>
+                {% else %}
+                    <a href="{{ url_for('principal') }}" class="welcome-cta-button">Explorar Árboles</a>
+                    <button class="welcome-cta-button secondary" id="closeModalButton">Continuar</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     <!-- Menú superior fijo -->
     <header class="menu-superior">
-        <div class="logo">
+        <div class="logo" id="logoVerdeQR" style="cursor: pointer;" title="Haz clic para ver información sobre VerdeQR">
             <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
         </div>
         <div class="buscador">
-            <input type="text" placeholder="Buscar árboles silvestres...">
+            <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
+                <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+            </form>
         </div>
+        <script>
+            function validateSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput.value.trim()) {
+                    // Si el campo está vacío, no envía el formulario
+                    return false;
+                }
+                return true;
+            }
+        </script>
         <div class="botones">
             {% if 'usuario' in session %}
-                {% if session['usuario']['CorreoElectronico'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
+                {% if session['usuario']['Correo'] == 'jhon123@gmail.com' %}
                     <a href="{{ url_for('gestion') }}" class="btn">Ir a Gestión</a>
                 {% endif %}
-                <a href="{{ url_for('perfil') }}" class="btn" style="display: flex; align-items: center; gap: 10px;">
-                    <img src="{{ url_for('static', filename='css/js/img/perfil.png') }}" alt="Usuario" style="width: 32px; height: 32px; border-radius: 50%;">
-                    <div style="text-align: left;">
-                        <div style="font-weight: bold;">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
-                        <div style="font-size: 0.8em;">{{ session['usuario']['CorreoElectronico'] }}</div>
+                <div class="usuario" onclick="window.location.href='{{ url_for('perfil') }}';" style="cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #2c3e50, #3498db); border-radius: 10px; padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease; animation: pulse 2s infinite; margin-left: 10px;">
+                    {% if session['usuario'].get('Imagen') %}
+                        <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                    {% else %}
+                        {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                        {% endif %}
+                    {% endif %}
+                    <div class="info-usuario" style="margin-left: 10px; color: white;">
+                        <div class="nombre-usuario" style="font-weight: bold; font-size: 0.9rem;">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
+                        <div class="correo-usuario" style="font-size: 0.8rem; opacity: 0.8;">{{ session['usuario']['Correo'] }}</div>
                     </div>
-                </a>
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                        50% { box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4); }
+                        100% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                    }
+                    .usuario:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+                    }
+                </style>
             {% else %}
+                <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
                 <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
                 <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
             {% endif %}
         </div>
     </header>
 
+    <!-- Navegación rápida -->
+    <div class="navegacion-rapida">
+        <a href="#inicio" class="nav-btn active">Inicio</a>
+        <a href="#beneficios" class="nav-btn">Beneficios</a>
+        <a href="#arboles" class="nav-btn">Árboles</a>
+        <a href="#tipos" class="nav-btn">Especies</a>
+        <a href="#centros" class="nav-btn">Centros</a>
+    </div>
+
     <!-- Primera pantalla: Código QR -->
-    <div class="contenido-principal">
+    <div id="inicio" class="contenido-principal">
         <h1 style="margin-top: 60px;">¡Identificar árboles silvestres!</h1>
         <h3>Identifica árboles silvestres al instante. Explora consejos e información sobre la vida de los árboles que te rodean.</h3>
         <p style="margin-top: 20px; color: #666; font-size: 1rem;">
@@ -43,229 +429,433 @@
         </p>
 
         <!-- Cuadro con código QR -->
-        <div class="cuadro-qr">
-            <img src="{{ url_for('static', filename='css/js/img/qr.png') }}" alt="Código QR">
-            <p class="texto-verde">Identificar aquí</p>
+        <div class="cuadro-qr animate-on-scroll">
+            <div class="qr-container">
+                <img src="{{ url_for('static', filename='css/js/img/qr.png') }}" alt="Código QR">
+                <div class="scan-effect"></div>
+            </div>
+            <button type="button" id="scanButton" class="btn-scan">Identificar aquí</button>
             <p>Abre la cámara de tu dispositivo y escanea el código QR.</p>
             <p class="nota">Asegúrate de que la imagen del código QR sea lo más nítida posible.</p>
         </div>
     </div>
 
-   
+
 
     <!-- Segunda pantalla: Información con imagen a la derecha -->
-    <div class="segunda-pantalla">
-        <div class="texto">
-            <h1>Identifica árboles al instante con QR</h1>
-            <h3>Escanea el código QR para identificar árboles al instante, obteniendo información rápida sobre su uso, características, nombre científico, etc.</h3>
+    <div class="segunda-pantalla animate-on-scroll">
+        <div class="texto animated-info-section">
+            <div class="animated-title">
+                <h1 class="gradient-text">Identifica árboles al instante con QR</h1>
+                <div class="animated-icons">
+                    <i class="fas fa-qrcode icon-animated"></i>
+                    <i class="fas fa-tree icon-animated"></i>
+                    <i class="fas fa-mobile-alt icon-animated"></i>
+                    <i class="fas fa-leaf icon-animated"></i>
+                </div>
+            </div>
+            <div class="animated-description">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Escanea el código QR para identificar árboles al instante</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Obtén información detallada sobre características y usos</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Conoce el nombre científico y datos de conservación</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Contribuye al conocimiento y preservación de especies</p>
+                </div>
+            </div>
         </div>
-        <div class="imagen">
+        <div class="imagen animated-image">
             <img src="{{ url_for('static', filename='css/js/img/cel.jpg') }}" alt="Celular con QR">
         </div>
     </div>
 
-  
+    <style>
+        .animated-info-section {
+            position: relative;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #2c3e50, #3498db, #2ecc71);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+
+        .animated-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .icon-animated {
+            font-size: 1.8rem;
+            color: #3498db;
+            animation: bounce 2s infinite;
+        }
+
+        .icon-animated:nth-child(1) { animation-delay: 0s; }
+        .icon-animated:nth-child(2) { animation-delay: 0.5s; }
+        .icon-animated:nth-child(3) { animation-delay: 1s; }
+        .icon-animated:nth-child(4) { animation-delay: 1.5s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animated-description {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeInRight 0.5s ease-out both;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.3s; }
+        .feature-item:nth-child(3) { animation-delay: 0.5s; }
+        .feature-item:nth-child(4) { animation-delay: 0.7s; }
+
+        .feature-item i {
+            color: #2ecc71;
+            font-size: 1.2rem;
+        }
+
+        .feature-item p {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .animated-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .animated-image img {
+            transform: scale(1.02);
+            transition: transform 0.5s ease;
+        }
+
+        .animated-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .qr-container {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .scan-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .animated-icons {
+                gap: 10px;
+            }
+
+            .icon-animated {
+                font-size: 1.5rem;
+            }
+
+            .gradient-text {
+                font-size: 1.8rem;
+            }
+
+            .feature-item {
+                padding: 8px 12px;
+            }
+
+            .feature-item p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+
 
     <!-- Tercera pantalla: Árboles Populares -->
-    <div class="tercera-pantalla">
+    <div id="arboles" class="tercera-pantalla">
         <h1 style="text-align: center;">Árboles Populares</h1>
         <h3 style="text-align: center;">Explora árboles populares y aprende a identificarlos</h3>
 
         <!-- Contenedor de columnas -->
-        <div class="grid-container-arboles">
-            <!-- Columna 1 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/ceiba.png') }}" alt="Ceiba">
-                <h2><strong>Árbol de Ceiba (Ceiba Pentandra)</strong></h2>
-                <p>Uno de los árboles más grandes y emblemáticos de Colombia...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 2 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
-                <h2><strong>Guayacán (Tabebuia chrysantha)</strong></h2>
-                <p>Conocido por sus flores amarillas y su madera dura...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 3 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
-                <h2><strong>Roble (Quercus humboldtii)</strong></h2>
-                <p>Un árbol nativo de los Andes colombianos...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 4 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/palma.jpg') }}" alt="Palma de Cera">
-                <h2><strong>Palma de Cera (Ceroxylon quindiuense)</strong></h2>
-                <p>El árbol nacional de Colombia y la palma más alta del mundo...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 5 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/saman.jpg') }}" alt="Samán">
-                <h2><strong>Samán (Samanea saman)</strong></h2>
-                <p>Conocido por su amplia copa y sus frutos...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 6 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/caoba.jpg') }}" alt="Caoba">
-                <h2><strong>Caoba (Swietenia macrophylla)</strong></h2>
-                <p>Valorado por su madera de alta calidad...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 7 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
-                <h2><strong>Cedro (Cedrela odorata)</strong></h2>
-                <p>Un árbol maderable muy apreciado en Colombia...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
-            <!-- Columna 8 -->
-            <div class="grid-item-arbol">
-                <img src="{{ url_for('static', filename='css/js/img/mango.jpg') }}" alt="Mango">
-                <h2><strong>Mango (Mangifera indica)</strong></h2>
-                <p>Un árbol frutal muy común en Colombia...</p>
-                <a href="#" class="btn">Leer más</a>
-            </div>
+        <div class="grid-container-arboles animate-on-scroll">
+            {% if arboles_populares %}
+                {% for arbol in arboles_populares %}
+                    <div class="grid-item-arbol">
+                        {% if arbol.Imagen %}
+                            <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.NombreVulgar }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="Árbol">
+                        {% endif %}
+                        <h2><strong>{{ arbol.NombreVulgar }} ({{ arbol.NombreCientifico }})</strong></h2>
+                        <p>{{ arbol.Descripcion|truncate(100) if arbol.Descripcion else 'Sin descripción disponible...' }}</p>
+                        {% if 'usuario' in session %}
+                            <a href="{{ url_for('ver_arbol', id=arbol.IDArbol) }}" class="btn">Leer más</a>
+                        {% else %}
+                            <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar sesión para ver</a>
+                        {% endif %}
+                        {% if 'usuario' in session %}
+                            <a href="{{ url_for('ver_arbol', id=arbol.IDArbol) }}" class="overlay-link" title="Ver detalles de {{ arbol.NombreVulgar }}"></a>
+                        {% else %}
+                            <a href="{{ url_for('iniciar_sesion') }}" class="overlay-link" title="Iniciar sesión para ver detalles"></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Contenido estático de respaldo si no hay árboles en la base de datos -->
+                <div class="grid-item-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/ceiba.png') }}" alt="Ceiba">
+                    <h2><strong>Árbol de Ceiba (Ceiba Pentandra)</strong></h2>
+                    <p>Uno de los árboles más grandes y emblemáticos de Colombia...</p>
+                    <a href="#" class="btn">Leer más</a>
+                </div>
+                <div class="grid-item-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
+                    <h2><strong>Guayacán (Tabebuia chrysantha)</strong></h2>
+                    <p>Conocido por sus flores amarillas y su madera dura...</p>
+                    <a href="#" class="btn">Leer más</a>
+                </div>
+                <div class="grid-item-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
+                    <h2><strong>Roble (Quercus humboldtii)</strong></h2>
+                    <p>Un árbol nativo de los Andes colombianos...</p>
+                    <a href="#" class="btn">Leer más</a>
+                </div>
+                <div class="grid-item-arbol">
+                    <img src="{{ url_for('static', filename='css/js/img/palma.jpg') }}" alt="Palma de Cera">
+                    <h2><strong>Palma de Cera (Ceroxylon quindiuense)</strong></h2>
+                    <p>El árbol nacional de Colombia y la palma más alta del mundo...</p>
+                    <a href="#" class="btn">Leer más</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 
-    
-    <!-- Cuarta pantalla: Explora Árboles por Tipo -->
-    <div class="cuarta-pantalla">
-        <h1>Explora Árboles por Tipo</h1>
-        <h3>Descubre los tipos de árboles que se ajustan a tus preferencias y necesidades, y aprende a identificarlos.</h3>
+
+    <!-- Cuarta pantalla: Explora Árboles por Especie -->
+    <div id="tipos" class="cuarta-pantalla">
+        <h1>Explora Árboles por Especie</h1>
+        <h3>Descubre las especies de árboles nativos y sus características únicas, y aprende a identificarlos en su hábitat natural.</h3>
 
         <!-- Contenedor de columnas -->
-        <div class="grid-container-tipos">
-            <!-- Columna 1: Guayacán -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Guayacán (Tabebuia chrysantha)</h2>
-                    <p>Árbol de floración amarilla brillante, típico de las zonas cálidas y secas de Colombia, especialmente en la región caribeña.</p>
-                    <p>🌳 150 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+        <div class="grid-container-tipos animate-on-scroll">
+            {% if especies_destacadas %}
+                {% for especie in especies_destacadas %}
+                    <div class="grid-item-tipo">
+                        <div class="imagen-tipo">
+                            {% if especie.Imagen %}
+                                <img src="{{ url_for('static', filename=especie.Imagen) }}" alt="{{ especie.NombreVulgar }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ especie.NombreVulgar }}">
+                            {% endif %}
+                        </div>
+                        <div class="texto-tipo">
+                            <h2>{{ especie.NombreVulgar }} ({{ especie.NombreCientifico }})</h2>
+                            <p>{{ especie.Descripcion|truncate(150) if especie.Descripcion else 'Especie registrada en el sistema VerdeQR.' }}</p>
+                            <p><strong>Usos:</strong>
+                                {% if especie.Usos %}
+                                    {{ especie.Usos|join(', ') }}
+                                {% else %}
+                                    No especificados
+                                {% endif %}
+                            </p>
+                            <div class="flecha">
+                                {% if 'usuario' in session %}
+                                    <a href="{{ url_for('buscar_arbol', especie_id=especie.IDEspecie) }}" title="Ver árboles de {{ especie.NombreVulgar }}">
+                                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url_for('iniciar_sesion') }}" title="Iniciar sesión para ver árboles">
+                                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Contenido estático de respaldo si no hay especies en la base de datos -->
+                <div class="grid-item-tipo">
+                    <div class="imagen-tipo">
+                        <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
+                    </div>
+                    <div class="texto-tipo">
+                        <h2>Guayacán (Tabebuia chrysantha)</h2>
+                        <p>Especie nativa de Colombia con flores amarillas brillantes. Su madera es muy dura y resistente, utilizada en ebanistería y construcción.</p>
+                        <p><strong>Usos:</strong> Maderable, Ornamental, Medicinal</p>
+                        <div class="flecha">
+                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Columna 2: Cedro -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Cedro (Cedrela montana)</h2>
-                    <p>Árbol de gran tamaño que crece en las montañas, apreciado por su madera dura y resistente, utilizada en la construcción.</p>
-                    <p>🌳 120 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                <div class="grid-item-tipo">
+                    <div class="imagen-tipo">
+                        <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
+                    </div>
+                    <div class="texto-tipo">
+                        <h2>Cedro (Cedrela odorata)</h2>
+                        <p>Especie forestal importante en Colombia. Su madera rojiza es muy apreciada por su aroma y resistencia a insectos y humedad.</p>
+                        <p><strong>Usos:</strong> Maderable, Restauración Ecológica</p>
+                        <div class="flecha">
+                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Columna 3: Arrayán -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/arrayan.jpg') }}" alt="Arrayan">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Arrayán (Myrciaria dubia)</h2>
-                    <p>Árbol de corteza naranja o rojiza, con frutos comestibles. Se encuentra en zonas tropicales y subtropicales.</p>
-                    <p>🌳 80 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                <div class="grid-item-tipo">
+                    <div class="imagen-tipo">
+                        <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
+                    </div>
+                    <div class="texto-tipo">
+                        <h2>Roble (Quercus humboldtii)</h2>
+                        <p>Especie endémica de los Andes colombianos. Árbol majestuoso que puede alcanzar hasta 25 metros de altura y vivir más de 200 años.</p>
+                        <p><strong>Usos:</strong> Maderable, Protección Ambiental</p>
+                        <div class="flecha">
+                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Columna 4: Teca -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/teca.jpg') }}" alt="Teca">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Teca (Tectona grandis)</h2>
-                    <p>Árbol de gran tamaño, originario del sudeste asiático, que se adapta bien en Colombia y es valorado por su madera de alta calidad.</p>
-                    <p>🌳 90 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Columna 5: Chachafruto -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/chachafruto.jpg') }}" alt="Chachafruto">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Chachafruto (Inga edulis)</h2>
-                    <p>Árbol de zonas tropicales con frutos dulces y comestibles. Se encuentra en regiones cálidas y subandinas.</p>
-                    <p>🌳 70 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Columna 6: Pino de montaña -->
-            <div class="grid-item-tipo">
-                <div class="imagen-tipo">
-                    <img src="{{ url_for('static', filename='css/js/img/pino.jpg') }}" alt="Pino de montaña">
-                </div>
-                <div class="texto-tipo">
-                    <h2>Pino de montaña (Podocarpus oleifolius)</h2>
-                    <p>Crece en zonas altas y frías de los Andes, su madera es utilizada en construcción y fabricación de papel.</p>
-                    <p>🌳 60 especies</p>
-                    <div class="flecha">
-                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 
-  
+
     <!-- Quinta pantalla: Explora Árboles por Centro -->
-    <div class="quinta-pantalla">
+    <div id="centros" class="quinta-pantalla">
         <h1>Explora Árboles por Centro</h1>
-        <h3>Una ayuda para descubrir los árboles de los centros.</h3>
+        <h3>Descubre los árboles registrados en cada centro de formación.</h3>
 
         <!-- Contenedor de imágenes -->
-        <div class="grid-container-centros">
-            <!-- Imagen 1: CIGEC -->
-            <div class="grid-item-centro">
-                <img src="{{ url_for('static', filename='css/js/img/cdi.jpg') }}" alt="Centro de Innovación de Gestión Empresarial y Cultural">
-                <div class="texto-centro">
-                    <h2>Centro de Innovación de Gestión Empresarial y Cultural</h2>
+        <div class="grid-container-centros animate-on-scroll">
+            {% if centros %}
+                {% for centro in centros %}
+                    <div class="grid-item-centro">
+                        {% if centro.Imagen %}
+                            <img src="{{ url_for('static', filename=centro.Imagen) }}" alt="{{ centro.NombreCentro }}">
+                        {% else %}
+                            {% if 'CIGEC' in centro.NombreCentro or 'Innovación' in centro.NombreCentro %}
+                                <img src="{{ url_for('static', filename='css/js/img/cigec.jpg') }}" alt="{{ centro.NombreCentro }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="{{ centro.NombreCentro }}">
+                            {% endif %}
+                        {% endif %}
+                        <div class="texto-centro">
+                            <h2>{{ centro.NombreCentro }}</h2>
+                            {% if 'usuario' in session %}
+                                <a href="{{ url_for('buscar_arbol', centro_id=centro.IDCentro) }}" class="btn-centro">Ver árboles</a>
+                            {% else %}
+                                <a href="{{ url_for('iniciar_sesion') }}" class="btn-centro">Iniciar sesión para ver</a>
+                            {% endif %}
+                        </div>
+                        {% if 'usuario' in session %}
+                            <a href="{{ url_for('buscar_arbol', centro_id=centro.IDCentro) }}" class="overlay-link" title="Ver árboles de {{ centro.NombreCentro }}"></a>
+                        {% else %}
+                            <a href="{{ url_for('iniciar_sesion') }}" class="overlay-link" title="Iniciar sesión para ver árboles"></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Contenido estático de respaldo si no hay centros en la base de datos -->
+                <!-- Centros de respaldo si no hay en la base de datos -->
+                <div class="grid-item-centro">
+                    <img src="{{ url_for('static', filename='css/js/img/cigec.jpg') }}" alt="Centro de Innovación de Gestión Empresarial y Cultural">
+                    <div class="texto-centro">
+                        <h2>Centro de Innovación de Gestión Empresarial y Cultural (CIGEC)</h2>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Imagen 2: CBC -->
-            <div class="grid-item-centro">
-                <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="Centro Biotecnológico del Caribe">
-                <div class="texto-centro">
-                    <h2>Centro Biotecnológico del Caribe</h2>
+                <div class="grid-item-centro">
+                    <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="Centro Biotecnológico del Caribe">
+                    <div class="texto-centro">
+                        <h2>Centro Biotecnológico del Caribe (CBC)</h2>
+                        <p>Km. 7 Vía a La Paz, Valledupar, Cesar</p>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 
-  
+
 
     <!-- Sección de Beneficios -->
-    <div class="beneficios-pantalla">
+    <div id="beneficios" class="beneficios-pantalla">
         <h1>Beneficios de la Identificación de Árboles Silvestres con Códigos QR</h1>
         <h3>Descubre cómo esta tecnología puede ayudar al medio ambiente y a la educación</h3>
-        
-        <div class="grid-container-beneficios">
+
+        <div class="grid-container-beneficios animate-on-scroll">
             <!-- Beneficio 1 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -278,7 +868,7 @@
                     <p>Interactúa con el código QR y descubre datos fascinantes sobre cada árbol para aumentar tu conocimiento del entorno natural.</p>
                 </div>
             </div>
-            
+
             <!-- Beneficio 2 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -291,7 +881,7 @@
                     <p>Explora los datos técnicos de los árboles de manera sencilla y accesible para enriquecer tu conocimiento de la flora local.</p>
                 </div>
             </div>
-            
+
             <!-- Beneficio 3 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -304,7 +894,7 @@
                     <p>Descubre cómo cada árbol contribuye a la biodiversidad y los importantes servicios ecosistémicos que proporciona.</p>
                 </div>
             </div>
-            
+
             <!-- Beneficio 4 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -317,7 +907,7 @@
                     <p>Escanea y obtén información al instante sobre cualquier árbol, aprovechando la tecnología para conocer mejor tu entorno.</p>
                 </div>
             </div>
-            
+
             <!-- Beneficio 5 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -330,7 +920,7 @@
                     <p>Diseñada para ser accesible y fácil de usar por personas de todas las edades y capacidades, facilitando el aprendizaje universal.</p>
                 </div>
             </div>
-            
+
             <!-- Beneficio 6 -->
             <div class="grid-item-beneficio">
                 <div class="beneficio-icono">
@@ -347,37 +937,37 @@
     </div>
 
     <!-- Footer con redes sociales y derechos -->
-    <footer class="footer">
+    <footer class="footer" style="background-color: #2c3e50;">
         <div class="footer-contenido">
             <div class="footer-logo">
                 <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
             </div>
-            
+
             <div class="footer-redes">
-                <a href="#" class="footer-red">
+                <a href="#" class="footer-red" title="Facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" class="footer-red">
+                <a href="#" class="footer-red" title="Twitter">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="#" class="footer-red">
+                <a href="#" class="footer-red" title="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="#" class="footer-red">
+                <a href="#" class="footer-red" title="YouTube">
                     <i class="fab fa-youtube"></i>
                 </a>
-                <a href="#" class="footer-red">
+                <a href="#" class="footer-red" title="LinkedIn">
                     <i class="fab fa-linkedin-in"></i>
                 </a>
             </div>
-            
+
             <div class="footer-enlaces">
-                <a href="#">Política de Privacidad</a>
-                <a href="#">Términos y Condiciones</a>
-                <a href="#">Contacto</a>
-                <a href="#">Acerca de Nosotros</a>
+                <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+                <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+                <a href="{{ url_for('contacto') }}">Contacto</a>
+                <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
             </div>
-            
+
             <div class="footer-derechos">
                 <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
                 <p>Desarrollado con <i class="fas fa-heart" style="color: var(--color-acento);"></i> por el equipo de VerdeQR</p>
@@ -385,11 +975,183 @@
         </div>
     </footer>
 
-    <!-- Botón de gestión -->
-    {% if session['loggedin'] %}
-    <a href="{{ url_for('gestion') }}" class="btn-gestion">
-        <i class="fas fa-cog"></i> Ir a Gestión
-    </a>
-    {% endif %}
+    <!-- Botones flotantes -->
+    <div class="botones-flotantes">
+        {% if 'usuario' in session %}
+        <a href="{{ url_for('principal') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-tree"></i> Ir a Principal
+        </a>
+        {% else %}
+        <a href="{{ url_for('iniciar_sesion') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </a>
+        {% endif %}
+        {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+        <a href="{{ url_for('gestion') }}" class="btn-flotante btn-gestion">
+            <i class="fas fa-cog"></i> Ir a Gestión
+        </a>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si hay un parámetro de cierre de sesión exitoso
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('logout_success')) {
+                showModalNotification(
+                    'Sesión Cerrada',
+                    'Has cerrado sesión exitosamente',
+                    'success',
+                    'fas fa-check-circle'
+                );
+                // Limpiar la URL para evitar que se muestre la notificación al refrescar
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
+    <script>
+        // Script para la navegación rápida
+        document.addEventListener('DOMContentLoaded', function() {
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const sections = [
+                document.getElementById('inicio'),
+                document.getElementById('beneficios'),
+                document.getElementById('arboles'),
+                document.getElementById('tipos'), // Ahora es 'Especies'
+                document.getElementById('centros')
+            ];
+
+            // Función para activar el botón correcto según la sección visible
+            function setActiveButton() {
+                const scrollPosition = window.scrollY;
+
+                // Encontrar la sección visible actualmente
+                let activeIndex = -1;
+
+                for (let i = 0; i < sections.length; i++) {
+                    if (sections[i]) {
+                        const sectionTop = sections[i].offsetTop - 150;
+                        const sectionBottom = sectionTop + sections[i].offsetHeight;
+
+                        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                            activeIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                // Si no se encontró ninguna sección activa, usar la primera
+                if (activeIndex === -1) activeIndex = 0;
+
+                // Actualizar clases de los botones
+                navBtns.forEach((btn, index) => {
+                    if (index === activeIndex) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            // Escuchar el evento de scroll
+            window.addEventListener('scroll', setActiveButton);
+
+            // Inicializar
+            setActiveButton();
+
+            // Scroll suave al hacer clic en los botones
+            navBtns.forEach((btn, index) => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        // Remover la clase active de todos los botones
+                        navBtns.forEach(b => b.classList.remove('active'));
+                        // Agregar la clase active al botón clickeado
+                        this.classList.add('active');
+
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- jsQR Library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+    <!-- QR Scanner Script -->
+    <script src="{{ url_for('static', filename='js/qr-scanner.js') }}"></script>
+
+    <!-- Search Autocomplete Script -->
+    <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
+    <!-- Script para animaciones al hacer scroll -->
+    <script src="{{ url_for('static', filename='js/scroll-animations.js') }}"></script>
+
+    <!-- Script para el modal de bienvenida -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const welcomeModal = document.getElementById('welcomeModal');
+            const closeWelcomeModal = document.getElementById('closeWelcomeModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const logoVerdeQR = document.getElementById('logoVerdeQR');
+
+            // Función para mostrar el modal
+            function showModal() {
+                welcomeModal.style.display = 'flex';
+                setTimeout(function() {
+                    welcomeModal.classList.add('active');
+                }, 10);
+            }
+
+            // Función para cerrar el modal
+            function closeModal() {
+                welcomeModal.classList.remove('active');
+                setTimeout(function() {
+                    welcomeModal.style.display = 'none';
+                }, 500);
+
+                // Guardar en localStorage que el usuario ya vio el modal
+                localStorage.setItem('welcomeModalShown', 'true');
+            }
+
+            // Mostrar el modal al hacer clic en el logo
+            logoVerdeQR.addEventListener('click', function() {
+                showModal();
+            });
+
+            // Cerrar el modal al hacer clic en el botón de cierre
+            closeWelcomeModal.addEventListener('click', closeModal);
+
+            // Cerrar el modal al hacer clic en el botón de continuar (si existe)
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', closeModal);
+            }
+
+            // Cerrar el modal al hacer clic fuera de él
+            welcomeModal.addEventListener('click', function(e) {
+                if (e.target === welcomeModal) {
+                    closeModal();
+                }
+            });
+
+            // Verificar si el usuario ya vio el modal anteriormente
+            const hasSeenModal = localStorage.getItem('welcomeModalShown');
+            if (hasSeenModal !== 'true') {
+                // Solo mostrar automáticamente si es la primera vez
+                setTimeout(function() {
+                    showModal();
+                }, 500);
+            } else {
+                // Asegurarse de que el modal esté oculto inicialmente
+                welcomeModal.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

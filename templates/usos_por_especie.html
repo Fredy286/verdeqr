@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usos por Especie - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .especie-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .usos-container {
+            margin-top: 10px;
+        }
+        
+        .uso-item {
+            background-color: rgba(240, 240, 240, 0.7);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .uso-info {
+            flex-grow: 1;
+        }
+        
+        .uso-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .especies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .especies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .especie-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .especie-title {
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .add-uso-btn {
+            white-space: nowrap;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+        }
+        
+        .category-Maderable { background-color: #3498db; }
+        .category-Comestible { background-color: #2ecc71; }
+        .category-Medicinal { background-color: #e74c3c; }
+        .category-Ornamental { background-color: #9b59b6; }
+        .category-Artesanal { background-color: #f39c12; }
+        .category-Agroforestal { background-color: #1abc9c; }
+        .category-RestauracionEcologica { background-color: #27ae60; }
+        .category-CulturalCeremonial { background-color: #8e44ad; }
+        .category-Melifero { background-color: #f1c40f; }
+        .category-ProteccionAmbiental { background-color: #16a085; }
+        .category-Tintoreo { background-color: #d35400; }
+        .category-Oleaginoso { background-color: #7f8c8d; }
+        .category-Biocombustible { background-color: #c0392b; }
+        .category-default { background-color: #95a5a6; }
+    </style>
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('usos_por_especie') }}" class="active"><i class="fas fa-sitemap"></i><span>Usos por Especie</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombre'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="contenedor-seccion">
+            <h2>Usos por Especie</h2>
+            
+            <div class="search-container">
+                <input type="text" id="search-especie" class="form-control" placeholder="Buscar especie...">
+                <button id="search-btn" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+            
+            <div class="especies-grid">
+                {% for especie in especies %}
+                <div class="especie-card">
+                    <div class="especie-header">
+                        <h3 class="especie-title">{{ especie.NombreCientifico }}</h3>
+                        <a href="{{ url_for('agregar_uso', especie_id=especie.IDEspecie) }}" class="btn btn-primary btn-sm add-uso-btn">
+                            <i class="fas fa-plus"></i> Agregar uso
+                        </a>
+                    </div>
+                    <p><em>{{ especie.NombreVulgar }}</em></p>
+                    
+                    <div class="usos-container">
+                        <h4>Usos registrados:</h4>
+                        {% if especie.usos %}
+                            {% for uso in especie.usos %}
+                            <div class="uso-item">
+                                <div class="uso-info">
+                                    <span class="category-badge category-{{ uso.TipoUsoDetectado }}">{{ uso.TipoUsoDetectado }}</span>
+                                    <strong>{{ uso.Nombre }}</strong>
+                                </div>
+                                <div class="uso-actions">
+                                    <a href="{{ url_for('completar_uso_especifico', id=uso.IDUso, categoria=uso.TipoUsoDetectado) }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ url_for('eliminar_uso_arbol', id=uso.IDUso) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este uso?');">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No hay usos registrados para esta especie.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>VerdeQR</h3>
+                <p>Sistema de gestión de árboles y códigos QR</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{{ url_for('principal') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+                    <li><a href="{{ url_for('acerca_de') }}">Acerca de</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>Email: info@verdeqr.com</p>
+                <p>Teléfono: +123 456 7890</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 VerdeQR. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-especie');
+            const searchBtn = document.getElementById('search-btn');
+            const especieCards = document.querySelectorAll('.especie-card');
+            
+            function filterEspecies() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                especieCards.forEach(card => {
+                    const nombreCientifico = card.querySelector('.especie-title').textContent.toLowerCase();
+                    const nombreVulgar = card.querySelector('em').textContent.toLowerCase();
+                    
+                    if (nombreCientifico.includes(searchTerm) || nombreVulgar.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+            
+            searchBtn.addEventListener('click', filterEspecies);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    filterEspecies();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

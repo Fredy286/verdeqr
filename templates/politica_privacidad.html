@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #2c3e50;
+            --color-secundario: #34495e;
+            --color-acento: #28a745;
+            --color-texto: #333;
+            --color-texto-claro: #666;
+            --color-fondo: #f8f9fa;
+            --color-tarjeta: #ffffff;
+            --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transicion: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
+
+        /* Menú superior simple */
+        .menu-simple {
+            background-color: var(--color-primario);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--sombra);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .menu-simple .botones {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .menu-simple .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-simple .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-acento);
+            transition: var(--transicion);
+            margin-right: 10px;
+        }
+
+        .menu-simple .logo img:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .menu-simple .botones a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transicion);
+            display: inline-block;
+        }
+
+        .menu-simple .botones a:hover {
+            background-color: var(--color-acento);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Estilos para el botón de perfil */
+        .btn-perfil {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 5px 15px 5px 5px;
+            transition: var(--transicion);
+            text-decoration: none;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-perfil:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-acento);
+            margin-right: 10px;
+        }
+
+        .user-info-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .user-email {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            line-height: 1.2;
+        }
+
+        /* Contenedor principal */
+        .politica-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: var(--color-tarjeta);
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+        }
+
+        .politica-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .politica-container h2 {
+            color: var(--color-acento);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .politica-container p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .politica-container ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .politica-container li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .fecha-actualizacion {
+            font-style: italic;
+            color: #666;
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .volver-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: var(--transicion);
+            font-weight: 500;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Footer simple */
+        .footer-simple {
+            background-color: var(--color-primario);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-simple a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transicion);
+        }
+
+        .footer-simple a:hover {
+            background-color: var(--color-acento);
+            color: white;
+        }
+
+        .footer-simple p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .heart-icon {
+            color: var(--color-acento);
+        }
+
+        /* Botones flotantes */
+        .botones-flotantes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-flotante {
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-flotante i {
+            margin-right: 8px;
+        }
+
+        .btn-flotante:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-principal {
+            background-color: #3498db; /* Azul para distinguirlo */
+        }
+
+        .btn-principal:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-gestion {
+            background-color: var(--color-acento);
+        }
+
+        .btn-gestion:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú superior simple -->
+    <header class="menu-simple">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="botones">
+            <a href="{{ url_for('contacto') }}"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="{{ url_for('acerca_de') }}"><i class="fas fa-info-circle"></i> Acerca de Nosotros</a>
+            <a href="{{ url_for('terminos_condiciones') }}"><i class="fas fa-file-contract"></i> Términos y Condiciones</a>
+            {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('gestion') }}"><i class="fas fa-cog"></i> Gestión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="politica-container">
+        <h1>Política de Privacidad</h1>
+
+        <p>En VerdeQR, accesible desde verdeqr.com, una de nuestras principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de Privacidad contiene los tipos de información que se recopilan y registran por VerdeQR y cómo la utilizamos.</p>
+
+        <p>Si tienes preguntas adicionales o requieres más información sobre nuestra Política de Privacidad, no dudes en contactarnos.</p>
+
+        <h2>Información que recopilamos</h2>
+
+        <p>Cuando te registras en nuestro sitio, como parte del proceso, recopilamos la información personal que nos proporcionas, como tu nombre, apellidos, dirección de correo electrónico y número de teléfono.</p>
+
+        <p>Además, recibimos y registramos automáticamente información desde tu navegador web, incluyendo tu dirección IP, información de cookies y las páginas que solicitas.</p>
+
+        <h2>Cómo utilizamos tu información</h2>
+
+        <p>Utilizamos la información que recopilamos de ti para:</p>
+
+        <ul>
+            <li>Personalizar tu experiencia y responder a tus necesidades individuales</li>
+            <li>Proporcionar contenido personalizado y relevante</li>
+            <li>Mejorar nuestro sitio web</li>
+            <li>Mejorar el servicio al cliente y tus necesidades de soporte</li>
+            <li>Contactarte para encuestas o información</li>
+            <li>Procesar transacciones</li>
+        </ul>
+
+        <h2>Protección de tu información</h2>
+
+        <p>Implementamos una variedad de medidas de seguridad para mantener la seguridad de tu información personal. Utilizamos encriptación avanzada para proteger información sensible transmitida en línea. También protegemos tu información fuera de línea. Solo los empleados que necesitan realizar un trabajo específico tienen acceso a información personal identificable.</p>
+
+        <h2>Uso de cookies</h2>
+
+        <p>Nuestro sitio web utiliza cookies para mejorar tu experiencia. Una cookie es un pequeño archivo que un sitio web coloca en tu computadora para recopilar información sobre tus actividades en el sitio. Puedes configurar tu navegador para rechazar cookies, o para avisarte cuando se envían cookies.</p>
+
+        <h2>Divulgación a terceros</h2>
+
+        <p>No vendemos, intercambiamos ni transferimos de ninguna otra manera a terceros externos tu información personal identificable. Esto no incluye terceros de confianza que nos ayudan a operar nuestro sitio web, realizar nuestro negocio o servirte, siempre que esas partes acuerden mantener esta información confidencial.</p>
+
+        <h2>Enlaces a terceros</h2>
+
+        <p>Ocasionalmente, a nuestra discreción, podemos incluir u ofrecer productos o servicios de terceros en nuestro sitio. Estos sitios de terceros tienen políticas de privacidad separadas e independientes. Por lo tanto, no tenemos responsabilidad por el contenido y las actividades de estos sitios vinculados.</p>
+
+        <h2>Consentimiento</h2>
+
+        <p>Al utilizar nuestro sitio, consientes a nuestra política de privacidad.</p>
+
+        <h2>Cambios a nuestra política de privacidad</h2>
+
+        <p>Si decidimos cambiar nuestra política de privacidad, publicaremos esos cambios en esta página.</p>
+
+        <p class="fecha-actualizacion">Esta política fue actualizada por última vez el 15 de mayo de 2023.</p>
+
+        <a href="{{ url_for('inicio') }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver a inicio</a>
+    </div>
+
+    <!-- Footer simple -->
+    <footer class="footer-simple">
+        <div>
+            <a href="{{ url_for('inicio') }}">Inicio</a>
+            <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+            <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+            <a href="{{ url_for('contacto') }}">Contacto</a>
+            <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
+        </div>
+        <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+        <p>Desarrollado con <i class="fas fa-heart heart-icon"></i> por el equipo de VerdeQR</p>
+    </footer>
+
+    <!-- Botones flotantes -->
+    {% if 'usuario' in session %}
+    <div class="botones-flotantes">
+        <a href="{{ url_for('inicio') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-home"></i> Ir a Inicio
+        </a>
+        <a href="{{ url_for('principal') }}" class="btn-flotante btn-gestion">
+            <i class="fas fa-tree"></i> Ir a Principal
+        </a>
+    </div>
+    {% endif %}
+</body>
+</html>

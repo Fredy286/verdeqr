@@ -1,0 +1,229 @@
+/* responsive_large.css - Mejoras específicas para pantallas grandes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* Media Queries para pantallas grandes */
+@media (min-width: 1400px) {
+    /* Estilos generales */
+    body {
+        font-size: 16px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+    }
+
+    h3 {
+        font-size: 1.8rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+    }
+
+    /* Contenedores */
+    .container,
+    .contenedor-principal,
+    .contenido-principal,
+    .main-content {
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Contenedores de gestión */
+    .contenedor-seccion {
+        width: 70%;
+        max-width: 700px;
+        margin: 30px auto;
+    }
+
+    /* Formularios */
+    .form-control,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+        padding: 12px 15px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+    }
+
+    label {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    /* Tablas */
+    table {
+        font-size: 1.1rem;
+    }
+
+    th, td {
+        padding: 12px 15px;
+    }
+
+    /* Tarjetas y elementos de contenido */
+    .card,
+    .tarjeta,
+    .item-card {
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Espaciado */
+    .section,
+    .seccion,
+    .pantalla {
+        padding: 60px 40px;
+    }
+
+    /* Menús y navegación */
+    .menu-item,
+    .nav-link,
+    .menu-link {
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+
+    /* Iconos */
+    .icon,
+    .icono,
+    i[class*="fa-"] {
+        font-size: 1.3em;
+    }
+
+    /* Imágenes */
+    .img-fluid,
+    .imagen-responsive {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Botones adicionales (complementa buttons.css) */
+    button,
+    .button,
+    input[type="submit"],
+    input[type="button"],
+    .btn {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        margin-right: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Elementos específicos de VerdeQR */
+    .arbol-card,
+    .centro-card,
+    .tipo-card,
+    .grid-item {
+        padding: 25px;
+        margin: 15px;
+    }
+
+    .logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Ajustes para tablas de gestión */
+    .tabla-contenedor {
+        overflow-x: auto;
+        margin: 30px 0;
+    }
+
+    .tabla-gestion th,
+    .tabla-gestion td {
+        padding: 15px 20px;
+    }
+
+    /* Ajustes para formularios de gestión */
+    .formulario-gestion {
+        width: 90%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    /* Ajustes para modales y popups */
+    .modal-content,
+    .popup-content {
+        padding: 30px;
+        border-radius: 15px;
+    }
+
+    .modal-title,
+    .popup-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
+    /* Estilos específicos para principal.html */
+    .header-principal {
+        padding: 15px 40px;
+    }
+
+    .bienvenida {
+        padding: 100px 40px;
+    }
+
+    .contenido-bienvenida h1 {
+        font-size: 3.5rem;
+    }
+
+    .contenido-bienvenida p {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto 30px;
+    }
+
+    .estadisticas {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0 40px;
+    }
+
+    .grid-arboles {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 0 40px;
+    }
+
+    .info-centros {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .texto-centros {
+        order: 1;
+        flex: 1;
+    }
+
+    .centros-grid {
+        order: 2;
+        flex: 1;
+    }
+
+    .contenedor-sugerencias {
+        flex-direction: row;
+    }
+
+    .formulario-sugerencias {
+        flex: 1;
+    }
+
+    .sugerencias-registradas {
+        flex: 1;
+    }
+}

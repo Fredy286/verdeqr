@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Código QR - {{ qr_info.NombreCientifico }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <header class="header-principal">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
+                <li><a href="{{ url_for('qr') }}" class="active"><i class="fas fa-qrcode"></i><span>QR</span></a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
+        <div class="user-section">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
+                {% if session['usuario'].get('Imagen') %}
+                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
+                {% else %}
+                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Usuario" class="user-avatar">
+                    {% endif %}
+                {% endif %}
+                <div class="user-info">
+                    <span class="user-name">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</span>
+                    <span class="user-email">{{ session['usuario']['Correo'] }}</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="contenedor-seccion">
+            <h2>Código QR para {{ qr_info.NombreCientifico }}</h2>
+            <div class="qr-details-container">
+                <div class="qr-image-container">
+                    <img src="data:image/png;base64,{{ qr_info.Imagen }}" alt="Código QR" class="qr-image">
+                    <div class="qr-actions">
+                        <a href="data:image/png;base64,{{ qr_info.Imagen }}" download="qr_arbol_{{ qr_info.Arbol }}.png" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Descargar QR
+                        </a>
+                    </div>
+                </div>
+                <div class="qr-info-container">
+                    <h3>Información del Árbol</h3>
+                    <div class="info-group">
+                        <label>ID del Árbol:</label>
+                        <span>{{ qr_info.Arbol }}</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Nombre Científico:</label>
+                        <span>{{ qr_info.NombreCientifico }}</span>
+                    </div>
+                    {% if qr_info.NombreVulgar %}
+                    <div class="info-group">
+                        <label>Nombre Vulgar:</label>
+                        <span>{{ qr_info.NombreVulgar }}</span>
+                    </div>
+                    {% endif %}
+                    {% if qr_info.Caracteristicas %}
+                    <div class="info-group">
+                        <label>Características:</label>
+                        <span>{{ qr_info.Caracteristicas }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="info-group">
+                        <label>URL del QR:</label>
+                        <span>{{ qr_info.Codigo }}</span>
+                    </div>
+                    <div class="info-group">
+                        <label>Fecha de Generación:</label>
+                        <span>{{ fecha_actual }}</span>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('ver_arbol', id=qr_info.Arbol) }}" class="btn btn-info">
+                            <i class="fas fa-tree"></i> Ver Detalles del Árbol
+                        </a>
+                        <a href="{{ url_for('qr') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Notificaciones -->
+    <div id="notification-container"></div>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    showNotification('{{ message }}', '{{ category }}');
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+</body>
+</html>

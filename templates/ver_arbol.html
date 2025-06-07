@@ -1,182 +1,1142 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ arbol.NombreCientifico }} - VerdeQR</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .arbol-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .arbol-header {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        .arbol-imagen {
-            flex: 1;
-            max-width: 500px;
-        }
-        .arbol-imagen img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .arbol-info {
-            flex: 1;
-        }
-        .arbol-titulo {
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        .arbol-subtitulo {
-            font-size: 1.5em;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .info-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .info-item h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .info-item p {
-            color: #34495e;
-            margin: 0;
-        }
-        .medidas-section {
-            margin-top: 40px;
-        }
-        .medidas-titulo {
-            font-size: 1.8em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        .medidas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .medida-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .medida-card h4 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-        .medida-valor {
-            font-size: 1.2em;
-            color: #27ae60;
-            font-weight: bold;
-        }
-        .volver-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #2ecc71;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-        }
-        .volver-btn:hover {
-            background-color: #27ae60;
-        }
-    </style>
-</head>
-<body>
-    <div class="arbol-container">
-        <div class="arbol-header">
-            <div class="arbol-imagen">
-                {% if arbol.IDArbol %}
-                    <img src="{{ url_for('static', filename='css/js/img/ceiba.png') }}" alt="{{ arbol.NombreCientifico }}">
+{% extends "base_sin_menu.html" %}
+
+{% block title %}Ver Árbol - {{ arbol.NombreCientifico }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-image: none !important;
+        background-color: white !important;
+    }
+
+    body::before {
+        display: none !important;
+    }
+
+    /* Estilos para la portada del árbol */
+    .arbol-portada-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        background-image: url('{{ url_for('static', filename='css/js/img/fver_arbol.png') }}');
+        background-size: cover;
+        background-position: center;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .arbol-imagen {
+        max-height: 400px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .arbol-portada-container:hover .arbol-imagen {
+        transform: scale(1.02);
+    }
+
+    /* Estilos para textos expandibles */
+    .text-preview, .curiosidad-preview {
+        position: relative;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: rgba(240, 248, 255, 0.5);
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        border-left: 4px solid #3498db;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .text-full, .curiosidad-full {
+        display: none;
+        position: relative;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: rgba(240, 248, 255, 0.7);
+        margin-bottom: 15px;
+        border-left: 4px solid #4CAF50;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .read-more-btn, .read-less-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+    .read-more-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+    }
+
+    .read-less-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+    }
+
+    .read-more-btn:hover, .read-less-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Estilos para todas las secciones */
+    .info-box {
+        margin-bottom: 20px !important;
+    }
+
+    .info-box .btn-secondary {
+        border-left: 4px solid #3498db !important;
+        transition: all 0.3s ease;
+    }
+
+    .info-box .btn-secondary:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .info-box .card-body {
+        border-left: 4px solid #3498db !important;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+
+    /* Estilos para las curiosidades */
+    .curiosidad-item {
+        border-left: 4px solid #3498db !important;
+        transition: all 0.3s ease;
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+        background-color: rgba(240, 248, 255, 0.5);
+    }
+
+    .curiosidad-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Contenedor principal a ancho completo -->
+<div class="container-fluid mt-4">
+    <!-- Botón para volver -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{{ url_for('principal') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor con márgenes solo para la imagen -->
+<div class="container mb-4">
+    <!-- Imagen del árbol con fondo tipo portada -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="arbol-portada-container">
+                {% if arbol.Imagen %}
+                <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.NombreCientifico }}" class="img-fluid rounded shadow arbol-imagen">
                 {% else %}
-                    <img src="{{ url_for('static', filename='css/js/img/default-tree.jpg') }}" alt="{{ arbol.NombreCientifico }}">
+                <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ arbol.NombreCientifico }}" class="img-fluid rounded shadow arbol-imagen">
                 {% endif %}
             </div>
-            <div class="arbol-info">
-                <h1 class="arbol-titulo">{{ arbol.NombreCientifico }}</h1>
-                <h2 class="arbol-subtitulo">{{ arbol.NombreVulgar }}</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <h3><i class="fas fa-map-marker-alt"></i> Ubicación</h3>
-                        <p>{{ arbol.UbicacionGeografica }}</p>
-                    </div>
-                    <div class="info-item">
-                        <h3><i class="fas fa-tree"></i> Tipo de Árbol</h3>
-                        <p>{{ arbol.TipoArbolNombre }}</p>
-                    </div>
-                    <div class="info-item">
-                        <h3><i class="fas fa-leaf"></i> Uso</h3>
-                        <p>{{ arbol.UsoArbolNombre }}</p>
-                    </div>
-                    <div class="info-item">
-                        <h3><i class="fas fa-forest"></i> Tipo de Bosque</h3>
-                        <p>{{ arbol.TipoBosqueNombre }}</p>
-                    </div>
-                    <div class="info-item">
-                        <h3><i class="fas fa-building"></i> Centro</h3>
-                        <p>{{ arbol.CentroNombre }}</p>
-                    </div>
-                    <div class="info-item">
-                        <h3><i class="fas fa-info-circle"></i> Estado</h3>
-                        <p>{{ arbol.EstadoDescripcion }}</p>
-                    </div>
-                </div>
-            </div>
         </div>
-
-        <div class="info-item">
-            <h3><i class="fas fa-info-circle"></i> Características</h3>
-            <p>{{ arbol.Caracteristicas }}</p>
-        </div>
-
-        <div class="info-item">
-            <h3><i class="fas fa-leaf"></i> Servicio Ecosistémico</h3>
-            <p>{{ arbol.ServicioEcosistemico }}</p>
-        </div>
-
-        {% if medidas %}
-        <div class="medidas-section">
-            <h2 class="medidas-titulo">Medidas del Árbol</h2>
-            <div class="medidas-grid">
-                {% for medida in medidas %}
-                <div class="medida-card">
-                    <h4>Medida #{{ loop.index }}</h4>
-                    <p><strong>CAP:</strong> <span class="medida-valor">{{ medida.CAP }} cm</span></p>
-                    <p><strong>DAP:</strong> <span class="medida-valor">{{ medida.DAP }} cm</span></p>
-                    <p><strong>Altura Comercial:</strong> <span class="medida-valor">{{ medida.AlturaComercial }} m</span></p>
-                    <p><strong>Altura Total:</strong> <span class="medida-valor">{{ medida.AlturaTotal }} m</span></p>
-                    <p><strong>Área Basal:</strong> <span class="medida-valor">{{ medida.AreaBasal }} m²</span></p>
-                    <p><strong>Fecha:</strong> {{ medida.Fecha.strftime('%d/%m/%Y') }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-
-        <a href="{{ url_for('principal') }}" class="volver-btn">
-            <i class="fas fa-arrow-left"></i> Volver a Principal
-        </a>
     </div>
-</body>
-</html> 
+</div>
+
+<!-- Volver al contenedor a ancho completo para el resto del contenido -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Columna izquierda (más pequeña) -->
+        <div class="col-md-4 columna-izquierda">
+            <!-- Separador decorativo -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Información básica -->
+            <div class="info-box mb-4">
+                <h5 class="bg-light p-2 rounded">Nombre Científico</h5>
+                <p class="bg-info text-white p-2 rounded color-celeste-claro">{{ arbol.EspecieNombreCientifico }}</p>
+            </div>
+
+            <div class="info-box mb-4">
+                <h5 class="bg-light p-2 rounded">Nombre Vulgar</h5>
+                <p class="bg-info text-white p-2 rounded color-celeste-claro">{{ arbol.EspecieNombreVulgar }}</p>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Árboles en Centros -->
+            <div class="info-box mb-4">
+                <h5 class="bg-light p-2 rounded text-center">Arboles en Centros</h5>
+                <div class="row">
+                    {% for centro_id, centro_info in arbol.CentrosArboles.items() %}
+                    <div class="col-6 mb-2">
+                        <div class="bg-light p-2 rounded text-center">
+                            <h6>{{ centro_info.siglas }}</h6>
+                            <p class="bg-secondary text-white p-2 rounded">{{ centro_info.total }} árboles</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Ubicación en Google Maps -->
+            <div class="info-box mb-4">
+                <h5 class="bg-light p-2 rounded text-center">Ubicación</h5>
+                <div class="p-2">
+                    <p><strong>Centro:</strong> {{ arbol.CentroInfo.nombre }}</p>
+                    <p><strong>Dirección:</strong> {{ arbol.CentroInfo.direccion }}</p>
+                </div>
+                <div id="map" class="mapa-container"></div>
+            </div>
+        </div>
+
+        <!-- Columna derecha (más grande) -->
+        <div class="col-md-8 columna-derecha">
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#descripcion">
+                    <h5 class="mb-0">Descripción</h5>
+                </button>
+                <div class="collapse" id="descripcion">
+                    <div class="card card-body">
+
+
+                        <!-- Descripción con mejor estilo y leer más -->
+                        {% if arbol.Descripcion|length > 300 %}
+                            <div id="descripcion-preview">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Descripcion[:300] }}...</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('descripcion-preview').style.display='none'; document.getElementById('descripcion-full').style.display='block';">
+                                    <i class="fas fa-chevron-down"></i> Leer más
+                                </button>
+                            </div>
+                            <div id="descripcion-full" style="display: none;">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Descripcion }}</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('descripcion-full').style.display='none'; document.getElementById('descripcion-preview').style.display='block';">
+                                    <i class="fas fa-chevron-up"></i> Leer menos
+                                </button>
+                            </div>
+                        {% else %}
+                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Descripcion }}</pre>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Características -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#caracteristicas">
+                    <h5 class="mb-0">Características</h5>
+                </button>
+                <div class="collapse" id="caracteristicas">
+                    <div class="card card-body">
+                        <!-- Características con mejor estilo y leer más -->
+                        {% if arbol.Caracteristicas|length > 300 %}
+                            <div id="caracteristicas-preview">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Caracteristicas[:300] }}...</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('caracteristicas-preview').style.display='none'; document.getElementById('caracteristicas-full').style.display='block';">
+                                    <i class="fas fa-chevron-down"></i> Leer más
+                                </button>
+                            </div>
+                            <div id="caracteristicas-full" style="display: none;">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Caracteristicas }}</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('caracteristicas-full').style.display='none'; document.getElementById('caracteristicas-preview').style.display='block';">
+                                    <i class="fas fa-chevron-up"></i> Leer menos
+                                </button>
+                            </div>
+                        {% else %}
+                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.Caracteristicas }}</pre>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Tipo de Bosque -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#tipo_bosque">
+                    <h5 class="mb-0">Tipo de Bosque</h5>
+                </button>
+                <div class="collapse" id="tipo_bosque">
+                    <div class="card card-body">
+                        {% if arbol.TipoBosqueNombre %}
+                            <div class="tipo-bosque-item p-3 border rounded">
+                                <h6 class="text-center mb-3 border-bottom pb-2">{{ arbol.TipoBosqueNombre }}</h6>
+                                <div class="tipo-bosque-descripcion">
+                                    {% if arbol.TipoBosqueDescripcion %}
+                                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.TipoBosqueDescripcion }}</pre>
+                                    {% else %}
+                                        <p class="text-center">No hay descripción disponible para este tipo de bosque.</p>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+                        {% else %}
+                            <div class="text-full">
+                                <p class="text-center">No hay información sobre el tipo de bosque para este árbol.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Uso del Árbol -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#uso_arbol">
+                    <h5 class="mb-0">Uso del Árbol</h5>
+                </button>
+                <div class="collapse" id="uso_arbol">
+                    <div class="card card-body">
+                        {% if arbol.Usos %}
+                            {% for uso in arbol.Usos %}
+                                <div class="uso-item mb-3 p-3 border rounded">
+                                    <h6 class="text-center mb-2">{{ uso.Categoria }}{% if uso.Nombre %} - {{ uso.Nombre }}{% endif %}</h6>
+
+                                    {% if uso.Categoria == 'Maderable' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Dureza:</strong> {{ uso.Detalles.Dureza }}</p>
+                                                <p><strong>Resistencia:</strong> {{ uso.Detalles.Resistencia }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Uso Final:</strong> {{ uso.Detalles.UsoFinal }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Comestible' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Parte Comestible:</strong> {{ uso.Detalles.ParteComestible }}</p>
+                                                <p><strong>Forma de Consumo:</strong> {{ uso.Detalles.FormaConsumo }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Valor Nutricional:</strong> {{ uso.Detalles.ValorNutricional }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Medicinal' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Parte Utilizada:</strong> {{ uso.Detalles.ParteUtilizada }}</p>
+                                                <p><strong>Preparación:</strong> {{ uso.Detalles.Preparacion }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Enfermedades Tratadas:</strong> {{ uso.Detalles.EnfermedadesTratadas }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Ornamental' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Características Estéticas:</strong> {{ uso.Detalles.CaracteristicasEsteticas }}</p>
+                                                <p><strong>Ubicación Recomendada:</strong> {{ uso.Detalles.UbicacionRecomendada }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Tipo de Jardinería:</strong> {{ uso.Detalles.TipoJardineria }}</p>
+                                                <p><strong>Coloración Estacional:</strong> {{ uso.Detalles.ColoracionEstacional }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Artesanal' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Parte Utilizada:</strong> {{ uso.Detalles.ParteUtilizada }}</p>
+                                                <p><strong>Tipo de Artesanía:</strong> {{ uso.Detalles.TipoArtesania }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Técnicas de Elaboración:</strong> {{ uso.Detalles.TecnicasElaboracion }}</p>
+                                                <p><strong>Comunidades Artesanales:</strong> {{ uso.Detalles.ComunidadesArtesanales }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Agroforestal' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Sistema Agroforestal:</strong> {{ uso.Detalles.SistemaAgroforestal }}</p>
+                                                <p><strong>Beneficios Asociados:</strong> {{ uso.Detalles.BeneficiosAsociados }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Cultivos Compatibles:</strong> {{ uso.Detalles.CultivosCompatibles }}</p>
+                                                <p><strong>Función Principal:</strong> {{ uso.Detalles.FuncionPrincipal }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'RestauracionEcologica' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Ecosistema Objetivo:</strong> {{ uso.Detalles.EcosistemaObjetivo }}</p>
+                                                <p><strong>Función Ecológica:</strong> {{ uso.Detalles.FuncionEcologica }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Especies Asociadas:</strong> {{ uso.Detalles.EspeciesAsociadas }}</p>
+                                                <p><strong>Tasa de Crecimiento:</strong> {{ uso.Detalles.TasaCrecimiento }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'CulturalCeremonial' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Grupo Étnico:</strong> {{ uso.Detalles.GrupoEtnico }}</p>
+                                                <p><strong>Tipo de Ceremonia:</strong> {{ uso.Detalles.TipoCeremonia }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Significado Cultural:</strong> {{ uso.Detalles.SignificadoCultural }}</p>
+                                                <p><strong>Parte Utilizada:</strong> {{ uso.Detalles.ParteUtilizada }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Melifero' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Tipo de Miel:</strong> {{ uso.Detalles.TipoMiel }}</p>
+                                                <p><strong>Época de Floración:</strong> {{ uso.Detalles.EpocaFloracion }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Calidad del Polen:</strong> {{ uso.Detalles.CalidadPolen }}</p>
+                                                <p><strong>Atracción de Polinizadores:</strong> {{ uso.Detalles.AtraccionPolinizadores }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'ProteccionAmbiental' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Tipo de Protección:</strong> {{ uso.Detalles.TipoProteccion }}</p>
+                                                <p><strong>Beneficios Ambientales:</strong> {{ uso.Detalles.BeneficiosAmbientales }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Zonas de Aplicación:</strong> {{ uso.Detalles.ZonasAplicacion }}</p>
+                                                <p><strong>Capacidad de Captura de Carbono:</strong> {{ uso.Detalles.CapacidadCapturaCarbon }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Tintoreo' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Parte Utilizada:</strong> {{ uso.Detalles.ParteUtilizada }}</p>
+                                                <p><strong>Color Obtenido:</strong> {{ uso.Detalles.ColorObtenido }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Método de Extracción:</strong> {{ uso.Detalles.MetodoExtraccion }}</p>
+                                                <p><strong>Usos de los Tintes:</strong> {{ uso.Detalles.UsosTintes }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Oleaginoso' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Parte Utilizada:</strong> {{ uso.Detalles.ParteUtilizada }}</p>
+                                                <p><strong>Tipo de Aceite:</strong> {{ uso.Detalles.TipoAceite }}</p>
+                                                <p><strong>Método de Extracción:</strong> {{ uso.Detalles.MetodoExtraccion }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Propiedades del Aceite:</strong> {{ uso.Detalles.PropiedadesAceite }}</p>
+                                                <p><strong>Aplicaciones del Aceite:</strong> {{ uso.Detalles.AplicacionesAceite }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% elif uso.Categoria == 'Biocombustible' and uso.Detalles %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Tipo de Biocombustible:</strong> {{ uso.Detalles.TipoBiocombustible }}</p>
+                                                <p><strong>Poder Calorífico:</strong> {{ uso.Detalles.PoderCalorifico }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Tasa de Crecimiento:</strong> {{ uso.Detalles.TasaCrecimiento }}</p>
+                                                <p><strong>Rendimiento por Hectárea:</strong> {{ uso.Detalles.RendimientoPorHectarea }}</p>
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        <p class="text-center">No hay detalles específicos disponibles para este uso.</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">No hay usos registrados para este árbol.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Servicio Ecosistémico -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#servicio_ecosistemico">
+                    <h5 class="mb-0">Servicio Ecosistémico</h5>
+                </button>
+                <div class="collapse" id="servicio_ecosistemico">
+                    <div class="card card-body">
+                        <!-- Servicios ecosistémicos con mejor estilo y leer más -->
+                        {% if arbol.ServiciosEcosistemicos|length > 300 %}
+                            <div id="servicios-preview">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.ServiciosEcosistemicos[:300] }}...</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('servicios-preview').style.display='none'; document.getElementById('servicios-full').style.display='block';">
+                                    <i class="fas fa-chevron-down"></i> Leer más
+                                </button>
+                            </div>
+                            <div id="servicios-full" style="display: none;">
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.ServiciosEcosistemicos }}</pre>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="document.getElementById('servicios-full').style.display='none'; document.getElementById('servicios-preview').style.display='block';">
+                                    <i class="fas fa-chevron-up"></i> Leer menos
+                                </button>
+                            </div>
+                        {% else %}
+                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.ServiciosEcosistemicos }}</pre>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Curiosidades -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidades">
+                    <h5 class="mb-0">Curiosidades</h5>
+                </button>
+                <div class="collapse" id="curiosidades">
+                    <div class="card card-body">
+                        {% if arbol.Curiosidades %}
+                            {% for curiosidad in arbol.Curiosidades %}
+                                <div class="curiosidad-item mb-3 p-3 border rounded">
+                                    <div class="curiosidad-content">
+                                        {% if curiosidad.Descripcion|length > 300 %}
+                                            <div class="curiosidad-preview" id="curiosidad-preview-{{ loop.index }}">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion[:300] }}...</pre>
+                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                                        onclick="toggleCuriosidad({{ loop.index }})">
+                                                    <i class="fas fa-chevron-down"></i> Leer más
+                                                </button>
+                                            </div>
+                                            <div class="curiosidad-full" id="curiosidad-full-{{ loop.index }}" style="display: none;">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion }}</pre>
+                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                                        onclick="toggleCuriosidad({{ loop.index }})">
+                                                    <i class="fas fa-chevron-up"></i> Leer menos
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <div class="curiosidad-full">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion }}</pre>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">No hay curiosidades registradas para este árbol.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separador mb-4">
+                <div class="circulo"></div>
+                <div class="linea"></div>
+                <div class="circulo"></div>
+            </div>
+
+            <!-- Interacciones Ecológicas -->
+            <div class="info-box mb-4">
+                <button class="btn btn-secondary btn-gris-claro w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#interacciones">
+                    <h5 class="mb-0">Interacciones Ecológicas</h5>
+                </button>
+                <div class="collapse" id="interacciones">
+                    <div class="card card-body">
+                        {% if arbol.Interacciones %}
+                            {% for interaccion in arbol.Interacciones %}
+                                <div class="interaccion-item mb-3 p-3 border rounded">
+                                    <h6 class="text-center mb-3 border-bottom pb-2">{{ interaccion.TipoInteraccion }}</h6>
+                                    <div class="interaccion-descripcion">
+                                        {% if interaccion.Descripcion and interaccion.Descripcion|length > 300 %}
+                                            <div class="text-preview" id="interaccion-{{ loop.index }}-preview">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion[:300] }}...</pre>
+                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                                        onclick="toggleInteraccion({{ loop.index }})">
+                                                    <i class="fas fa-chevron-down"></i> Leer más
+                                                </button>
+                                            </div>
+                                            <div class="text-full" id="interaccion-{{ loop.index }}-full" style="display: none;">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion }}</pre>
+                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                                                        onclick="toggleInteraccion({{ loop.index }})">
+                                                    <i class="fas fa-chevron-up"></i> Leer menos
+                                                </button>
+                                            </div>
+                                        {% elif interaccion.Descripcion %}
+                                            <div class="text-full">
+                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion }}</pre>
+                                            </div>
+                                        {% else %}
+                                            <p class="text-center">No hay descripción disponible para esta interacción.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">No hay interacciones ecológicas registradas para este árbol.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Código QR del árbol si existe -->
+            {% if arbol.QR %}
+            <div class="info-box mb-4 text-center">
+                <h5 class="bg-success text-white p-2 rounded">Código Escaneado</h5>
+                <div class="qr-container text-center">
+                    <img src="data:image/png;base64,{{ arbol.QR }}" alt="Código QR" class="img-fluid qr-image">
+                    <div class="mt-3">
+                        <a href="data:image/png;base64,{{ arbol.QR }}" download="qr_arbol_{{ arbol.IDArbol }}.png" class="btn btn-primary btn-sm">
+                            <i class="fas fa-download"></i> Descargar QR
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer-verde w-100 m-0 p-0">
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+            <div class="col-md-4 p-4 d-flex justify-content-center align-items-center">
+                <div class="logo-container-footer">
+                    <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="footer-logo">
+                </div>
+            </div>
+            <div class="col-md-4 p-4">
+                <h5 class="mb-3">Enlaces rápidos</h5>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('principal') }}">Principal</a></li>
+                    <li><a href="{{ url_for('arbol') }}">Gestión de Árboles</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 p-4">
+                <h5 class="mb-3">Contacto</h5>
+                <p class="mb-2">Email: info@verdeqr.com</p>
+                <p class="mb-2">Teléfono: +57 123 456 7890</p>
+            </div>
+        </div>
+        <div class="row g-0 py-3 bg-dark-green">
+            <div class="col-12 text-center">
+                <p class="mb-1">© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+                <p class="mb-0">Desarrollado con <i class="fas fa-heart heart-icon"></i> por el equipo de VerdeQR</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .separador {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px 0;
+    }
+
+    .circulo {
+        width: 12px;
+        height: 12px;
+        background-color: white;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .linea {
+        height: 2px;
+        background-color: black;
+        flex-grow: 1;
+        margin: 0 15px;
+        display: block !important;
+        width: auto !important;
+    }
+
+    .info-box {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 0 10px;
+        margin: 15px 0;
+    }
+
+    .btn-light {
+        background-color: #f8f9fa;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-light:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        color: white;
+    }
+
+    .btn-gris-claro {
+        background-color: #e9ecef;
+        color: #333;
+    }
+
+    .btn-gris-claro:hover {
+        background-color: #dee2e6;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .footer-verde {
+        background-color: #2c3e50;
+        color: white;
+        padding: 30px 0;
+        margin-top: 50px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        left: 0;
+        right: 0;
+    }
+
+    .footer-logo {
+        max-width: 100px;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .logo-container-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bg-dark-green {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 10px;
+    }
+
+    .footer-links a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .footer-links a:hover {
+        text-decoration: underline;
+    }
+
+    .heart-icon {
+        color: #ff6b6b;
+    }
+
+    .columna-izquierda {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: left;
+    }
+
+    .columna-derecha {
+        padding-left: 20px;
+    }
+
+    .columna-izquierda .info-box {
+        width: 100%;
+        background-color: transparent;
+        border-radius: 8px;
+        padding: 0;
+        margin: 15px 0;
+        overflow: hidden;
+    }
+
+    /* Estilo eliminado para evitar duplicación */
+
+    .color-celeste-claro {
+        background-color: #8ecdf9 !important;
+    }
+
+    .mapa-container {
+        background-color: #f8f9fa;
+        margin-top: 10px;
+        border-radius: 5px;
+        padding: 0;
+    }
+
+    .map-info {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .map-info p {
+        margin: 0 0 5px 0;
+    }
+
+    .map-info p:last-child {
+        margin-bottom: 0;
+    }
+
+    .qr-imagen, .qr-image {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    /* Corregir estilos de los botones */
+    .btn-secondary.btn-gris-claro {
+        background-color: #f8f9fa;
+        color: #333;
+        border: 1px solid #ddd;
+        width: 100%;
+        text-align: left;
+        padding: 10px 15px;
+        border-radius: 5px;
+        box-shadow: none;
+    }
+
+    .btn-secondary.btn-gris-claro h5 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .card {
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .card-body {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid #ddd;
+        border-top: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Estilos para los títulos */
+    .bg-light {
+        background-color: #f8f9fa !important;
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+
+    .info-box h5 {
+        margin: 0;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* Estilos para los elementos de tipo de bosque e interacciones */
+    .tipo-bosque-item, .interaccion-item {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tipo-bosque-item h6, .interaccion-item h6 {
+        color: #2c3e50;
+        font-weight: 600;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    /* Estilo para el borde izquierdo azul */
+    .tipo-bosque-item, .interaccion-item, .curiosidad-item {
+        border-left: 4px solid #3498db !important;
+        padding-left: 15px;
+    }
+
+
+</style>
+
+<!-- Script para la interactividad de textos expandibles -->
+<script>
+    // Función simple para alternar la visibilidad del texto completo
+    function toggleText(button, id) {
+        const fullElement = document.getElementById(`${id}-full`);
+        const previewElement = document.getElementById(`${id}-preview`);
+
+        if (fullElement.style.display === 'none' || fullElement.style.display === '') {
+            // Mostrar texto completo
+            fullElement.style.display = 'block';
+            previewElement.style.display = 'none';
+        } else {
+            // Mostrar vista previa
+            fullElement.style.display = 'none';
+            previewElement.style.display = 'block';
+        }
+    }
+
+    // Función para alternar la visibilidad de las curiosidades
+    function toggleCuriosidad(index) {
+        const fullElement = document.getElementById(`curiosidad-full-${index}`);
+        const previewElement = document.getElementById(`curiosidad-preview-${index}`);
+
+        if (fullElement.style.display === 'none' || fullElement.style.display === '') {
+            // Mostrar texto completo
+            fullElement.style.display = 'block';
+            previewElement.style.display = 'none';
+        } else {
+            // Mostrar vista previa
+            fullElement.style.display = 'none';
+            previewElement.style.display = 'block';
+        }
+    }
+
+    // Función para alternar la visibilidad de las interacciones ecológicas
+    function toggleInteraccion(index) {
+        const fullElement = document.getElementById(`interaccion-${index}-full`);
+        const previewElement = document.getElementById(`interaccion-${index}-preview`);
+
+        if (fullElement.style.display === 'none' || fullElement.style.display === '') {
+            // Mostrar texto completo
+            fullElement.style.display = 'block';
+            previewElement.style.display = 'none';
+        } else {
+            // Mostrar vista previa
+            fullElement.style.display = 'none';
+            previewElement.style.display = 'block';
+        }
+    }
+
+
+</script>
+
+<!-- Mapa con OpenStreetMap (no requiere API key) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener las coordenadas del centro donde está el árbol
+        const lat = {{ arbol.CentroInfo.lat }};
+        const lng = {{ arbol.CentroInfo.lng }};
+        const centerName = "{{ arbol.CentroInfo.nombre }}";
+        const direccion = "{{ arbol.CentroInfo.direccion }}";
+        const nombreArbol = "{{ arbol.EspecieNombreCientifico }}";
+        const nombreVulgar = "{{ arbol.EspecieNombreVulgar }}";
+
+        // Crear el contenedor del mapa con estilo
+        const mapContainer = document.getElementById('map');
+        mapContainer.style.height = '350px';
+        mapContainer.style.width = '100%';
+        mapContainer.style.borderRadius = '8px';
+        mapContainer.style.border = '1px solid #ddd';
+        mapContainer.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+
+        // Crear el mapa usando OpenStreetMap (no requiere API key)
+        mapContainer.innerHTML = `
+            <div class="map-info bg-light p-3 mb-3 rounded shadow-sm">
+                <h5 class="mb-2 border-bottom pb-2 text-primary">${nombreArbol}</h5>
+                <p class="mb-2 fst-italic">${nombreVulgar}</p>
+                <p class="mb-1"><strong><i class="fas fa-map-marker-alt text-danger"></i> Centro:</strong> ${centerName}</p>
+                <p class="mb-3"><strong><i class="fas fa-map-pin text-danger"></i> Dirección:</strong> ${direccion}</p>
+            </div>
+            <div class="mb-3">
+                <iframe
+                    width="100%"
+                    height="250"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.005}%2C${lat-0.005}%2C${lng+0.005}%2C${lat+0.005}&amp;layer=mapnik&amp;marker=${lat}%2C${lng}"
+                    style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"
+                ></iframe>
+            </div>
+            <div class="d-flex justify-content-center gap-2 mb-2">
+                <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" class="btn btn-primary btn-sm">
+                    <i class="fas fa-map-marked-alt"></i> Ver en Google Maps
+                </a>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="btn btn-success btn-sm">
+                    <i class="fas fa-directions"></i> Cómo llegar
+                </a>
+                <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}" target="_blank" class="btn btn-info btn-sm text-white">
+                    <i class="fas fa-map"></i> Ver en OpenStreetMap
+                </a>
+            </div>
+        `;
+    });
+</script>
+
+<!-- Script para cargar Google Maps como alternativa si se proporciona una clave API -->
+<script>
+    // Si deseas usar Google Maps en lugar de OpenStreetMap, descomenta el siguiente script
+    // y reemplaza TU_CLAVE_API con tu clave real de Google Maps API
+    /*
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cargar Google Maps API dinámicamente
+        const loadGoogleMaps = () => {
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=TU_CLAVE_API&libraries=places,geometry&callback=initMap';
+            script.defer = true;
+            script.async = true;
+            document.head.appendChild(script);
+        };
+
+        // Intentar cargar Google Maps después de 1 segundo
+        setTimeout(loadGoogleMaps, 1000);
+    });
+
+    // Función para inicializar Google Maps
+    function initMap() {
+        const lat = {{ arbol.CentroInfo.lat }};
+        const lng = {{ arbol.CentroInfo.lng }};
+        const centerName = "{{ arbol.CentroInfo.nombre }}";
+        const direccion = "{{ arbol.CentroInfo.direccion }}";
+        const nombreArbol = "{{ arbol.EspecieNombreCientifico }}";
+        const nombreVulgar = "{{ arbol.EspecieNombreVulgar }}";
+
+        const mapContainer = document.getElementById('map');
+        mapContainer.innerHTML = ''; // Limpiar el contenedor
+
+        const mapOptions = {
+            center: { lat: lat, lng: lng },
+            zoom: 16,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            fullscreenControl: true,
+            streetViewControl: true,
+            zoomControl: true
+        };
+
+        const map = new google.maps.Map(mapContainer, mapOptions);
+
+        const marker = new google.maps.Marker({
+            position: { lat: lat, lng: lng },
+            map: map,
+            title: nombreArbol,
+            animation: google.maps.Animation.DROP,
+            icon: {
+                url: "{{ url_for('static', filename='css/js/img/tree-marker.png') }}",
+                scaledSize: new google.maps.Size(40, 40)
+            }
+        });
+
+        const contentString = `
+            <div class="info-window">
+                <h5 style="margin-bottom: 8px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">${nombreArbol}</h5>
+                <p style="margin-bottom: 5px; font-style: italic;">${nombreVulgar}</p>
+                <div style="margin-top: 10px;">
+                    <p style="margin-bottom: 5px;"><strong>Centro:</strong> ${centerName}</p>
+                    <p style="margin-bottom: 5px;"><strong>Dirección:</strong> ${direccion}</p>
+                </div>
+                <div style="margin-top: 10px; text-align: center;">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank"
+                       style="display: inline-block; padding: 5px 10px; background-color: #3498db; color: white; text-decoration: none; border-radius: 4px;">
+                        <i class="fas fa-directions"></i> Cómo llegar
+                    </a>
+                </div>
+            </div>
+        `;
+
+        const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 300
+        });
+
+        marker.addListener('click', () => {
+            infowindow.open(map, marker);
+        });
+
+        infowindow.open(map, marker);
+    }
+    */
+</script>
+{% endblock %}

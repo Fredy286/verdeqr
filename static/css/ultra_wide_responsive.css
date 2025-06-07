@@ -1,0 +1,226 @@
+/* ultra_wide_responsive.css - Solución específica para pantallas ultra anchas */
+
+/* Variables para diferentes tamaños de pantalla */
+:root {
+  --ultra-wide-content-width: 98vw; /* Para pantallas ultra anchas */
+  --ultra-wide-padding: 80px;
+  --max-content-width: 3000px; /* Aumentamos significativamente el ancho máximo */
+}
+
+/* Estilos específicos para pantallas muy grandes */
+@media (min-width: 1600px) {
+  /* Contenedores principales */
+  .contenido-principal,
+  .segunda-pantalla,
+  .tercera-pantalla,
+  .cuarta-pantalla,
+  .quinta-pantalla,
+  .beneficios-pantalla {
+    width: 100% !important;
+    max-width: var(--ultra-wide-content-width) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: var(--ultra-wide-padding) !important;
+    padding-right: var(--ultra-wide-padding) !important;
+  }
+
+  /* Ajustes de tamaño de texto */
+  .contenido-principal h1 {
+    font-size: 3.5rem !important;
+  }
+
+  .contenido-principal h3 {
+    font-size: 1.8rem !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Ajustes para el cuadro QR */
+  .cuadro-qr {
+    max-width: 600px !important;
+    margin: 40px auto !important;
+  }
+
+  /* Ajustes para los grids */
+  .grid-container-arboles {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 30px !important;
+  }
+
+  .grid-container-tipos {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+  }
+
+  /* Ajuste para el cuadro QR y el botón */
+  .cuadro-qr {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+
+  .cuadro-qr .btn-escanear {
+    margin-top: 20px !important;
+    margin-left: 0 !important;
+    align-self: center !important;
+    padding: 12px 25px !important;
+    font-size: 1.1rem !important;
+  }
+
+  .grid-container-beneficios {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+  }
+
+  .grid-container-centros {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+  }
+
+  /* Ajustes para la segunda pantalla */
+  .segunda-pantalla {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .segunda-pantalla .texto {
+    flex: 1 !important;
+    padding-right: 60px !important;
+  }
+
+  .segunda-pantalla .imagen {
+    flex: 1 !important;
+  }
+
+  .segunda-pantalla .imagen img {
+    max-width: 600px !important;
+  }
+}
+
+/* Pantallas extremadamente anchas (2000px y superior) */
+@media (min-width: 2000px) {
+  :root {
+    --ultra-wide-content-width: 2800px;
+  }
+
+  .contenido-principal,
+  .segunda-pantalla,
+  .tercera-pantalla,
+  .cuarta-pantalla,
+  .quinta-pantalla,
+  .beneficios-pantalla {
+    max-width: var(--ultra-wide-content-width) !important;
+  }
+
+  /* Ajustes para los grids en pantallas extremadamente grandes */
+  .grid-container-arboles {
+    grid-template-columns: repeat(8, 1fr) !important;
+    gap: 25px !important;
+  }
+
+  /* Estilos para grid-container-tipos movidos a especies_large.css */
+
+  /* Estilos para imagen-tipo movidos a especies_large.css */
+
+  /* Estilos para texto-tipo movidos a especies_large.css */
+
+  /* Estilos para texto-tipo h2 movidos a especies_large.css */
+
+  /* Estilos para texto-tipo p movidos a especies_large.css */
+
+  .flecha {
+    bottom: 25px !important;
+    right: 25px !important;
+  }
+
+  .flecha img {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .grid-container-beneficios {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Ajuste para el cuadro QR y el botón */
+  .cuadro-qr {
+    max-width: 700px !important;
+  }
+
+  .cuadro-qr .btn-escanear {
+    margin-top: 30px !important;
+    padding: 15px 30px !important;
+    font-size: 1.2rem !important;
+  }
+
+  /* Ajustes adicionales para pantallas extremadamente grandes */
+  .menu-superior {
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+  }
+
+  .footer {
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+  }
+
+  /* Mejorar la visualización de las tarjetas */
+  .grid-item-arbol,
+  .grid-item-tipo,
+  .grid-item-centro {
+    padding: 20px !important;
+  }
+}
+
+/* Asegurar que el menú superior ocupe todo el ancho */
+.menu-superior {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+  background-color: var(--color-primario) !important;
+}
+
+/* Ajustes para el footer */
+.footer {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.footer-contenido {
+  width: 100% !important;
+  max-width: var(--ultra-wide-content-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Asegurar que las imágenes se adapten correctamente */
+.grid-item-arbol img,
+.grid-item-tipo img,
+.grid-item-centro img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
+}
+
+/* Mejorar la visualización de las tarjetas */
+.grid-item-arbol,
+.grid-item-tipo,
+.grid-item-centro {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.grid-item-arbol:hover,
+.grid-item-tipo:hover,
+.grid-item-centro:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}

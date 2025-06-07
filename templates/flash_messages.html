@@ -16,9 +16,10 @@
                 top: 20px;
                 right: 20px;
                 z-index: 9999;
-                max-width: 400px;
+                max-width: 500px;
+                width: 100%;
             }
-            
+
             .flash-message {
                 margin-bottom: 10px;
                 padding: 15px;
@@ -29,36 +30,38 @@
                 animation: slideIn 0.3s ease forwards;
                 position: relative;
             }
-            
+
             .flash-success {
                 background-color: #d4edda;
                 border-left: 4px solid #28a745;
                 color: #155724;
+                font-size: 16px;
+                font-weight: 500;
             }
-            
+
             .flash-error {
                 background-color: #f8d7da;
                 border-left: 4px solid #dc3545;
                 color: #721c24;
             }
-            
+
             .flash-warning {
                 background-color: #fff3cd;
                 border-left: 4px solid #ffc107;
                 color: #856404;
             }
-            
+
             .flash-info {
                 background-color: #d1ecf1;
                 border-left: 4px solid #17a2b8;
                 color: #0c5460;
             }
-            
+
             .flash-message i {
                 margin-right: 10px;
                 font-size: 1.2rem;
             }
-            
+
             .flash-close {
                 background: none;
                 border: none;
@@ -69,11 +72,11 @@
                 opacity: 0.7;
                 transition: opacity 0.2s;
             }
-            
+
             .flash-close:hover {
                 opacity: 1;
             }
-            
+
             @keyframes slideIn {
                 from {
                     transform: translateX(100%);
@@ -84,7 +87,7 @@
                     opacity: 1;
                 }
             }
-            
+
             @keyframes fadeOut {
                 from {
                     opacity: 1;
@@ -107,8 +110,8 @@
                         }, 300);
                     });
                 });
-                
-                // Auto-cerrar mensajes después de 5 segundos
+
+                // Auto-cerrar mensajes después de 8 segundos
                 setTimeout(() => {
                     document.querySelectorAll('.flash-message').forEach(message => {
                         message.style.animation = 'fadeOut 0.3s forwards';
@@ -116,8 +119,8 @@
                             message.remove();
                         }, 300);
                     });
-                }, 5000);
+                }, 8000);
             });
         </script>
     {% endif %}
-{% endwith %} 
+{% endwith %}

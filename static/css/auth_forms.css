@@ -1,0 +1,294 @@
+/* auth_forms.css - Estilos para formularios de autenticación */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #34495e;
+    --color-acento: #28a745;
+    --color-texto: #333;
+    --color-texto-claro: #666;
+    --color-fondo: #f8f9fa;
+    --color-tarjeta: #ffffff;
+    --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --sombra-fuerte: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --transicion: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: block;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+/* Contenedor para formularios de autenticación */
+.contenedor-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+.formulario-auth {
+    background-color: rgba(255, 255, 255, 0.55);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    width: 90%;
+    max-width: 380px;
+    position: relative;
+    transition: var(--transicion);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+}
+
+.formulario-auth::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.formulario-auth h1 {
+    color: var(--color-primario);
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+.btn-inicio {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--color-acento);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: var(--transicion);
+}
+
+.btn-inicio:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-primario);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid rgba(221, 221, 221, 0.7);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: var(--transicion);
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+.form-group input:focus {
+    border-color: var(--color-acento);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.form-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--color-acento);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: auto;
+    text-align: center;
+    transition: var(--transicion);
+    margin-top: 12px;
+}
+
+.formulario-auth form {
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-auth p {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--color-texto);
+}
+
+.formulario-auth p a {
+    color: var(--color-acento);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transicion);
+}
+
+.formulario-auth p a:hover {
+    color: #218838;
+    text-decoration: underline;
+}
+
+/* Media Queries para Responsive Design */
+/* Para pantallas grandes */
+@media (min-width: 1200px) {
+    .formulario-auth {
+        max-width: 600px;
+        padding: 40px;
+    }
+
+    .formulario-auth h1 {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+    }
+
+    .form-group label {
+        font-size: 1.1rem;
+    }
+
+    .form-group input {
+        padding: 15px 18px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+    }
+
+    .btn {
+        padding: 15px 25px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+    }
+
+    .btn-inicio {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    .formulario-auth p {
+        font-size: 1.1rem;
+        margin-top: 25px;
+    }
+
+    /* Ya está configurado para 2 columnas por defecto */
+}
+
+/* Para tablets */
+@media (max-width: 992px) {
+    .formulario-auth {
+        max-width: 360px;
+    }
+}
+
+/* Para móviles grandes */
+@media (max-width: 768px) {
+    .form-columns {
+        grid-template-columns: 1fr;
+    }
+    .formulario-auth {
+        padding: 15px;
+        max-width: 320px;
+    }
+
+    .formulario-auth h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+    }
+}
+
+/* Para móviles pequeños */
+@media (max-width: 480px) {
+    .formulario-auth {
+        padding: 12px;
+        max-width: 100%;
+        width: 95%;
+    }
+
+    .formulario-auth h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-inicio {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .formulario-auth p {
+        font-size: 0.9rem;
+    }
+}

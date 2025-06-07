@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #2c3e50;
+            --color-secundario: #34495e;
+            --color-acento: #28a745;
+            --color-texto: #333;
+            --color-texto-claro: #666;
+            --color-fondo: #f8f9fa;
+            --color-tarjeta: #ffffff;
+            --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transicion: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
+
+        /* Menú superior simple */
+        .menu-simple {
+            background-color: var(--color-primario);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--sombra);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .menu-simple .botones {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .menu-simple .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-simple .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-acento);
+            transition: var(--transicion);
+            margin-right: 10px;
+        }
+
+        .menu-simple .logo img:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .menu-simple .botones a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transicion);
+            display: inline-block;
+        }
+
+        .menu-simple .botones a:hover {
+            background-color: var(--color-acento);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Contenedor principal */
+        .contacto-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: var(--color-tarjeta);
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .contacto-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contacto-form {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .contacto-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            font-size: 2rem;
+        }
+
+        .contacto-container h2 {
+            color: var(--color-acento);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .contacto-container p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .contacto-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contacto-info-item i {
+            font-size: 1.5rem;
+            color: var(--color-acento);
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--color-acento);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transicion);
+            font-weight: 500;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .mapa {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .volver-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: var(--transicion);
+            font-weight: 500;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Footer simple */
+        .footer-simple {
+            background-color: #1a2a3a; /* Azul oscuro */
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-simple a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transicion);
+        }
+
+        .footer-simple a:hover {
+            background-color: var(--color-acento);
+            color: white;
+        }
+
+        .footer-simple p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .heart-icon {
+            color: var(--color-acento);
+        }
+
+        /* Botones flotantes */
+        .botones-flotantes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-flotante {
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-flotante i {
+            margin-right: 8px;
+        }
+
+        .btn-flotante:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-principal {
+            background-color: #3498db; /* Azul para distinguirlo */
+        }
+
+        .btn-principal:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-gestion {
+            background-color: var(--color-acento);
+        }
+
+        .btn-gestion:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 768px) {
+            .contacto-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú superior simple -->
+    <header class="menu-simple">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="botones">
+            <a href="{{ url_for('inicio') }}"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('principal') }}"><i class="fas fa-tree"></i> Ver Árboles</a>
+            <a href="{{ url_for('acerca_de') }}"><i class="fas fa-info-circle"></i> Acerca de Nosotros</a>
+            <a href="{{ url_for('terminos_condiciones') }}"><i class="fas fa-file-contract"></i> Términos y Condiciones</a>
+            <a href="{{ url_for('politica_privacidad') }}"><i class="fas fa-shield-alt"></i> Política de Privacidad</a>
+            {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('gestion') }}"><i class="fas fa-cog"></i> Gestión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="contacto-container">
+        <h1>Contacto</h1>
+
+        <div class="contacto-info">
+            <h2>Información de Contacto</h2>
+
+            <div class="contacto-info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <strong>Dirección:</strong>
+                    <p>Calle 123, Bogotá, Colombia</p>
+                </div>
+            </div>
+
+            <div class="contacto-info-item">
+                <i class="fas fa-phone"></i>
+                <div>
+                    <strong>Teléfono:</strong>
+                    <p>+57 123 456 7890</p>
+                </div>
+            </div>
+
+            <div class="contacto-info-item">
+                <i class="fas fa-envelope"></i>
+                <div>
+                    <strong>Email:</strong>
+                    <p>info@verdeqr.com</p>
+                </div>
+            </div>
+
+            <div class="contacto-info-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <strong>Horario de Atención:</strong>
+                    <p>Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                    <p>Sábados: 9:00 AM - 1:00 PM</p>
+                </div>
+            </div>
+
+            <iframe class="mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254508.39280650613!2d-74.24789682500001!3d4.648617799999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9bfd2da6cb29%3A0x239d635520a33914!2zQm9nb3TDoQ!5e0!3m2!1ses!2sco!4v1652645123456!5m2!1ses!2sco" allowfullscreen="" title="Mapa de ubicación de VerdeQR"></iframe>
+        </div>
+
+        <div class="contacto-form">
+            <h2>Envíanos un Mensaje</h2>
+
+            <form id="contactForm" action="{{ url_for('enviar_contacto') }}" method="POST">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo *</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono">
+                </div>
+
+                <div class="form-group">
+                    <label for="asunto">Asunto *</label>
+                    <input type="text" id="asunto" name="asunto" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mensaje">Mensaje *</label>
+                    <textarea id="mensaje" name="mensaje" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                </button>
+            </form>
+
+            <a href="{{ url_for('inicio') }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver a inicio</a>
+        </div>
+    </div>
+
+    <!-- Footer simple -->
+    <footer class="footer-simple">
+        <div>
+            <a href="{{ url_for('inicio') }}">Inicio</a>
+            <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+            <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+            <a href="{{ url_for('contacto') }}">Contacto</a>
+            <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
+        </div>
+        <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+        <p>Desarrollado con <i class="fas fa-heart heart-icon"></i> por el equipo de VerdeQR</p>
+    </footer>
+
+    <!-- Botones flotantes -->
+    {% if 'usuario' in session %}
+    <div class="botones-flotantes">
+        <a href="{{ url_for('inicio') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-home"></i> Ir a Inicio
+        </a>
+        <a href="{{ url_for('principal') }}" class="btn-flotante btn-gestion">
+            <i class="fas fa-tree"></i> Ir a Principal
+        </a>
+    </div>
+    {% endif %}
+</body>
+</html>

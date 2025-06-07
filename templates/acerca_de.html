@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de Nosotros - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #2c3e50;
+            --color-secundario: #34495e;
+            --color-acento: #28a745;
+            --color-texto: #333;
+            --color-texto-claro: #666;
+            --color-fondo: #f8f9fa;
+            --color-tarjeta: #ffffff;
+            --sombra: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --transicion: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+        }
+
+        /* Menú superior simple */
+        .menu-simple {
+            background-color: var(--color-primario);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--sombra);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .menu-simple .botones {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .menu-simple .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-simple .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-acento);
+            transition: var(--transicion);
+            margin-right: 10px;
+        }
+
+        .menu-simple .logo img:hover {
+            transform: scale(1.05);
+            border-color: white;
+        }
+
+        .menu-simple .botones a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transicion);
+            display: inline-block;
+        }
+
+        .menu-simple .botones a:hover {
+            background-color: var(--color-acento);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Contenedor principal */
+        .acerca-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: var(--color-tarjeta);
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+        }
+
+        .acerca-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .acerca-container h2 {
+            color: var(--color-acento);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .acerca-container p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .mision-vision {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .mision, .vision {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: rgba(40, 167, 69, 0.1);
+            border-radius: 10px;
+            border-left: 5px solid var(--color-acento);
+        }
+
+        .equipo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .miembro {
+            width: 220px;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .miembro:hover {
+            transform: translateY(-5px);
+        }
+
+        .miembro img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid var(--color-acento);
+        }
+
+        .miembro h3 {
+            margin-bottom: 5px;
+            color: var(--color-primario);
+        }
+
+        .miembro p {
+            color: var(--color-texto-claro);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .miembro .redes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .miembro .redes a {
+            color: var(--color-texto-claro);
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .miembro .redes a:hover {
+            color: var(--color-acento);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--color-acento);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .container-timeline {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        .container-timeline::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -12px;
+            background-color: white;
+            border: 4px solid var(--color-acento);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--color-acento);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--color-acento);
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--color-acento);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--color-acento) transparent transparent;
+        }
+
+        .right::after {
+            left: -12px;
+        }
+
+        .content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .content h3 {
+            color: var(--color-acento);
+            margin-bottom: 10px;
+        }
+
+        .volver-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: var(--transicion);
+            font-weight: 500;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Footer simple */
+        .footer-simple {
+            background-color: #1a2a3a; /* Azul oscuro */
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .footer-simple a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transicion);
+        }
+
+        .footer-simple a:hover {
+            background-color: var(--color-acento);
+            color: white;
+        }
+
+        .footer-simple p {
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .heart-icon {
+            color: var(--color-acento);
+        }
+
+        /* Botones flotantes */
+        .botones-flotantes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-flotante {
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-flotante i {
+            margin-right: 8px;
+        }
+
+        .btn-flotante:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-principal {
+            background-color: #3498db; /* Azul para distinguirlo */
+        }
+
+        .btn-principal:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-gestion {
+            background-color: var(--color-acento);
+        }
+
+        .btn-gestion:hover {
+            background-color: #218838;
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .container-timeline {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .container-timeline::before {
+                left: 60px;
+                border: medium solid var(--color-acento);
+                border-width: 10px 10px 10px 0;
+                border-color: transparent var(--color-acento) transparent transparent;
+            }
+
+            .left::after, .right::after {
+                left: 19px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú superior simple -->
+    <header class="menu-simple">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="botones">
+            <a href="{{ url_for('inicio') }}"><i class="fas fa-home"></i> Inicio</a>
+            <a href="{{ url_for('principal') }}"><i class="fas fa-tree"></i> Ver Árboles</a>
+            <a href="{{ url_for('contacto') }}"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="{{ url_for('terminos_condiciones') }}"><i class="fas fa-file-contract"></i> Términos y Condiciones</a>
+            <a href="{{ url_for('politica_privacidad') }}"><i class="fas fa-shield-alt"></i> Política de Privacidad</a>
+            {% if 'usuario' in session and session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                <a href="{{ url_for('gestion') }}"><i class="fas fa-cog"></i> Gestión</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="acerca-container">
+        <h1>Acerca de VerdeQR</h1>
+
+        <p>VerdeQR es una plataforma innovadora diseñada para conectar a las personas con la naturaleza a través de la tecnología. Nuestra misión es promover el conocimiento y la conservación de los árboles silvestres mediante el uso de códigos QR que proporcionan información detallada sobre cada especie.</p>
+
+        <div class="mision-vision">
+            <div class="mision">
+                <h2>Nuestra Misión</h2>
+                <p>Facilitar el acceso a información detallada sobre árboles silvestres a través de tecnología QR, promoviendo la educación ambiental y la conservación de la biodiversidad forestal en Colombia.</p>
+            </div>
+
+            <div class="vision">
+                <h2>Nuestra Visión</h2>
+                <p>Ser la plataforma líder en identificación y educación sobre árboles silvestres en Latinoamérica, contribuyendo significativamente a la conservación de ecosistemas forestales y al desarrollo de comunidades sostenibles.</p>
+            </div>
+        </div>
+
+        <h2>Nuestra Historia</h2>
+
+        <div class="timeline">
+            <div class="container-timeline left">
+                <div class="content">
+                    <h3>2021</h3>
+                    <p>Nace la idea de VerdeQR durante un hackathon de innovación ambiental en la Universidad Nacional de Colombia. El concepto inicial buscaba conectar la tecnología con la conservación de la naturaleza.</p>
+                </div>
+            </div>
+            <div class="container-timeline right">
+                <div class="content">
+                    <h3>2022</h3>
+                    <p>Desarrollo del primer prototipo funcional y pruebas piloto en el Jardín Botánico de Bogotá. Se establecen alianzas con centros de investigación forestal.</p>
+                </div>
+            </div>
+            <div class="container-timeline left">
+                <div class="content">
+                    <h3>2023</h3>
+                    <p>Lanzamiento oficial de la plataforma VerdeQR con cobertura inicial en los departamentos de Cundinamarca y Cesar. Implementación de los primeros 500 códigos QR en árboles silvestres.</p>
+                </div>
+            </div>
+            <div class="container-timeline right">
+                <div class="content">
+                    <h3>Actualidad</h3>
+                    <p>Expansión continua de la base de datos de árboles y colaboración con instituciones educativas y ambientales para promover la conservación de la biodiversidad forestal en Colombia.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Nuestro Equipo</h2>
+
+        <p>VerdeQR está formado por un equipo multidisciplinario de profesionales apasionados por la tecnología y el medio ambiente. Cada miembro aporta su experiencia única para hacer de VerdeQR una herramienta valiosa para la educación ambiental y la conservación.</p>
+
+        <div class="equipo">
+            <div class="miembro">
+                <img src="{{ url_for('static', filename='css/js/img/team1.jpg') }}" alt="Juan Pérez">
+                <h3>Juan Pérez</h3>
+                <p>Fundador & CEO</p>
+                <p>Ingeniero Forestal con especialización en Conservación de Ecosistemas</p>
+                <div class="redes">
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="miembro">
+                <img src="{{ url_for('static', filename='css/js/img/team2.jpg') }}" alt="María Rodríguez">
+                <h3>María Rodríguez</h3>
+                <p>Directora de Investigación</p>
+                <p>Bióloga con doctorado en Botánica y Conservación</p>
+                <div class="redes">
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="miembro">
+                <img src="{{ url_for('static', filename='css/js/img/team3.jpg') }}" alt="Carlos Gómez">
+                <h3>Carlos Gómez</h3>
+                <p>Jefe de Desarrollo</p>
+                <p>Ingeniero de Software especializado en aplicaciones móviles</p>
+                <div class="redes">
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="miembro">
+                <img src="{{ url_for('static', filename='css/js/img/team4.jpg') }}" alt="Laura Martínez">
+                <h3>Laura Martínez</h3>
+                <p>Coordinadora de Educación Ambiental</p>
+                <p>Licenciada en Educación Ambiental con maestría en Pedagogía</p>
+                <div class="redes">
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <h2>Nuestros Valores</h2>
+
+        <ul>
+            <li><strong>Compromiso con la Conservación:</strong> Trabajamos activamente para proteger y preservar la biodiversidad forestal.</li>
+            <li><strong>Innovación Tecnológica:</strong> Utilizamos la tecnología como herramienta para conectar a las personas con la naturaleza.</li>
+            <li><strong>Educación Ambiental:</strong> Creemos en el poder de la educación para generar cambios positivos en la relación de las personas con el medio ambiente.</li>
+            <li><strong>Colaboración:</strong> Fomentamos alianzas con instituciones, comunidades y personas comprometidas con la conservación.</li>
+            <li><strong>Transparencia:</strong> Mantenemos una comunicación clara y honesta con nuestros usuarios y colaboradores.</li>
+        </ul>
+
+        <a href="{{ url_for('inicio') }}" class="volver-btn"><i class="fas fa-arrow-left"></i> Volver a inicio</a>
+    </div>
+
+    <!-- Footer simple -->
+    <footer class="footer-simple">
+        <div>
+            <a href="{{ url_for('inicio') }}">Inicio</a>
+            <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+            <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+            <a href="{{ url_for('contacto') }}">Contacto</a>
+            <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
+        </div>
+        <p>© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+        <p>Desarrollado con <i class="fas fa-heart heart-icon"></i> por el equipo de VerdeQR</p>
+    </footer>
+
+    <!-- Botones flotantes -->
+    {% if 'usuario' in session %}
+    <div class="botones-flotantes">
+        <a href="{{ url_for('inicio') }}" class="btn-flotante btn-principal">
+            <i class="fas fa-home"></i> Ir a Inicio
+        </a>
+        <a href="{{ url_for('principal') }}" class="btn-flotante btn-gestion">
+            <i class="fas fa-tree"></i> Ir a Principal
+        </a>
+    </div>
+    {% endif %}
+</body>
+</html>

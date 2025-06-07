@@ -1,0 +1,210 @@
+/* Estilos para los botones del menú en todas las páginas */
+
+/* Estilo base para los botones del menú */
+.menu-list li a,
+.sidebar-menu li a,
+.menu-principal ul li a,
+.menu-gestion li a,
+#menu li a,
+nav.menu-principal ul li a {
+    background-color: transparent !important;
+    color: white !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease !important;
+    padding: 8px 15px !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+/* Efecto hover para los botones del menú */
+.menu-list li a:hover,
+.sidebar-menu li a:hover,
+.menu-principal ul li a:hover,
+.menu-gestion li a:hover,
+#menu li a:hover,
+nav.menu-principal ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilo para el botón activo */
+.menu-list li a.active,
+.sidebar-menu li a.active,
+.menu-principal ul li a.active,
+.menu-gestion li a.active,
+#menu li a.active,
+nav.menu-principal ul li a.active {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    font-weight: 600 !important;
+}
+
+/* Estilos específicos para los botones en inicio.html */
+.navegacion-rapida .nav-btn {
+    background-color: transparent !important;
+    color: var(--color-primario) !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease !important;
+    padding: 8px 15px !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+}
+
+.navegacion-rapida .nav-btn:hover {
+    background-color: rgba(44, 62, 80, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+
+.navegacion-rapida .nav-btn.active {
+    background-color: rgba(44, 62, 80, 0.2) !important;
+    font-weight: 600 !important;
+}
+
+/* Estilos para los botones en la página de inicio */
+.header-buttons .btn {
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 20px !important;
+    transition: all 0.3s ease !important;
+    padding: 8px 15px !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    margin: 0 5px !important;
+}
+
+.header-buttons .btn:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos adicionales para asegurar consistencia en los menús de gestión */
+.gestion-body .header-principal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 200px !important;
+    height: 100vh !important;
+    background: var(--menu-bg, #2c3e50) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 10px !important;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1000 !important;
+    overflow-y: auto !important;
+}
+
+.gestion-body .menu-principal {
+    width: 100% !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.gestion-body #menu, .gestion-body .menu-principal ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.gestion-body #menu li, .gestion-body .menu-principal ul li {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.gestion-body #menu li a, .gestion-body .menu-principal ul li a {
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 15px !important;
+    color: white !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 4px !important;
+    transition: background-color 0.3s !important;
+}
+
+.gestion-body #menu li a i, .gestion-body .menu-principal ul li a i {
+    width: 20px !important;
+    margin-right: 10px !important;
+    font-size: 16px !important;
+}
+
+.gestion-body .container {
+    margin-left: 200px !important;
+    padding: 20px !important;
+    min-height: 100vh !important;
+    box-sizing: border-box !important;
+    width: calc(100% - 200px) !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Excluir principal.html de estos estilos */
+body:not(.gestion-body) .header-principal {
+    position: sticky !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: auto !important;
+    background-color: var(--color-primario, #2c3e50) !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    overflow-y: visible !important;
+    z-index: 1000 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+body:not(.gestion-body) .menu-principal {
+    width: auto !important;
+    flex: unset !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+}
+
+body:not(.gestion-body) .menu-principal ul {
+    display: flex !important;
+    list-style: none !important;
+    gap: 15px !important;
+    margin: 10px 0 !important;
+    padding: 0 !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+}
+
+body:not(.gestion-body) .menu-principal ul li a {
+    font-weight: 500 !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    transition: all 0.2s ease !important;
+    font-size: 14px !important;
+    color: white !important;
+    display: inline-block !important;
+    background-color: transparent !important;
+}
+
+body:not(.gestion-body) .menu-principal ul li a:hover {
+    background-color: var(--color-acento, #28a745) !important;
+    color: white !important;
+}
+
+body:not(.gestion-body) .container {
+    margin-left: 0 !important;
+    width: 100% !important;
+}

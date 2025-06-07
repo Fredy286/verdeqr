@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Búsqueda - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .resultados-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .resultados-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .resultados-container h2 {
+            color: var(--color-acento);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .resultados-container p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .resultados-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .arbol-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .arbol-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .arbol-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .arbol-info {
+            padding: 15px;
+        }
+
+        .arbol-info h3 {
+            color: var(--color-primario);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .arbol-info p {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .arbol-info .cientifico {
+            font-style: italic;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .arbol-info .descripcion {
+            margin-top: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ver-mas {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .ver-mas:hover {
+            background-color: var(--color-primario);
+        }
+
+        .no-resultados {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .no-resultados i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .no-resultados h3 {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .volver-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-acento);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .volver-btn:hover {
+            background-color: var(--color-primario);
+        }
+
+        @media (max-width: 768px) {
+            .resultados-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .resultados-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    <!-- Menú superior fijo -->
+    <header class="menu-superior">
+        <div class="logo" onclick="window.location.href='{{ url_for('principal') }}'" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="buscador">
+            <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres..." value="{{ query }}">
+                <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <script>
+            function validateSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput.value.trim()) {
+                    // Si el campo está vacío, no envía el formulario
+                    return false;
+                }
+                return true;
+            }
+        </script>
+        <div class="botones">
+            {% if 'usuario' in session %}
+                <a href="{{ url_for('inicio') }}" class="btn">Inicio</a>
+                <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
+                {% if session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                    <a href="{{ url_for('gestion') }}" class="btn btn-gestion">Ir a Gestión</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
+                <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="resultados-container">
+        <h1>Resultados de Búsqueda</h1>
+        <p>Mostrando resultados para: <strong>"{{ query }}"</strong></p>
+
+        {% if arboles|length > 0 %}
+            <div class="resultados-grid">
+                {% for arbol in arboles %}
+                    <div class="arbol-card">
+                        {% if arbol.Imagen %}
+                            <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.EspecieNombreVulgar }}" class="arbol-img">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ arbol.EspecieNombreVulgar }}" class="arbol-img">
+                        {% endif %}
+                        <div class="arbol-info">
+                            <h3>{{ arbol.EspecieNombreVulgar }}</h3>
+                            <p class="cientifico">{{ arbol.EspecieNombreCientifico }}</p>
+                            <p class="descripcion">{{ arbol.Descripcion|truncate(150) if arbol.Descripcion else 'Sin descripción disponible' }}</p>
+                            <a href="{{ url_for('ver_arbol', id=arbol.IDArbol) }}" class="ver-mas">Ver más</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-resultados">
+                <i class="fas fa-search"></i>
+                <h3>No se encontraron árboles que coincidan con tu búsqueda</h3>
+                <p>Intenta con otros términos o explora nuestras categorías</p>
+                <a href="{{ url_for('inicio') }}" class="volver-btn"><i class="fas fa-arrow-left" style="vertical-align: middle; margin-right: 5px;"></i> Volver a inicio</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="background-color: #1a2a3a;">
+        <div class="footer-container" style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div class="footer-logo" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px;">
+                <h3 style="color: white; margin-bottom: 10px;">VerdeQR</h3>
+                <p style="color: #ccc; font-size: 0.9rem;">Un dendrólogo en tu bolsillo</p>
+            </div>
+
+            <div class="footer-links" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Enlaces rápidos</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('inicio') }}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Inicio</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Ver Árboles</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}#centros" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Centros</a></li>
+                    <li style="margin-bottom: 10px;"><a href="{{ url_for('principal') }}#sugerencias" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Sugerencias</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Contacto</h4>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: #28a745;"></i> Calle 123, Bogotá, Colombia</p>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-phone" style="margin-right: 10px; color: #28a745;"></i> +57 123 456 7890</p>
+                <p style="color: #ccc; margin-bottom: 10px;"><i class="fas fa-envelope" style="margin-right: 10px; color: #28a745;"></i> info@verdeqr.com</p>
+            </div>
+
+            <div class="footer-redes" style="display: flex; flex-direction: column;">
+                <h4 style="color: white; margin-bottom: 20px; border-bottom: 2px solid #28a745; padding-bottom: 10px; display: inline-block;">Síguenos</h4>
+                <div style="display: flex; gap: 15px;">
+                    <a href="#" class="footer-red" title="Facebook" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="footer-red" title="Twitter" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="footer-red" title="Instagram" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="footer-red" title="YouTube" style="color: #ccc; font-size: 1.5rem; transition: color 0.3s;">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; padding-top: 20px; padding-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
+            <p style="color: #ccc; font-size: 0.9rem; margin: 0;">© 2023 VerdeQR - Un dendrólogo en tu bolsillo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
