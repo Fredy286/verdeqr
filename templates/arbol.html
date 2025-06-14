@@ -132,6 +132,7 @@
                             <th>Servicios Ecosistémicos</th>
                             <th>Tipo de Bosque</th>
                             <th>Centro</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -146,6 +147,11 @@
                             <td>{{ arbol.ServiciosEcosistemicos|default('No disponible')|truncate(50) }}</td>
                             <td>{{ arbol.TipoBosqueNombre }}</td>
                             <td>{{ arbol.CentroNombre }}</td>
+                            <td>
+                                <span class="badge {% if arbol.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ arbol.EstadoNombre }}
+                                </span>
+                            </td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">
                                     <a href="{{ url_for('editar_arbol', id=arbol.IDArbol) }}" class="btn btn-primary btn-sm">
