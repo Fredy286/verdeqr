@@ -64,6 +64,14 @@
                     <label for="descripcion">Descripción:</label>
                     <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}">{{ estado.NombreEstado }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Registrar Curiosidad
                 </button>
@@ -79,6 +87,7 @@
                             <th>ID</th>
                             <th>Especie</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -88,6 +97,11 @@
                             <td>{{ curiosidad.IDCuriosidad }}</td>
                             <td>{{ curiosidad.EspecieNombre }}</td>
                             <td>{{ curiosidad.Descripcion }}</td>
+                            <td>
+                                <span class="badge {% if curiosidad.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ curiosidad.EstadoNombre }}
+                                </span>
+                            </td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">
                                     <a href="{{ url_for('editar_curiosidad', id=curiosidad.IDCuriosidad) }}" class="btn btn-primary btn-sm">

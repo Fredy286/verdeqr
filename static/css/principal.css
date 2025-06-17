@@ -67,6 +67,7 @@ img {
   width: 100vw;
   left: 0;
   right: 0;
+  min-height: 70px;
 }
 
 /* Contenedor para centrar el contenido en pantallas grandes */
@@ -1092,4 +1093,88 @@ img {
   position: relative;
   min-width: 200px;
   max-width: 300px;
+}
+
+/* Media Queries específicas para móviles */
+@media (max-width: 768px) {
+  .header-principal {
+    padding: 8px 15px;
+    min-height: 60px;
+  }
+
+  .header-principal .logo img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .header-principal .buscador {
+    max-width: 250px;
+    margin: 5px 10px;
+  }
+
+  .header-principal .menu-principal ul {
+    gap: 8px;
+    margin: 5px 0;
+  }
+
+  .header-principal .menu-principal ul li a {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .header-principal .usuario span {
+    font-size: 12px;
+  }
+
+  .grid-arboles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .arbol-card .info-arbol h3 {
+    font-size: 0.9rem;
+  }
+
+  .arbol-card .info-arbol .detalles p {
+    font-size: 0.8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .imagen-arbol {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-principal {
+    flex-direction: column;
+    padding: 10px;
+    min-height: auto;
+  }
+
+  .header-principal .logo,
+  .header-principal .buscador,
+  .header-principal .menu-principal,
+  .header-principal .usuario {
+    width: 100%;
+    margin: 5px 0;
+    justify-content: center;
+  }
+
+  .header-principal .buscador {
+    max-width: 100%;
+  }
+
+  .grid-arboles {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .arbol-card .info-arbol .detalles p {
+    -webkit-line-clamp: 3;
+  }
 }

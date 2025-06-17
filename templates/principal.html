@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}?v={{ range(1, 10000) | random }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}?v={{ range(1, 10000) | random }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/unified_buttons.css') }}?v={{ range(1, 10000) | random }}">
+    <!-- Correcciones responsive adicionales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive-fixes.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -23,25 +25,35 @@
     <!-- Barra Superior -->
     <header class="header-principal">
         <div class="header-container">
-            <div class="logo" onclick="window.location.href='{{ url_for('principal') }}'">
-                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+            <!-- Primera fila: Logo, buscador y perfil -->
+            <div class="header-top-row">
+                <div class="logo" onclick="window.location.href='{{ url_for('principal') }}'">
+                    <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+                </div>
+                <div class="buscador">
+                    <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                        <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
+                        <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="usuario" onclick="window.location.href='{{ url_for('perfil') }}';">
+                    {% if session['usuario'].get('Imagen') %}
+                        <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Icono de Usuario">
+                    {% else %}
+                        {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Icono de Usuario">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Icono de Usuario">
+                        {% endif %}
+                    {% endif %}
+                    <div class="info-usuario">
+                        <div class="nombre-usuario">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
+                        <div class="correo-usuario">{{ session['usuario']['Correo'] }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="buscador">
-                <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
-                    <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
-                    <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
-                </form>
-            </div>
-            <script>
-                function validateSearch() {
-                    const searchInput = document.getElementById('searchInput');
-                    if (!searchInput.value.trim()) {
-                        // Si el campo está vacío, no envía el formulario
-                        return false;
-                    }
-                    return true;
-                }
-            </script>
+
+            <!-- Segunda fila: Menú de navegación -->
             <nav class="menu-principal">
                 <ul class="menu-list">
                     <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
@@ -53,33 +65,17 @@
                     {% endif %}
                 </ul>
             </nav>
-            <div class="usuario" onclick="window.location.href='{{ url_for('perfil') }}';" style="cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #2c3e50, #3498db); border-radius: 10px; padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease; animation: pulse 2s infinite;">
-                {% if session['usuario'].get('Imagen') %}
-                    <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
-                {% else %}
-                    {% if determinar_genero(session['usuario']['Nombres']) == 'femenino' %}
-                        <img src="{{ url_for('static', filename='css/js/img/avatarf.jpg') }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='css/js/img/avatarm.jpg') }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
-                    {% endif %}
-                {% endif %}
-                <div class="info-usuario" style="margin-left: 10px; color: white;">
-                    <div class="nombre-usuario" style="font-weight: bold; font-size: 0.9rem;">{{ session['usuario']['Nombres'] }} {{ session['usuario']['Apellidos'] }}</div>
-                    <div class="correo-usuario" style="font-size: 0.8rem; opacity: 0.8;">{{ session['usuario']['Correo'] }}</div>
-                </div>
-            </div>
-            <style>
-                @keyframes pulse {
-                    0% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-                    50% { box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4); }
-                    100% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-                }
-                .usuario:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-                }
-            </style>
         </div>
+
+        <script>
+            function validateSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput.value.trim()) {
+                    return false;
+                }
+                return true;
+            }
+        </script>
     </header>
 
     <!-- Sección de Bienvenida -->
@@ -659,6 +655,28 @@
     <script src="{{ url_for('static', filename='js/fullwidth_fix.js') }}?v={{ range(1, 10000) | random }}" defer></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}?v={{ range(1, 10000) | random }}" defer></script>
 
+    <!-- Script para el menú desplegable del footer -->
+    <script>
+        // Función para el menú desplegable del footer
+        function toggleFooterDropdown() {
+            const dropdown = document.getElementById('footerDropdownContent');
+            dropdown.classList.toggle('show');
+        }
+
+        // Cerrar el dropdown del footer si se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.footer-dropdown-toggle') && !event.target.matches('.footer-dropdown-toggle i')) {
+                const dropdowns = document.getElementsByClassName('footer-dropdown-content');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        });
+    </script>
+
     <!-- Pie de Página -->
     <footer class="footer-principal" style="background-color: #2c3e50;">
         <div class="contenido-footer">
@@ -680,11 +698,17 @@
                 </div>
                 <div class="columna">
                     <h4>Contacto</h4>
-                    <ul>
-                        <li><a href="{{ url_for('soporte_tecnico') }}">Soporte técnico</a></li>
-                        <li><a href="{{ url_for('preguntas_frecuentes') }}">Preguntas frecuentes</a></li>
-                        <li><a href="{{ url_for('reportar_problema') }}">Reportar problema</a></li>
-                    </ul>
+                    <!-- Menú desplegable para soporte -->
+                    <div class="footer-dropdown">
+                        <button type="button" class="footer-dropdown-toggle" onclick="toggleFooterDropdown()">
+                            <i class="fas fa-headset"></i> Soporte
+                        </button>
+                        <div class="footer-dropdown-content" id="footerDropdownContent">
+                            <a href="{{ url_for('soporte_tecnico') }}"><i class="fas fa-tools"></i>Soporte técnico</a>
+                            <a href="{{ url_for('preguntas_frecuentes') }}"><i class="fas fa-question-circle"></i>Preguntas frecuentes</a>
+                            <a href="{{ url_for('reportar_problema') }}"><i class="fas fa-bug"></i>Reportar problema</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="redes-sociales">

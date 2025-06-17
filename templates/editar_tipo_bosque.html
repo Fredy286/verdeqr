@@ -64,8 +64,9 @@
                 <div class="form-group">
                     <label for="estado">Estado:</label>
                     <select id="estado" name="estado" class="form-control" required>
-                        <option value="1" {% if tipo_bosque.Estado == 1 %}selected{% endif %}>Activo</option>
-                        <option value="0" {% if tipo_bosque.Estado == 0 %}selected{% endif %}>Inactivo</option>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}" {% if estado.IDEstado == tipo_bosque.Estado %}selected{% endif %}>{{ estado.NombreEstado }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">

@@ -1,0 +1,381 @@
+/* responsive-fixes.css - Correcciones específicas para responsive */
+
+/* Ocultar el botón hamburguesa en desktop */
+.menu-toggle {
+    display: none;
+}
+
+/* Overlay para el menú móvil */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* Correcciones para inicio.css */
+@media (max-width: 768px) {
+    /* Asegurar que el título esté visible */
+    .contenido-principal {
+        padding-top: 80px !important;
+        margin-top: 0 !important;
+    }
+
+    .contenido-principal h1 {
+        z-index: 100 !important;
+        position: relative !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        padding: 15px !important;
+        border-radius: 10px !important;
+        margin-bottom: 20px !important;
+        margin-top: 0 !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    }
+
+    .contenido-principal h3 {
+        z-index: 100 !important;
+        position: relative !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
+        margin-bottom: 25px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Alinear logo con buscador */
+    .menu-superior {
+        align-items: center !important;
+    }
+
+    .menu-superior .logo {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Mejorar el buscador en móviles */
+    .menu-superior .buscador input {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #333 !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .menu-superior .buscador input::placeholder {
+        color: #666 !important;
+    }
+
+    .menu-superior .buscador button {
+        color: #333 !important;
+    }
+
+    /* Ajustar la imagen QR */
+    .cuadro-qr {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .cuadro-qr img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Correcciones para principal.css */
+@media (max-width: 768px) {
+    /* Estructura del header principal */
+    .header-principal {
+        flex-direction: column !important;
+        padding: 10px !important;
+        min-height: auto !important;
+        align-items: stretch !important;
+    }
+
+    /* Primera fila: Logo, buscador y perfil */
+    .header-container {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .header-top-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 10px !important;
+    }
+
+    .header-principal .logo {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+    }
+
+    .header-principal .logo img {
+        height: 40px !important;
+        width: 40px !important;
+    }
+
+    .header-principal .buscador {
+        order: 2 !important;
+        flex: 1 !important;
+        max-width: none !important;
+        margin: 0 15px !important;
+    }
+
+    .header-principal .usuario {
+        order: 3 !important;
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+        padding: 5px 10px !important;
+    }
+
+    .header-principal .usuario img {
+        height: 35px !important;
+        width: 35px !important;
+    }
+
+    .header-principal .usuario .info-usuario {
+        display: none !important;
+    }
+
+    /* Segunda fila: Menú de navegación */
+    .header-principal .menu-principal {
+        order: 4 !important;
+        width: 100% !important;
+    }
+
+    .header-principal .menu-principal ul {
+        display: flex !important;
+        justify-content: space-around !important;
+        gap: 5px !important;
+        margin: 0 !important;
+        flex-wrap: wrap !important;
+    }
+
+    .header-principal .menu-principal ul li a {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+        border-radius: 15px !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        display: block !important;
+    }
+
+    /* Árboles destacados en 2x2 */
+    .grid-arboles {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
+    .arbol-card .info-arbol .detalles p {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 0.8rem !important;
+    }
+
+    .imagen-arbol {
+        height: 150px !important;
+    }
+
+    .arbol-card .info-arbol h3 {
+        font-size: 0.9rem !important;
+    }
+
+    .arbol-card .info-arbol h3 span {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-principal {
+        flex-direction: column !important;
+        padding: 8px !important;
+        align-items: center !important;
+    }
+
+    .header-principal .logo,
+    .header-principal .buscador,
+    .header-principal .menu-principal,
+    .header-principal .usuario {
+        width: 100% !important;
+        margin: 3px 0 !important;
+        justify-content: center !important;
+    }
+
+    .header-principal .buscador {
+        max-width: 90% !important;
+    }
+
+    .grid-arboles {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Correcciones para gestión */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block !important;
+        background: none;
+        border: none;
+        color: var(--menu-text, white);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+        order: 1;
+    }
+
+    .header-principal .logo-container {
+        order: 3 !important;
+    }
+
+    .header-principal .user-section {
+        order: 2 !important;
+        margin-left: 10px !important;
+    }
+}
+
+/* Badges para estados */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Botones de acciones */
+.acciones-cell {
+    white-space: nowrap;
+}
+
+.acciones-botones {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .acciones-botones {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .acciones-botones .btn {
+        font-size: 0.7rem !important;
+        padding: 4px 8px !important;
+    }
+}
+
+/* Correcciones adicionales para texto truncado */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .text-truncate {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .text-truncate {
+        max-width: 80px;
+    }
+}
+
+/* Estilos para menú desplegable del footer */
+.footer-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.footer-dropdown-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-dropdown-content {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2c3e50;
+    min-width: 200px;
+    box-shadow: 0 -8px 16px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    z-index: 1001;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-dropdown-content.show {
+    display: block;
+}
+
+.footer-dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s;
+    font-size: 13px;
+}
+
+.footer-dropdown-content a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-dropdown-content a:first-child {
+    border-radius: 5px 5px 0 0;
+}
+
+.footer-dropdown-content a:last-child {
+    border-radius: 0 0 5px 5px;
+}
+
+@media (max-width: 768px) {
+    .footer-dropdown-content {
+        min-width: 180px;
+        font-size: 12px;
+    }
+
+    .footer-dropdown-toggle {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}

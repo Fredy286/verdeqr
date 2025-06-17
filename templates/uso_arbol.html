@@ -85,6 +85,15 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}">{{ estado.NombreEstado }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <!-- Campos específicos para Maderable -->
                 <div id="campos-maderable" class="campos-especificos" style="display: none;">
                     <h4>Información de Uso Maderable</h4>
@@ -453,11 +462,9 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if uso.Estado == 1 %}
-                                <span class="badge badge-success">Activo</span>
-                                {% else %}
-                                <span class="badge badge-danger">Inactivo</span>
-                                {% endif %}
+                                <span class="badge {% if uso.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ uso.EstadoNombre }}
+                                </span>
                             </td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">

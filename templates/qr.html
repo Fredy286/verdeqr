@@ -110,15 +110,21 @@
                             <th>ID</th>
                             <th>Árbol</th>
                             <th>Nombre Científico</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for qr in qrs_guardados %}
-                        <tr data-arbol-id="{{ qr.Arbol }}" {% if qr.Estado == 0 %}class="inactive-qr" style="opacity: 0.5;"{% endif %}>
+                        <tr data-arbol-id="{{ qr.Arbol }}" {% if qr.Estado == 2 %}class="inactive-qr" style="opacity: 0.5;"{% endif %}>
                             <td>{{ qr.IDQR }}</td>
                             <td>{{ qr.Arbol }}</td>
                             <td>{{ qr.NombreCientifico }} {% if qr.NombreVulgar %}({{ qr.NombreVulgar }}){% endif %}</td>
+                            <td>
+                                <span class="badge {% if qr.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ qr.EstadoNombre }}
+                                </span>
+                            </td>
                             <td>
                                 <a href="{{ url_for('ver_qr', id=qr.IDQR) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-eye"></i> Ver QR

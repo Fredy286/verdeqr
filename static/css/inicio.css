@@ -847,10 +847,17 @@ img {
 @media (max-width: 768px) {
   .menu-superior {
     flex-wrap: wrap;
+    padding: 10px 15px;
   }
 
   .menu-superior .logo {
-    flex: 1;
+    flex: 0 0 auto;
+    order: 1;
+  }
+
+  .menu-superior .botones {
+    flex: 0 0 auto;
+    order: 2;
   }
 
   .menu-superior .buscador {
@@ -858,14 +865,35 @@ img {
     width: 100%;
     max-width: none;
     margin: 10px 0 0;
+    flex: 1 1 100%;
+  }
+
+  .menu-superior .buscador input {
+    font-size: 16px;
+    padding: 10px 40px 10px 15px;
+  }
+
+  .menu-superior .buscador input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
   }
 
   .contenido-principal {
-    padding: 100px 15px 40px;
+    padding: 120px 15px 40px;
   }
 
   .contenido-principal h1 {
     font-size: 2rem;
+    margin-bottom: 15px;
+    z-index: 10;
+    position: relative;
+  }
+
+  .contenido-principal h3 {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    z-index: 10;
+    position: relative;
   }
 
   .segunda-pantalla {
@@ -881,12 +909,14 @@ img {
   }
 
   .segunda-pantalla .texto {
-    order: 2;
+    order: 1;
     padding-right: 0;
+    text-align: center;
   }
 
   .segunda-pantalla .imagen {
-    order: 1;
+    order: 2;
+    margin-bottom: 20px;
   }
 
   .tercera-pantalla,

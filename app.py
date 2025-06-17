@@ -1107,11 +1107,23 @@ def centro():
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM Centro')
+
+    # Obtener centros con información de estado
+    cursor.execute('''
+        SELECT c.*, e.NombreEstado as EstadoNombre
+        FROM Centro c
+        LEFT JOIN Estado e ON c.Estado = e.IDEstado
+        ORDER BY c.IDCentro DESC
+    ''')
     centros = cursor.fetchall()
+
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
-    return render_template('centro.html', centros=centros)
+    return render_template('centro.html', centros=centros, estados=estados)
 
 # Ruta para editar un centro
 @app.route('/centro/editar/<int:id>', methods=['GET', 'POST'])
@@ -1144,9 +1156,14 @@ def editar_centro(id):
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM Centro WHERE IDCentro = %s', (id,))
     centro = cursor.fetchone()
+
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
-    return render_template('editar_centro.html', centro=centro)
+    return render_template('editar_centro.html', centro=centro, estados=estados)
 
 # Ruta para eliminar un centro
 @app.route('/centro/eliminar/<int:id>')
@@ -1341,35 +1358,42 @@ def curiosidades():
             try:
                 especie = request.form['especie']
                 descripcion = request.form['descripcion']
+                estado = request.form.get('estado', 1)  # Por defecto activo
 
                 cursor.execute('''
-                    INSERT INTO CuriosidadesArbol (Especie, Descripcion)
-                    VALUES (%s, %s)
-                ''', (especie, descripcion))
+                    INSERT INTO CuriosidadesArbol (Especie, Descripcion, Estado)
+                    VALUES (%s, %s, %s)
+                ''', (especie, descripcion, estado))
                 connection.commit()
                 flash('Curiosidad registrada exitosamente', 'success')
                 return redirect(url_for('curiosidades'))
             except Exception as e:
                 flash(f'Error al registrar curiosidad: {str(e)}', 'error')
 
-        # Obtener todas las curiosidades
+        # Obtener todas las curiosidades con información de estado
         cursor.execute('''
-            SELECT c.*, e.NombreCientifico as EspecieNombre
+            SELECT c.*, e.NombreCientifico as EspecieNombre, es.NombreEstado as EstadoNombre
             FROM CuriosidadesArbol c
             LEFT JOIN Especie e ON c.Especie = e.IDEspecie
+            LEFT JOIN Estado es ON c.Estado = es.IDEstado
             ORDER BY c.IDCuriosidad DESC
         ''')
         curiosidades_list = cursor.fetchall()
+
+        # Obtener estados para el formulario
+        cursor.execute('SELECT * FROM Estado')
+        estados = cursor.fetchall()
 
     except Exception as e:
         flash(f'Error al cargar las curiosidades: {str(e)}', 'error')
         curiosidades_list = []
         especies = []
+        estados = []
     finally:
         cursor.close()
         connection.close()
 
-    return render_template('curiosidades.html', curiosidades=curiosidades_list, especies=especies)
+    return render_template('curiosidades.html', curiosidades=curiosidades_list, especies=especies, estados=estados)
 
 # Ruta para editar una curiosidad
 @app.route('/curiosidades/editar/<int:id>', methods=['GET', 'POST'])
@@ -1385,11 +1409,12 @@ def editar_curiosidad(id):
         try:
             especie = request.form['especie']
             descripcion = request.form['descripcion']
+            estado = request.form.get('estado', 1)  # Por defecto activo
 
             cursor.execute('''
-                UPDATE CuriosidadesArbol SET Especie = %s, Descripcion = %s
+                UPDATE CuriosidadesArbol SET Especie = %s, Descripcion = %s, Estado = %s
                 WHERE IDCuriosidad = %s
-            ''', (especie, descripcion, id))
+            ''', (especie, descripcion, estado, id))
             connection.commit()
             flash('Curiosidad actualizada exitosamente', 'success')
             return redirect(url_for('curiosidades'))
@@ -1404,6 +1429,10 @@ def editar_curiosidad(id):
     cursor.execute('SELECT * FROM CuriosidadesArbol WHERE IDCuriosidad = %s', (id,))
     curiosidad = cursor.fetchone()
 
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
 
@@ -1411,7 +1440,7 @@ def editar_curiosidad(id):
         flash('Curiosidad no encontrada', 'error')
         return redirect(url_for('curiosidades'))
 
-    return render_template('editar_curiosidad.html', curiosidad=curiosidad, especies=especies)
+    return render_template('editar_curiosidad.html', curiosidad=curiosidad, especies=especies, estados=estados)
 
 # Ruta para eliminar una curiosidad
 @app.route('/curiosidades/eliminar/<int:id>')
@@ -1451,35 +1480,42 @@ def interacciones():
                 especie = request.form['especie']
                 tipo_interaccion = request.form['tipo_interaccion']
                 descripcion = request.form['descripcion']
+                estado = request.form.get('estado', 1)  # Por defecto activo
 
                 cursor.execute('''
-                    INSERT INTO InteraccionesEcologicas (Especie, TipoInteraccion, Descripcion)
-                    VALUES (%s, %s, %s)
-                ''', (especie, tipo_interaccion, descripcion))
+                    INSERT INTO InteraccionesEcologicas (Especie, TipoInteraccion, Descripcion, Estado)
+                    VALUES (%s, %s, %s, %s)
+                ''', (especie, tipo_interaccion, descripcion, estado))
                 connection.commit()
                 flash('Interacción ecológica registrada exitosamente', 'success')
                 return redirect(url_for('interacciones'))
             except Exception as e:
                 flash(f'Error al registrar interacción ecológica: {str(e)}', 'error')
 
-        # Obtener todas las interacciones ecológicas
+        # Obtener todas las interacciones ecológicas con información de estado
         cursor.execute('''
-            SELECT i.*, e.NombreCientifico as EspecieNombre
+            SELECT i.*, e.NombreCientifico as EspecieNombre, es.NombreEstado as EstadoNombre
             FROM InteraccionesEcologicas i
             LEFT JOIN Especie e ON i.Especie = e.IDEspecie
+            LEFT JOIN Estado es ON i.Estado = es.IDEstado
             ORDER BY i.IDInteraccion DESC
         ''')
         interacciones_list = cursor.fetchall()
+
+        # Obtener estados para el formulario
+        cursor.execute('SELECT * FROM Estado')
+        estados = cursor.fetchall()
 
     except Exception as e:
         flash(f'Error al cargar las interacciones ecológicas: {str(e)}', 'error')
         interacciones_list = []
         especies = []
+        estados = []
     finally:
         cursor.close()
         connection.close()
 
-    return render_template('interacciones.html', interacciones=interacciones_list, especies=especies)
+    return render_template('interacciones.html', interacciones=interacciones_list, especies=especies, estados=estados)
 
 # Ruta para editar una interacción ecológica
 @app.route('/interacciones/editar/<int:id>', methods=['GET', 'POST'])
@@ -1496,11 +1532,12 @@ def editar_interaccion(id):
             especie = request.form['especie']
             tipo_interaccion = request.form['tipo_interaccion']
             descripcion = request.form['descripcion']
+            estado = request.form.get('estado', 1)  # Por defecto activo
 
             cursor.execute('''
-                UPDATE InteraccionesEcologicas SET Especie = %s, TipoInteraccion = %s, Descripcion = %s
+                UPDATE InteraccionesEcologicas SET Especie = %s, TipoInteraccion = %s, Descripcion = %s, Estado = %s
                 WHERE IDInteraccion = %s
-            ''', (especie, tipo_interaccion, descripcion, id))
+            ''', (especie, tipo_interaccion, descripcion, estado, id))
             connection.commit()
             flash('Interacción ecológica actualizada exitosamente', 'success')
             return redirect(url_for('interacciones'))
@@ -1515,6 +1552,10 @@ def editar_interaccion(id):
     cursor.execute('SELECT * FROM InteraccionesEcologicas WHERE IDInteraccion = %s', (id,))
     interaccion = cursor.fetchone()
 
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
 
@@ -1522,7 +1563,7 @@ def editar_interaccion(id):
         flash('Interacción ecológica no encontrada', 'error')
         return redirect(url_for('interacciones'))
 
-    return render_template('editar_interaccion.html', interaccion=interaccion, especies=especies)
+    return render_template('editar_interaccion.html', interaccion=interaccion, especies=especies, estados=estados)
 
 # Ruta para eliminar una interacción ecológica
 @app.route('/interacciones/eliminar/<int:id>')
@@ -1561,6 +1602,7 @@ def uso_arbol():
             especie = request.form['especie']
             nombre = request.form['nombre']
             categoria = request.form['categoria']
+            estado = request.form.get('estado', 1)  # Por defecto activo
 
             # Verificar si la columna Categoria existe en la tabla UsoArbol
             cursor.execute('''
@@ -1576,13 +1618,13 @@ def uso_arbol():
             if column_exists:
                 cursor.execute('''
                     INSERT INTO UsoArbol (Especie, Nombre, Categoria, Estado)
-                    VALUES (%s, %s, %s, 1)
-                ''', (especie, nombre, categoria))
+                    VALUES (%s, %s, %s, %s)
+                ''', (especie, nombre, categoria, estado))
             else:
                 cursor.execute('''
                     INSERT INTO UsoArbol (Especie, Nombre, Estado)
-                    VALUES (%s, %s, 1)
-                ''', (especie, nombre))
+                    VALUES (%s, %s, %s)
+                ''', (especie, nombre, estado))
 
             # Obtener el ID del uso recién insertado
             uso_id = cursor.lastrowid
@@ -1747,9 +1789,9 @@ def uso_arbol():
         cursor.execute('SELECT * FROM Especie')
         especies = cursor.fetchall()
 
-        # Obtener usos de árbol
+        # Obtener usos de árbol con información de estado
         cursor.execute('''
-            SELECT u.*, e.NombreCientifico as EspecieNombre,
+            SELECT u.*, e.NombreCientifico as EspecieNombre, es.NombreEstado as EstadoNombre,
                    CASE
                        WHEN um.IDUsoMaderable IS NOT NULL THEN 'Maderable'
                        WHEN uc.IDUsoComestible IS NOT NULL THEN 'Comestible'
@@ -1768,6 +1810,7 @@ def uso_arbol():
                    END AS TipoUsoDetectado
             FROM UsoArbol u
             LEFT JOIN Especie e ON u.Especie = e.IDEspecie
+            LEFT JOIN Estado es ON u.Estado = es.IDEstado
             LEFT JOIN UsoMaderable um ON u.IDUso = um.Uso
             LEFT JOIN UsoComestible uc ON u.IDUso = uc.Uso
             LEFT JOIN UsoMedicinal umed ON u.IDUso = umed.Uso
@@ -1784,14 +1827,20 @@ def uso_arbol():
             ORDER BY u.IDUso DESC
         ''')
         usos = cursor.fetchall()
+
+        # Obtener estados para el formulario
+        cursor.execute('SELECT * FROM Estado')
+        estados = cursor.fetchall()
+
     except Exception as e:
         flash(f'Error al cargar los usos de árbol: {str(e)}', 'error')
         usos = []
         especies = []
+        estados = []
     finally:
         cursor.close()
         connection.close()
-    return render_template('uso_arbol.html', usos=usos, especies=especies)
+    return render_template('uso_arbol.html', usos=usos, especies=especies, estados=estados)
 
 # Ruta para editar un uso de árbol
 @app.route('/uso_arbol/editar/<int:id>', methods=['GET', 'POST'])
@@ -2620,11 +2669,23 @@ def tipo_bosque():
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM tipobosque')
+
+    # Obtener tipos de bosque con información de estado
+    cursor.execute('''
+        SELECT tb.*, e.NombreEstado as EstadoNombre
+        FROM TipoBosque tb
+        LEFT JOIN Estado e ON tb.Estado = e.IDEstado
+        ORDER BY tb.IDTipoBosque DESC
+    ''')
     tipos = cursor.fetchall()
+
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
-    return render_template('tipo_bosque.html', tipos=tipos)
+    return render_template('tipo_bosque.html', tipos=tipos, estados=estados)
 
 # Ruta para editar un tipo de bosque
 @app.route('/tipo_bosque/editar/<int:id>', methods=['GET', 'POST'])
@@ -2657,9 +2718,14 @@ def editar_tipo_bosque(id):
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM tipobosque WHERE IDTipoBosque = %s', (id,))
     tipo_bosque = cursor.fetchone()
+
+    # Obtener estados para el formulario
+    cursor.execute('SELECT * FROM Estado')
+    estados = cursor.fetchall()
+
     cursor.close()
     connection.close()
-    return render_template('editar_tipo_bosque.html', tipo_bosque=tipo_bosque)
+    return render_template('editar_tipo_bosque.html', tipo_bosque=tipo_bosque, estados=estados)
 
 # Ruta para eliminar un tipo de bosque
 @app.route('/tipo_bosque/eliminar/<int:id>')
@@ -3113,7 +3179,7 @@ def qr():
                     flash(f'Error al guardar el QR: {str(db_insert_error)}', 'error')
                     return redirect(url_for('qr'))
 
-                # Obtener todos los QRs guardados
+                # Obtener todos los QRs guardados con información de estado
                 cursor.execute('''
                     SELECT
                         qr.IDQR,
@@ -3123,10 +3189,12 @@ def qr():
                         qr.FechaGeneracion,
                         qr.Estado,
                         e.NombreCientifico,
-                        e.NombreVulgar
+                        e.NombreVulgar,
+                        es.NombreEstado as EstadoNombre
                     FROM CodigoQR qr
                     JOIN Arbol a ON qr.Arbol = a.IDArbol
                     JOIN Especie e ON a.Especie = e.IDEspecie
+                    LEFT JOIN Estado es ON qr.Estado = es.IDEstado
                     ORDER BY qr.IDQR DESC
                 ''')
                 qrs_guardados = cursor.fetchall()
@@ -3175,7 +3243,7 @@ def qr():
         connection_qrs = get_db_connection()
         cursor_qrs = connection_qrs.cursor()
 
-        # Consulta para obtener todos los QRs
+        # Consulta para obtener todos los QRs con información de estado
         cursor_qrs.execute('''
             SELECT
                 qr.IDQR,
@@ -3185,10 +3253,12 @@ def qr():
                 qr.FechaGeneracion,
                 qr.Estado,
                 e.NombreCientifico,
-                e.NombreVulgar
+                e.NombreVulgar,
+                es.NombreEstado as EstadoNombre
             FROM CodigoQR qr
             JOIN Arbol a ON qr.Arbol = a.IDArbol
             JOIN Especie e ON a.Especie = e.IDEspecie
+            LEFT JOIN Estado es ON qr.Estado = es.IDEstado
             WHERE qr.Estado = 1
             ORDER BY qr.IDQR DESC
         ''')

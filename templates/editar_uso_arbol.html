@@ -85,6 +85,15 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}" {% if estado.IDEstado == uso_arbol.Estado %}selected{% endif %}>{{ estado.NombreEstado }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <!-- Campos específicos para Maderable -->
                 <div id="campos-maderable" class="campos-especificos" style="display: none;">
                     <h4>Información de Uso Maderable</h4>

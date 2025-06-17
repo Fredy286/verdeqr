@@ -65,8 +65,9 @@
                 <div class="form-group">
                     <label for="estado">Estado:</label>
                     <select id="estado" name="estado" class="form-control" required>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}">{{ estado.NombreEstado }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
@@ -98,7 +99,7 @@
                             <td>{{ bosque.Descripcion }}</td>
                             <td>
                                 <span class="badge {% if bosque.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
-                                    {% if bosque.Estado == 1 %}Activo{% else %}Inactivo{% endif %}
+                                    {{ bosque.EstadoNombre }}
                                 </span>
                             </td>
                             <td class="acciones-cell">

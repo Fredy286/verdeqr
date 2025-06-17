@@ -78,6 +78,14 @@
                     <label for="descripcion">Descripción:</label>
                     <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control" required>
+                        {% for estado in estados %}
+                        <option value="{{ estado.IDEstado }}">{{ estado.NombreEstado }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Registrar Interacción
                 </button>
@@ -94,6 +102,7 @@
                             <th>Especie</th>
                             <th>Tipo de Interacción</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -104,6 +113,11 @@
                             <td>{{ interaccion.EspecieNombre }}</td>
                             <td>{{ interaccion.TipoInteraccion }}</td>
                             <td>{{ interaccion.Descripcion }}</td>
+                            <td>
+                                <span class="badge {% if interaccion.Estado == 1 %}badge-success{% else %}badge-danger{% endif %}">
+                                    {{ interaccion.EstadoNombre }}
+                                </span>
+                            </td>
                             <td class="acciones-cell">
                                 <div class="acciones-botones">
                                     <a href="{{ url_for('editar_interaccion', id=interaccion.IDInteraccion) }}" class="btn btn-primary btn-sm">

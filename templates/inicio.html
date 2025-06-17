@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/especies_large.css') }}">
     <!-- Corrección responsiva específica para la sección "Explora árboles por especie" -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/especies_responsive_fix.css') }}">
+    <!-- Correcciones responsive adicionales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive-fixes.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -352,31 +354,35 @@
     </div>
     <!-- Menú superior fijo -->
     <header class="menu-superior">
-        <div class="logo" id="logoVerdeQR" style="cursor: pointer;" title="Haz clic para ver información sobre VerdeQR">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        <!-- Primera fila: Logo y Buscador (visible en móviles) -->
+        <div class="header-top-row">
+            <div class="logo" id="logoVerdeQR" style="cursor: pointer;" title="Haz clic para ver información sobre VerdeQR">
+                <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+            </div>
+            <div class="buscador">
+                <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                    <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
+                    <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
         </div>
-        <div class="buscador">
-            <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
-                <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
-                <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-        <script>
-            function validateSearch() {
-                const searchInput = document.getElementById('searchInput');
-                if (!searchInput.value.trim()) {
-                    // Si el campo está vacío, no envía el formulario
-                    return false;
-                }
-                return true;
-            }
-        </script>
-        <div class="botones">
-            {% if 'usuario' in session %}
-                <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
-                {% if session['usuario']['Correo'] == 'jhon123@gmail.com' %}
-                    <a href="{{ url_for('gestion') }}" class="btn">Ir a Gestión</a>
+
+        <!-- Segunda fila: Botones y Avatar (visible en móviles) -->
+        <div class="header-bottom-row">
+            <div class="botones">
+                {% if 'usuario' in session %}
+                    <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
+                    {% if session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                        <a href="{{ url_for('gestion') }}" class="btn">Ir a Gestión</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
+                    <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
+                    <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
                 {% endif %}
+            </div>
+
+            {% if 'usuario' in session %}
                 <div class="usuario" onclick="window.location.href='{{ url_for('perfil') }}';" style="cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #2c3e50, #3498db); border-radius: 10px; padding: 8px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease; animation: pulse 2s infinite; margin-left: 10px;">
                     {% if session['usuario'].get('Imagen') %}
                         <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Icono de Usuario" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
@@ -392,23 +398,53 @@
                         <div class="correo-usuario" style="font-size: 0.8rem; opacity: 0.8;">{{ session['usuario']['Correo'] }}</div>
                     </div>
                 </div>
-                <style>
-                    @keyframes pulse {
-                        0% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-                        50% { box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4); }
-                        100% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-                    }
-                    .usuario:hover {
-                        transform: translateY(-3px);
-                        box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
-                    }
-                </style>
-            {% else %}
-                <a href="{{ url_for('principal') }}" class="btn">Ver Árboles</a>
-                <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
-                <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
             {% endif %}
         </div>
+
+        <script>
+            function validateSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput.value.trim()) {
+                    // Si el campo está vacío, no envía el formulario
+                    return false;
+                }
+                return true;
+            }
+        </script>
+
+        <style>
+            @keyframes pulse {
+                0% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                50% { box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4); }
+                100% { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            }
+            .usuario:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(52, 152, 219, 0.5);
+            }
+
+            /* Estilos por defecto para desktop */
+            .header-top-row, .header-bottom-row {
+                display: contents;
+            }
+
+            /* En desktop mantener el layout original */
+            @media (min-width: 481px) {
+                .menu-superior {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                .header-top-row {
+                    display: contents;
+                }
+
+                .header-bottom-row {
+                    display: contents;
+                }
+            }
+        </style>
     </header>
 
     <!-- Navegación rápida -->
@@ -416,8 +452,7 @@
         <a href="#inicio" class="nav-btn active">Inicio</a>
         <a href="#beneficios" class="nav-btn">Beneficios</a>
         <a href="#arboles" class="nav-btn">Árboles</a>
-        <a href="#tipos" class="nav-btn">Especies</a>
-        <a href="#centros" class="nav-btn">Centros</a>
+        <a href="#centros" class="nav-btn">Únete</a>
     </div>
 
     <!-- Primera pantalla: Código QR -->
@@ -586,13 +621,22 @@
             transform: scale(1.05);
         }
 
+        .cuadro-qr {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
         .qr-container {
             position: relative;
             display: inline-block;
             overflow: hidden;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px;
+            margin: 0 auto 15px auto;
         }
 
         .scan-effect {
@@ -600,15 +644,28 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 3px;
             background: linear-gradient(90deg, transparent, #3498db, transparent);
-            animation: scan 2s linear infinite;
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
+            animation: scanLine 2.5s ease-in-out infinite;
+            z-index: 2;
         }
 
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+        @keyframes scanLine {
+            0% {
+                top: 0;
+                opacity: 0.8;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: calc(100% - 3px);
+                opacity: 0.8;
+            }
         }
 
         @keyframes fadeInRight {
@@ -622,7 +679,237 @@
             }
         }
 
-        @media (max-width: 768px) {
+        /* Responsive para móviles - Header mejorado */
+        @media (max-width: 480px) {
+            .menu-superior {
+                flex-direction: column;
+                padding: 6px 12px;
+                gap: 6px;
+                min-height: auto;
+            }
+
+            /* Primera fila: Logo y Buscador */
+            .header-top-row {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .logo {
+                flex-shrink: 0;
+                width: auto;
+            }
+
+            .logo img {
+                height: 28px;
+                width: auto;
+            }
+
+            /* Buscador estilo principal.html - blanco, ajustado al espacio */
+            .buscador {
+                flex: 1;
+                background-color: white;
+                border-radius: 20px;
+                padding: 1px 10px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                min-width: 0; /* Permite que se comprima */
+            }
+
+            .buscador form {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+
+            .buscador input {
+                background: transparent;
+                border: none;
+                color: #2c3e50;
+                padding: 5px;
+                width: 100%;
+                font-size: 12px;
+                outline: none;
+                min-width: 0; /* Permite que se comprima */
+            }
+
+            .buscador input::placeholder {
+                color: #666;
+                font-size: 12px;
+            }
+
+            .buscador button {
+                background: none;
+                border: none;
+                color: #2c3e50;
+                cursor: pointer;
+                font-size: 12px;
+                padding: 3px;
+                flex-shrink: 0;
+            }
+
+            /* Segunda fila: Botones y Avatar */
+            .header-bottom-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                gap: 6px;
+            }
+
+            .botones {
+                display: flex;
+                gap: 4px;
+                flex: 1;
+                justify-content: flex-start;
+            }
+
+            .botones .btn {
+                padding: 5px 8px;
+                font-size: 11px;
+                border-radius: 12px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Avatar solo en móviles */
+            .usuario {
+                margin-left: 0 !important;
+                padding: 3px !important;
+                border-radius: 50% !important;
+                min-width: 36px !important;
+                height: 36px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                flex-shrink: 0;
+            }
+
+            .usuario .info-usuario {
+                display: none !important;
+            }
+
+            .usuario img {
+                width: 30px !important;
+                height: 30px !important;
+            }
+
+            /* Navegación rápida responsive */
+            .navegacion-rapida {
+                padding: 4px 12px;
+                gap: 3px;
+            }
+
+            .nav-btn {
+                padding: 4px 8px;
+                font-size: 11px;
+                border-radius: 10px;
+            }
+
+            /* Contenido principal */
+            .contenido-principal {
+                padding: 10px 15px;
+                margin-top: 0px;
+            }
+
+            .contenido-principal h1 {
+                font-size: 1.5rem !important;
+                margin-top: 8px !important;
+                text-align: center;
+                line-height: 1.2;
+            }
+
+            .contenido-principal h3 {
+                font-size: 0.95rem;
+                text-align: center;
+                margin: 10px 0;
+                line-height: 1.3;
+            }
+
+            .contenido-principal p {
+                font-size: 0.8rem !important;
+                text-align: center;
+                margin: 6px 0 !important;
+                line-height: 1.4;
+            }
+
+            /* QR Container responsive - centrado */
+            .cuadro-qr {
+                text-align: center;
+                margin: 12px auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .qr-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+            }
+
+            .qr-container img {
+                max-width: 170px;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+            }
+
+            .btn-scan {
+                padding: 8px 18px;
+                font-size: 12px;
+                margin: 10px auto;
+                border-radius: 18px;
+                display: block;
+                width: fit-content;
+            }
+        }
+
+        @media (max-width: 768px) and (min-width: 481px) {
+            .menu-superior {
+                flex-wrap: wrap;
+                padding: 12px 20px;
+                gap: 15px;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+
+            .buscador {
+                flex: 1;
+                min-width: 250px;
+            }
+
+            .botones {
+                gap: 10px;
+            }
+
+            .botones .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .usuario {
+                padding: 8px 12px !important;
+            }
+
+            .usuario .info-usuario {
+                margin-left: 8px !important;
+            }
+
+            .nombre-usuario {
+                font-size: 0.8rem !important;
+            }
+
+            .correo-usuario {
+                font-size: 0.7rem !important;
+            }
+
             .animated-icons {
                 gap: 10px;
             }
@@ -707,146 +994,484 @@
     </div>
 
 
-    <!-- Cuarta pantalla: Explora Árboles por Especie -->
-    <div id="tipos" class="cuarta-pantalla">
-        <h1>Explora Árboles por Especie</h1>
-        <h3>Descubre las especies de árboles nativos y sus características únicas, y aprende a identificarlos en su hábitat natural.</h3>
-
-        <!-- Contenedor de columnas -->
-        <div class="grid-container-tipos animate-on-scroll">
-            {% if especies_destacadas %}
-                {% for especie in especies_destacadas %}
-                    <div class="grid-item-tipo">
-                        <div class="imagen-tipo">
-                            {% if especie.Imagen %}
-                                <img src="{{ url_for('static', filename=especie.Imagen) }}" alt="{{ especie.NombreVulgar }}">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ especie.NombreVulgar }}">
-                            {% endif %}
-                        </div>
-                        <div class="texto-tipo">
-                            <h2>{{ especie.NombreVulgar }} ({{ especie.NombreCientifico }})</h2>
-                            <p>{{ especie.Descripcion|truncate(150) if especie.Descripcion else 'Especie registrada en el sistema VerdeQR.' }}</p>
-                            <p><strong>Usos:</strong>
-                                {% if especie.Usos %}
-                                    {{ especie.Usos|join(', ') }}
-                                {% else %}
-                                    No especificados
-                                {% endif %}
-                            </p>
-                            <div class="flecha">
-                                {% if 'usuario' in session %}
-                                    <a href="{{ url_for('buscar_arbol', especie_id=especie.IDEspecie) }}" title="Ver árboles de {{ especie.NombreVulgar }}">
-                                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                                    </a>
-                                {% else %}
-                                    <a href="{{ url_for('iniciar_sesion') }}" title="Iniciar sesión para ver árboles">
-                                        <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <!-- Contenido estático de respaldo si no hay especies en la base de datos -->
-                <div class="grid-item-tipo">
-                    <div class="imagen-tipo">
-                        <img src="{{ url_for('static', filename='css/js/img/guayacan.jpg') }}" alt="Guayacán">
-                    </div>
-                    <div class="texto-tipo">
-                        <h2>Guayacán (Tabebuia chrysantha)</h2>
-                        <p>Especie nativa de Colombia con flores amarillas brillantes. Su madera es muy dura y resistente, utilizada en ebanistería y construcción.</p>
-                        <p><strong>Usos:</strong> Maderable, Ornamental, Medicinal</p>
-                        <div class="flecha">
-                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-item-tipo">
-                    <div class="imagen-tipo">
-                        <img src="{{ url_for('static', filename='css/js/img/cedro.jpg') }}" alt="Cedro">
-                    </div>
-                    <div class="texto-tipo">
-                        <h2>Cedro (Cedrela odorata)</h2>
-                        <p>Especie forestal importante en Colombia. Su madera rojiza es muy apreciada por su aroma y resistencia a insectos y humedad.</p>
-                        <p><strong>Usos:</strong> Maderable, Restauración Ecológica</p>
-                        <div class="flecha">
-                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                        </div>
-                    </div>
-                </div>
-                <div class="grid-item-tipo">
-                    <div class="imagen-tipo">
-                        <img src="{{ url_for('static', filename='css/js/img/roble.jpg') }}" alt="Roble">
-                    </div>
-                    <div class="texto-tipo">
-                        <h2>Roble (Quercus humboldtii)</h2>
-                        <p>Especie endémica de los Andes colombianos. Árbol majestuoso que puede alcanzar hasta 25 metros de altura y vivir más de 200 años.</p>
-                        <p><strong>Usos:</strong> Maderable, Protección Ambiental</p>
-                        <div class="flecha">
-                            <img src="{{ url_for('static', filename='css/js/img/flecha.png') }}" alt="Flecha">
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
 
 
-    <!-- Quinta pantalla: Explora Árboles por Centro -->
+
+    <!-- Cuarta pantalla: Identifica árboles al instante con QR -->
     <div id="centros" class="quinta-pantalla">
-        <h1>Explora Árboles por Centro</h1>
-        <h3>Descubre los árboles registrados en cada centro de formación.</h3>
+        <div class="nature-hero-section animate-on-scroll">
+            <div class="nature-content">
+                <div class="nature-header">
+                    <h1 class="nature-title">Identifica árboles al instante con QR</h1>
+                    <h3 class="nature-subtitle">Accede a información completa sobre árboles silvestres. Escanea códigos QR y descubre la biodiversidad que te rodea.</h3>
+                </div>
 
-        <!-- Contenedor de imágenes -->
-        <div class="grid-container-centros animate-on-scroll">
-            {% if centros %}
-                {% for centro in centros %}
-                    <div class="grid-item-centro">
-                        {% if centro.Imagen %}
-                            <img src="{{ url_for('static', filename=centro.Imagen) }}" alt="{{ centro.NombreCentro }}">
-                        {% else %}
-                            {% if 'CIGEC' in centro.NombreCentro or 'Innovación' in centro.NombreCentro %}
-                                <img src="{{ url_for('static', filename='css/js/img/cigec.jpg') }}" alt="{{ centro.NombreCentro }}">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="{{ centro.NombreCentro }}">
-                            {% endif %}
-                        {% endif %}
-                        <div class="texto-centro">
-                            <h2>{{ centro.NombreCentro }}</h2>
-                            {% if 'usuario' in session %}
-                                <a href="{{ url_for('buscar_arbol', centro_id=centro.IDCentro) }}" class="btn-centro">Ver árboles</a>
-                            {% else %}
-                                <a href="{{ url_for('iniciar_sesion') }}" class="btn-centro">Iniciar sesión para ver</a>
-                            {% endif %}
+                <div class="nature-stats">
+                    <div class="nature-stat">
+                        <div class="stat-icon">🌳</div>
+                        <div class="stat-info">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-text">Árboles Catalogados</div>
                         </div>
-                        {% if 'usuario' in session %}
-                            <a href="{{ url_for('buscar_arbol', centro_id=centro.IDCentro) }}" class="overlay-link" title="Ver árboles de {{ centro.NombreCentro }}"></a>
-                        {% else %}
-                            <a href="{{ url_for('iniciar_sesion') }}" class="overlay-link" title="Iniciar sesión para ver árboles"></a>
-                        {% endif %}
                     </div>
-                {% endfor %}
-            {% else %}
-                <!-- Contenido estático de respaldo si no hay centros en la base de datos -->
-                <!-- Centros de respaldo si no hay en la base de datos -->
-                <div class="grid-item-centro">
-                    <img src="{{ url_for('static', filename='css/js/img/cigec.jpg') }}" alt="Centro de Innovación de Gestión Empresarial y Cultural">
-                    <div class="texto-centro">
-                        <h2>Centro de Innovación de Gestión Empresarial y Cultural (CIGEC)</h2>
+                    <div class="nature-stat">
+                        <div class="stat-icon">🔬</div>
+                        <div class="stat-info">
+                            <div class="stat-number">150+</div>
+                            <div class="stat-text">Especies Documentadas</div>
+                        </div>
+                    </div>
+                    <div class="nature-stat">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-text">Consultas Realizadas</div>
+                        </div>
+                    </div>
+                    <div class="nature-stat">
+                        <div class="stat-icon">📱</div>
+                        <div class="stat-info">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-text">Acceso Disponible</div>
+                        </div>
                     </div>
                 </div>
-                <div class="grid-item-centro">
-                    <img src="{{ url_for('static', filename='css/js/img/cbc.jpg') }}" alt="Centro Biotecnológico del Caribe">
-                    <div class="texto-centro">
-                        <h2>Centro Biotecnológico del Caribe (CBC)</h2>
-                        <p>Km. 7 Vía a La Paz, Valledupar, Cesar</p>
+
+                <div class="nature-features">
+                    <div class="nature-feature">
+                        <div class="feature-visual">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Escaneo QR Instantáneo</h4>
+                            <p>Escanea códigos QR con tu dispositivo móvil y obtén información detallada sobre cualquier árbol silvestre al instante</p>
+                        </div>
+                    </div>
+                    <div class="nature-feature">
+                        <div class="feature-visual">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Base de Datos Completa</h4>
+                            <p>Accede a información científica detallada: nombres, características, usos medicinales y datos de conservación</p>
+                        </div>
+                    </div>
+                    <div class="nature-feature">
+                        <div class="feature-visual">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4>Educación Ambiental</h4>
+                            <p>Aprende sobre la biodiversidad local y contribuye al conocimiento de los ecosistemas forestales</p>
+                        </div>
                     </div>
                 </div>
-            {% endif %}
+            </div>
+
+            <div class="nature-visual">
+                <div class="floating-nature">
+                    <div class="floating-element tree">🌲</div>
+                    <div class="floating-element leaf1">🍃</div>
+                    <div class="floating-element leaf2">🌿</div>
+                    <div class="floating-element flower">🌸</div>
+                    <div class="floating-element seed">🌰</div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <style>
+        .nature-hero-section {
+            min-height: 100vh;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 80px 0;
+        }
+
+        .nature-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .nature-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .nature-title {
+            font-size: 4.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #2c3e50, #3498db, #2ecc71, #2c3e50);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            line-height: 1.1;
+            animation: titleGradient 4s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .nature-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #2ecc71, #3498db, #2ecc71);
+            border-radius: 2px;
+            animation: underlineGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes underlineGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); }
+        }
+
+        .nature-subtitle {
+            font-size: 1.6rem;
+            color: #555;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-weight: 400;
+            margin-top: 35px;
+        }
+
+        .nature-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .nature-stat {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            border-radius: 25px;
+            padding: 35px 25px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .nature-stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nature-stat:hover::before {
+            left: 100%;
+        }
+
+        .nature-stat:hover {
+            transform: translateY(-15px) scale(1.02);
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 30px rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
+        .stat-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #2c3e50, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-text {
+            font-size: 1.1rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .nature-features {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .nature-feature {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            border-radius: 25px;
+            padding: 35px;
+            border: 2px solid #e9ecef;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .nature-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .nature-feature:hover::before {
+            left: 100%;
+        }
+
+        .nature-feature:hover {
+            transform: translateX(15px) translateY(-5px);
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 25px rgba(46, 204, 113, 0.3);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
+        .feature-visual {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60, #16a085);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            box-shadow: 0 15px 30px rgba(46, 204, 113, 0.4), inset 0 2px 10px rgba(255,255,255,0.2);
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .feature-visual::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #2ecc71, #3498db, #2ecc71);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nature-feature:hover .feature-visual::before {
+            opacity: 1;
+        }
+
+        .nature-feature:hover .feature-visual {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 20px 40px rgba(46, 204, 113, 0.6), inset 0 2px 15px rgba(255,255,255,0.3);
+        }
+
+        .feature-content h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #2c3e50, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-content p {
+            font-size: 1.05rem;
+            color: #666;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+
+
+        .nature-visual {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-nature {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.6;
+            animation: floatNature 6s ease-in-out infinite;
+        }
+
+        .floating-element.tree {
+            top: 15%;
+            right: 10%;
+            font-size: 4rem;
+            animation-delay: 0s;
+        }
+
+        .floating-element.leaf1 {
+            top: 30%;
+            right: 25%;
+            animation-delay: 1s;
+        }
+
+        .floating-element.leaf2 {
+            bottom: 40%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element.flower {
+            bottom: 25%;
+            right: 30%;
+            animation-delay: 3s;
+        }
+
+        .floating-element.seed {
+            top: 60%;
+            right: 5%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatNature {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+                opacity: 0.8;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nature-content {
+                padding: 50px 20px;
+            }
+
+            .nature-title {
+                font-size: 2.8rem;
+                margin-bottom: 20px;
+            }
+
+            .nature-title::after {
+                width: 80px;
+                height: 3px;
+            }
+
+            .nature-subtitle {
+                font-size: 1.3rem;
+                margin-top: 25px;
+                max-width: 100%;
+            }
+
+            .nature-stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin-bottom: 50px;
+            }
+
+            .nature-stat {
+                padding: 25px 20px;
+            }
+
+            .stat-icon {
+                font-size: 3rem;
+                margin-bottom: 15px;
+            }
+
+            .stat-number {
+                font-size: 2.3rem;
+            }
+
+            .stat-text {
+                font-size: 0.95rem;
+                letter-spacing: 1px;
+            }
+
+            .nature-features {
+                gap: 25px;
+            }
+
+            .nature-feature {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+                gap: 20px;
+            }
+
+            .feature-visual {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .feature-content h4 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+
+            .feature-content p {
+                font-size: 1rem;
+            }
+
+            .floating-element {
+                font-size: 2rem;
+            }
+
+            .floating-element.tree {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 
 
 
@@ -962,10 +1587,18 @@
             </div>
 
             <div class="footer-enlaces">
-                <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
-                <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
-                <a href="{{ url_for('contacto') }}">Contacto</a>
-                <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
+                <!-- Menú desplegable para enlaces legales -->
+                <div class="footer-dropdown">
+                    <button type="button" class="footer-dropdown-toggle" onclick="toggleFooterDropdown()">
+                        <i class="fas fa-info-circle"></i> Información Legal
+                    </button>
+                    <div class="footer-dropdown-content" id="footerDropdownContent">
+                        <a href="{{ url_for('politica_privacidad') }}"><i class="fas fa-shield-alt"></i>Política de Privacidad</a>
+                        <a href="{{ url_for('terminos_condiciones') }}"><i class="fas fa-file-contract"></i>Términos y Condiciones</a>
+                        <a href="{{ url_for('contacto') }}"><i class="fas fa-envelope"></i>Contacto</a>
+                        <a href="{{ url_for('acerca_de') }}"><i class="fas fa-users"></i>Acerca de Nosotros</a>
+                    </div>
+                </div>
             </div>
 
             <div class="footer-derechos">
@@ -1017,7 +1650,6 @@
                 document.getElementById('inicio'),
                 document.getElementById('beneficios'),
                 document.getElementById('arboles'),
-                document.getElementById('tipos'), // Ahora es 'Especies'
                 document.getElementById('centros')
             ];
 
@@ -1092,6 +1724,28 @@
     <script src="{{ url_for('static', filename='js/search-autocomplete.js') }}"></script>
     <!-- Script para animaciones al hacer scroll -->
     <script src="{{ url_for('static', filename='js/scroll-animations.js') }}"></script>
+
+    <!-- Script para el menú desplegable del footer -->
+    <script>
+        // Función para el menú desplegable del footer
+        function toggleFooterDropdown() {
+            const dropdown = document.getElementById('footerDropdownContent');
+            dropdown.classList.toggle('show');
+        }
+
+        // Cerrar el dropdown del footer si se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.footer-dropdown-toggle') && !event.target.matches('.footer-dropdown-toggle i')) {
+                const dropdowns = document.getElementsByClassName('footer-dropdown-content');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        });
+    </script>
 
     <!-- Script para el modal de bienvenida -->
     <script>
