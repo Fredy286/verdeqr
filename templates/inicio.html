@@ -1587,18 +1587,10 @@
             </div>
 
             <div class="footer-enlaces">
-                <!-- Menú desplegable para enlaces legales -->
-                <div class="footer-dropdown">
-                    <button type="button" class="footer-dropdown-toggle" onclick="toggleFooterDropdown()">
-                        <i class="fas fa-info-circle"></i> Información Legal
-                    </button>
-                    <div class="footer-dropdown-content" id="footerDropdownContent">
-                        <a href="{{ url_for('politica_privacidad') }}"><i class="fas fa-shield-alt"></i>Política de Privacidad</a>
-                        <a href="{{ url_for('terminos_condiciones') }}"><i class="fas fa-file-contract"></i>Términos y Condiciones</a>
-                        <a href="{{ url_for('contacto') }}"><i class="fas fa-envelope"></i>Contacto</a>
-                        <a href="{{ url_for('acerca_de') }}"><i class="fas fa-users"></i>Acerca de Nosotros</a>
-                    </div>
-                </div>
+                <a href="{{ url_for('politica_privacidad') }}">Política de Privacidad</a>
+                <a href="{{ url_for('terminos_condiciones') }}">Términos y Condiciones</a>
+                <a href="{{ url_for('contacto') }}">Contacto</a>
+                <a href="{{ url_for('acerca_de') }}">Acerca de Nosotros</a>
             </div>
 
             <div class="footer-derechos">
@@ -1725,27 +1717,7 @@
     <!-- Script para animaciones al hacer scroll -->
     <script src="{{ url_for('static', filename='js/scroll-animations.js') }}"></script>
 
-    <!-- Script para el menú desplegable del footer -->
-    <script>
-        // Función para el menú desplegable del footer
-        function toggleFooterDropdown() {
-            const dropdown = document.getElementById('footerDropdownContent');
-            dropdown.classList.toggle('show');
-        }
 
-        // Cerrar el dropdown del footer si se hace clic fuera de él
-        document.addEventListener('click', function(event) {
-            if (!event.target.matches('.footer-dropdown-toggle') && !event.target.matches('.footer-dropdown-toggle i')) {
-                const dropdowns = document.getElementsByClassName('footer-dropdown-content');
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        });
-    </script>
 
     <!-- Script para el modal de bienvenida -->
     <script>

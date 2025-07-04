@@ -48,9 +48,6 @@ CREATE TABLE Especie (
     FOREIGN KEY (Estado) REFERENCES Estado(IDEstado)
 );
 
-INSERT INTO Especie (NombreCientifico, NombreVulgar) VALUES
-('Mangifera indica', 'Mango'),
-('Persea americana', 'Aguacate');
 
 -- UsoArbol
 CREATE TABLE UsoArbol (

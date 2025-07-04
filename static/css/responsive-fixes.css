@@ -21,34 +21,43 @@
 @media (max-width: 768px) {
     /* Asegurar que el título esté visible */
     .contenido-principal {
-        padding-top: 80px !important;
+        padding-top: 120px !important;
         margin-top: 0 !important;
+        position: relative !important;
+        z-index: 10 !important;
     }
 
     .contenido-principal h1 {
-        z-index: 100 !important;
+        z-index: 1000 !important;
+        position: relative !important;
+        background-color: rgba(255, 255, 255, 0.98) !important;
+        padding: 20px !important;
+        border-radius: 12px !important;
+        margin-bottom: 25px !important;
+        margin-top: 30px !important;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+        font-size: 1.8rem !important;
+        text-align: center !important;
+        color: #2c3e50 !important;
+        font-weight: bold !important;
+    }
+
+    .contenido-principal h3 {
+        z-index: 1000 !important;
         position: relative !important;
         background-color: rgba(255, 255, 255, 0.95) !important;
         padding: 15px !important;
         border-radius: 10px !important;
-        margin-bottom: 20px !important;
-        margin-top: 0 !important;
+        margin-bottom: 30px !important;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-    }
-
-    .contenido-principal h3 {
-        z-index: 100 !important;
-        position: relative !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        padding: 12px !important;
-        border-radius: 8px !important;
-        margin-bottom: 25px !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        text-align: center !important;
+        color: #34495e !important;
     }
 
     /* Alinear logo con buscador */
     .menu-superior {
         align-items: center !important;
+        padding: 10px 15px !important;
     }
 
     .menu-superior .logo {
@@ -83,89 +92,281 @@
     }
 }
 
-/* Correcciones para principal.css */
+/* Correcciones para principal.css - SOLO RESPONSIVE */
 @media (max-width: 768px) {
-    /* Estructura del header principal */
+    /* Reorganizar header en móviles - ESTRUCTURA LIMPIA */
     .header-principal {
+        display: flex !important;
         flex-direction: column !important;
-        padding: 10px !important;
+        padding: 8px 15px !important;
         min-height: auto !important;
         align-items: stretch !important;
+        gap: 8px !important;
     }
 
-    /* Primera fila: Logo, buscador y perfil */
-    .header-container {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-    }
-
-    .header-top-row {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        margin-bottom: 10px !important;
-    }
-
-    .header-principal .logo {
-        order: 1 !important;
-        flex: 0 0 auto !important;
-    }
-
-    .header-principal .logo img {
-        height: 40px !important;
-        width: 40px !important;
-    }
-
-    .header-principal .buscador {
-        order: 2 !important;
-        flex: 1 !important;
-        max-width: none !important;
-        margin: 0 15px !important;
-    }
-
-    .header-principal .usuario {
-        order: 3 !important;
-        flex: 0 0 auto !important;
-        margin: 0 !important;
-        padding: 5px 10px !important;
-    }
-
-    .header-principal .usuario img {
-        height: 35px !important;
-        width: 35px !important;
-    }
-
-    .header-principal .usuario .info-usuario {
-        display: none !important;
-    }
-
-    /* Segunda fila: Menú de navegación */
+    /* OCULTAR BOTONES DUPLICADOS EN PRINCIPAL.HTML - URGENTE - FORZAR */
     .header-principal .menu-principal {
-        order: 4 !important;
-        width: 100% !important;
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
     }
 
     .header-principal .menu-principal ul {
-        display: flex !important;
-        justify-content: space-around !important;
-        gap: 5px !important;
-        margin: 0 !important;
-        flex-wrap: wrap !important;
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .header-principal .menu-principal ul li {
+        display: none !important;
     }
 
     .header-principal .menu-principal ul li a {
-        padding: 8px 12px !important;
+        display: none !important;
+    }
+
+    .header-principal .usuario {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+
+    .header-principal .usuario span {
+        display: none !important;
+    }
+
+    .header-principal .usuario img {
+        display: none !important;
+    }
+
+    /* Primera fila: Logo y buscador lado a lado ARRIBA */
+    .header-principal .header-container {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 10px !important;
+        order: 1 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .header-principal .logo {
+        flex: 0 0 auto !important;
+        order: 1 !important;
+    }
+
+    .header-principal .logo img {
+        height: 30px !important;
+        width: 30px !important;
+    }
+
+    .header-principal .buscador {
+        flex: 1 !important;
+        max-width: 250px !important;
+        margin: 0 !important;
+        order: 2 !important;
+    }
+
+    .header-principal .buscador input {
+        width: 100% !important;
+        padding: 6px 10px !important;
         font-size: 12px !important;
-        border-radius: 15px !important;
-        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Ocultar menú y usuario originales completamente */
+    .header-principal .menu-principal {
+        display: none !important;
+    }
+
+    .header-principal .usuario {
+        display: none !important;
+    }
+
+    /* Segunda fila: Perfil y menú desplegable ABAJO */
+    .mobile-menu-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        order: 2 !important;
+        margin-top: 0 !important;
+    }
+
+    /* Perfil móvil a la izquierda */
+    .mobile-user {
+        display: flex !important;
+        align-items: center !important;
+        cursor: pointer !important;
+        order: 1 !important;
+        background: linear-gradient(135deg, #2c3e50, #3498db) !important;
+        border-radius: 10px !important;
+        padding: 6px 10px !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+    }
+
+    .mobile-user img {
+        height: 28px !important;
+        width: 28px !important;
+        border-radius: 50% !important;
+        border: 2px solid white !important;
+        object-fit: cover !important;
+    }
+
+    /* Menú desplegable móvil a la derecha */
+    .mobile-dropdown {
+        position: relative !important;
+        display: inline-block !important;
+        order: 2 !important;
+    }
+
+    .mobile-dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+        font-size: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        transition: background-color 0.3s !important;
+    }
+
+    .mobile-dropdown-toggle:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .mobile-dropdown-content {
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        right: 0 !important;
+        background-color: #1e5631 !important;
+        min-width: 200px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+        border-radius: 5px !important;
+        z-index: 1001 !important;
+        margin-top: 5px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .mobile-dropdown-content.show {
         display: block !important;
     }
 
-    /* Árboles destacados en 2x2 */
+    .mobile-dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        transition: background-color 0.3s !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .mobile-dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .mobile-dropdown-content a:last-child {
+        border-bottom: none !important;
+    }
+
+    /* GRID 2x2 SIMPLE Y EFECTIVO - RESTAURAR ÁRBOLES */
     .grid-arboles {
+        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 15px !important;
+        padding: 15px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* CADA TARJETA VISIBLE Y FUNCIONAL */
+    .grid-arboles .arbol-card {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        max-width: none !important;
+    }
+
+    /* CONTENEDOR PADRE NORMAL */
+    .arboles-destacados {
+        width: 100% !important;
+        padding: 20px 15px !important;
+        margin: 0 !important;
+    }
+
+    /* Sobrescribir cualquier CSS de principal.css que interfiera */
+    .arboles-destacados .grid-arboles {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Asegurar que no se aplique grid de 3 columnas */
+    .grid-arboles:not(.grid-centros) {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .arbol-card {
+        width: 100% !important;
+        max-width: none !important;
+        background: white !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        overflow: hidden !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    .arbol-card:hover {
+        transform: translateY(-2px) !important;
+    }
+
+    .imagen-arbol {
+        height: 120px !important;
+        overflow: hidden !important;
+    }
+
+    .imagen-arbol img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .arbol-card .info-arbol {
+        padding: 8px !important;
+    }
+
+    .arbol-card .info-arbol h3 {
+        font-size: 0.75rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 6px !important;
+        color: #2c3e50 !important;
+        font-weight: 600 !important;
+    }
+
+    .arbol-card .info-arbol h3 span {
+        font-size: 0.65rem !important;
+        display: block !important;
+        margin-top: 2px !important;
+        color: #7f8c8d !important;
+        font-style: italic !important;
+    }
+
+    .arbol-card .info-arbol .detalles {
+        margin-bottom: 8px !important;
     }
 
     .arbol-card .info-arbol .detalles p {
@@ -174,20 +375,45 @@
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        font-size: 0.8rem !important;
+        font-size: 0.7rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 4px !important;
+        color: #555 !important;
     }
 
-    .imagen-arbol {
-        height: 150px !important;
+    .arbol-card .info-arbol .detalles p i {
+        margin-right: 4px !important;
+        color: #27ae60 !important;
+        font-size: 0.65rem !important;
     }
 
-    .arbol-card .info-arbol h3 {
-        font-size: 0.9rem !important;
+    /* Corregir botón "Explorar" */
+    .arbol-card .btn {
+        padding: 6px 10px !important;
+        font-size: 10px !important;
+        border-radius: 15px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 100% !important;
+        width: auto !important;
+        display: inline-block !important;
+        background: #27ae60 !important;
+        color: white !important;
+        text-decoration: none !important;
+        transition: background-color 0.3s !important;
     }
 
-    .arbol-card .info-arbol h3 span {
-        font-size: 0.8rem !important;
+    .arbol-card .btn:hover {
+        background: #219a52 !important;
     }
+
+    .arbol-card .btn i {
+        margin-left: 4px !important;
+        font-size: 9px !important;
+    }
+
+
 }
 
 @media (max-width: 480px) {
@@ -377,5 +603,657 @@
     .footer-dropdown-toggle {
         padding: 8px 12px;
         font-size: 12px;
+    }
+}
+
+/* Ocultar menú desplegable en desktop */
+.dropdown-menu {
+    display: none !important;
+}
+
+/* Ocultar elementos móviles en desktop */
+.mobile-menu-row {
+    display: none;
+}
+
+/* Ocultar menú desplegable de páginas de soporte en desktop */
+.menu-simple .dropdown-menu {
+    display: none !important;
+}
+
+/* Estilos responsive para páginas de gestión */
+@media (max-width: 768px) {
+    /* Mostrar menú desplegable en móviles para páginas de gestión */
+    .header-principal .dropdown-menu {
+        display: block !important;
+        order: 1 !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Reorganizar header de gestión en móviles */
+    .header-principal {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 10px 15px !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    /* Logo en páginas de gestión */
+    .header-principal .logo-container {
+        order: 2 !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Ocultar menú principal en móviles */
+    .header-principal .menu-principal {
+        display: none !important;
+    }
+
+    /* Perfil de usuario en móviles */
+    .header-principal .user-section {
+        order: 3 !important;
+        background: linear-gradient(135deg, #2c3e50, #3498db) !important;
+        border-radius: 10px !important;
+        padding: 8px 12px !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+    }
+
+    .header-principal .user-section .user-avatar {
+        width: 30px !important;
+        height: 30px !important;
+        border: 2px solid white !important;
+    }
+
+    .header-principal .user-section .user-info {
+        margin-left: 8px !important;
+    }
+
+    .header-principal .user-section .user-name {
+        font-size: 12px !important;
+        color: white !important;
+    }
+
+    .header-principal .user-section .user-email {
+        font-size: 10px !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    /* Estilos para menú desplegable de gestión */
+    .header-principal .dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+        font-size: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        transition: background-color 0.3s !important;
+    }
+
+    .header-principal .dropdown-toggle:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .header-principal .dropdown-content {
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        background-color: #1e5631 !important;
+        min-width: 250px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+        border-radius: 5px !important;
+        z-index: 1001 !important;
+        margin-top: 5px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .header-principal .dropdown-content.show {
+        display: block !important;
+    }
+
+    .header-principal .dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        transition: background-color 0.3s !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .header-principal .dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .header-principal .dropdown-content a:last-child {
+        border-bottom: none !important;
+    }
+
+    .header-principal .dropdown-content a i {
+        margin-right: 8px !important;
+        width: 16px !important;
+        text-align: center !important;
+    }
+
+    /* Estilos responsive para páginas de soporte - POSICIONAMIENTO FINAL */
+    .menu-simple {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 8px 15px !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .menu-simple .logo {
+        order: 1 !important;
+        margin: 0 10px 0 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .menu-simple .usuario-botones {
+        order: 2 !important;
+        margin-left: auto !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .menu-simple .dropdown-menu {
+        display: block !important;
+        position: relative !important;
+        order: 3 !important;
+        margin-left: 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .menu-simple .dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        cursor: pointer !important;
+        font-size: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: auto !important;
+        margin: 0 !important;
+        position: relative !important;
+    }
+
+    .menu-simple .dropdown-content {
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        right: 0 !important;
+        background-color: #1e5631 !important;
+        min-width: 220px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+        border-radius: 5px !important;
+        z-index: 1001 !important;
+        margin-top: 5px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        white-space: nowrap !important;
+    }
+
+    .menu-simple .dropdown-content.show {
+        display: block !important;
+    }
+
+    .menu-simple .dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        text-align: left !important;
+    }
+
+    .menu-simple .dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .menu-simple .dropdown-content a:last-child {
+        border-bottom: none !important;
+    }
+
+    .menu-simple .dropdown-content a i {
+        margin-right: 8px !important;
+        width: 16px !important;
+        text-align: center !important;
+    }
+
+    /* Ocultar botones normales en páginas de soporte en móviles */
+    .menu-simple .botones {
+        display: none !important;
+    }
+
+    /* Corregir tamaño del perfil vs fondo azul */
+    .menu-simple .usuario-botones .usuario {
+        padding: 6px 12px !important;
+        min-height: 40px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .menu-simple .usuario-botones .usuario img {
+        width: 32px !important;
+        height: 32px !important;
+        border: 1px solid white !important;
+    }
+
+    .menu-simple .usuario-botones .usuario .info-usuario {
+        margin-left: 8px !important;
+    }
+
+    .menu-simple .usuario-botones .usuario .nombre-usuario {
+        font-size: 0.8rem !important;
+        line-height: 1.1 !important;
+    }
+
+    .menu-simple .usuario-botones .usuario .correo-usuario {
+        font-size: 0.7rem !important;
+        line-height: 1.1 !important;
+    }
+
+    /* Para enlaces de perfil también */
+    .menu-simple .usuario-botones a.btn {
+        padding: 6px 12px !important;
+        min-height: 40px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .menu-simple .usuario-botones a.btn img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .menu-simple .usuario-botones a.btn div {
+        font-size: 0.8rem !important;
+        line-height: 1.1 !important;
+    }
+}
+
+/* Correcciones específicas para gestión en móviles */
+@media (max-width: 768px) {
+    /* Cambiar a menú horizontal en móviles */
+    .gestion-body .header-principal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        background: var(--menu-bg) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0 15px !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+        z-index: 1000 !important;
+        flex-direction: row !important;
+    }
+
+    /* Mantener fondo original en móviles */
+    .gestion-body .container {
+        margin-left: 0 !important;
+        margin-top: 60px !important;
+        padding: 15px 10px !important;
+        width: 100% !important;
+        min-height: calc(100vh - 60px) !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ocultar menú lateral original en móviles */
+    .gestion-body .menu-principal {
+        display: none !important;
+    }
+
+    /* Mostrar menú desplegable solo en móviles */
+    .gestion-body .dropdown-menu {
+        display: block !important;
+        position: relative !important;
+        order: 1 !important;
+    }
+
+    .gestion-body .dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        transition: background-color 0.3s !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .gestion-body .dropdown-toggle:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .gestion-body .dropdown-content {
+        display: none !important;
+        position: fixed !important;
+        top: 60px !important;
+        left: 15px !important;
+        background-color: #1e5631 !important;
+        min-width: 200px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
+        border-radius: 5px !important;
+        z-index: 99999 !important;
+        margin-top: 5px !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .gestion-body .dropdown-content.show {
+        display: block !important;
+    }
+
+    .gestion-body .dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        transition: background-color 0.3s !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .gestion-body .dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .gestion-body .dropdown-content a:last-child {
+        border-bottom: none !important;
+    }
+
+    .gestion-body .dropdown-content a i {
+        margin-right: 10px !important;
+        width: 16px !important;
+        text-align: center !important;
+        font-size: 11px !important;
+    }
+
+    .gestion-body .logo-container {
+        order: 3 !important;
+    }
+
+    .gestion-body .user-section {
+        order: 2 !important;
+    }
+
+    /* Aplicar mismo responsive a todas las páginas de gestión */
+    .arbol-body .header-principal,
+    .centro-body .header-principal,
+    .especie-body .header-principal,
+    .uso-arbol-body .header-principal,
+    .tipo-bosque-body .header-principal,
+    .curiosidades-body .header-principal,
+    .interacciones-body .header-principal,
+    .qr-body .header-principal,
+    .sugerencias-body .header-principal,
+    .usuarios-body .header-principal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        background: var(--menu-bg) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0 15px !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+        z-index: 1000 !important;
+        flex-direction: row !important;
+    }
+
+    /* Ocultar menú lateral en todas las páginas de gestión */
+    .arbol-body .menu-principal,
+    .centro-body .menu-principal,
+    .especie-body .menu-principal,
+    .uso-arbol-body .menu-principal,
+    .tipo-bosque-body .menu-principal,
+    .curiosidades-body .menu-principal,
+    .interacciones-body .menu-principal,
+    .qr-body .menu-principal,
+    .sugerencias-body .menu-principal,
+    .usuarios-body .menu-principal {
+        display: none !important;
+    }
+
+    /* Mostrar menú desplegable en todas las páginas de gestión */
+    .arbol-body .dropdown-menu,
+    .centro-body .dropdown-menu,
+    .especie-body .dropdown-menu,
+    .uso-arbol-body .dropdown-menu,
+    .tipo-bosque-body .dropdown-menu,
+    .curiosidades-body .dropdown-menu,
+    .interacciones-body .dropdown-menu,
+    .qr-body .dropdown-menu,
+    .sugerencias-body .dropdown-menu,
+    .usuarios-body .dropdown-menu {
+        display: block !important;
+        position: relative !important;
+        order: 1 !important;
+    }
+
+    /* Estilos del menú desplegable para todas las páginas de gestión */
+    .arbol-body .dropdown-toggle,
+    .centro-body .dropdown-toggle,
+    .especie-body .dropdown-toggle,
+    .uso-arbol-body .dropdown-toggle,
+    .tipo-bosque-body .dropdown-toggle,
+    .curiosidades-body .dropdown-toggle,
+    .interacciones-body .dropdown-toggle,
+    .qr-body .dropdown-toggle,
+    .sugerencias-body .dropdown-toggle,
+    .usuarios-body .dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        transition: background-color 0.3s !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .arbol-body .dropdown-content,
+    .centro-body .dropdown-content,
+    .especie-body .dropdown-content,
+    .uso-arbol-body .dropdown-content,
+    .tipo-bosque-body .dropdown-content,
+    .curiosidades-body .dropdown-content,
+    .interacciones-body .dropdown-content,
+    .qr-body .dropdown-content,
+    .sugerencias-body .dropdown-content,
+    .usuarios-body .dropdown-content {
+        display: none !important;
+        position: fixed !important;
+        top: 60px !important;
+        left: 15px !important;
+        background-color: #1e5631 !important;
+        min-width: 200px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
+        border-radius: 5px !important;
+        z-index: 99999 !important;
+        margin-top: 5px !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .arbol-body .dropdown-content.show,
+    .centro-body .dropdown-content.show,
+    .especie-body .dropdown-content.show,
+    .uso-arbol-body .dropdown-content.show,
+    .tipo-bosque-body .dropdown-content.show,
+    .curiosidades-body .dropdown-content.show,
+    .interacciones-body .dropdown-content.show,
+    .qr-body .dropdown-content.show,
+    .sugerencias-body .dropdown-content.show,
+    .usuarios-body .dropdown-content.show {
+        display: block !important;
+    }
+
+    .arbol-body .dropdown-content a,
+    .centro-body .dropdown-content a,
+    .especie-body .dropdown-content a,
+    .uso-arbol-body .dropdown-content a,
+    .tipo-bosque-body .dropdown-content a,
+    .curiosidades-body .dropdown-content a,
+    .interacciones-body .dropdown-content a,
+    .qr-body .dropdown-content a,
+    .sugerencias-body .dropdown-content a,
+    .usuarios-body .dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        transition: background-color 0.3s !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Centrar contenido en todas las páginas de gestión */
+    .arbol-body .container,
+    .centro-body .container,
+    .especie-body .container,
+    .uso-arbol-body .container,
+    .tipo-bosque-body .container,
+    .curiosidades-body .container,
+    .interacciones-body .container,
+    .qr-body .container,
+    .sugerencias-body .container,
+    .usuarios-body .container {
+        padding: 15px 20px !important;
+        margin: 60px 0 0 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+    }
+
+    /* Responsive para páginas de soporte */
+    .menu-simple .dropdown-menu {
+        display: block !important;
+        position: relative !important;
+        order: 1 !important;
+    }
+
+    .menu-simple .dropdown-toggle {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        padding: 8px 12px !important;
+        border-radius: 5px !important;
+        transition: background-color 0.3s !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .menu-simple .dropdown-content {
+        display: none !important;
+        position: fixed !important;
+        top: 60px !important;
+        left: 15px !important;
+        background-color: #1e5631 !important;
+        min-width: 200px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3) !important;
+        border-radius: 5px !important;
+        z-index: 99999 !important;
+        margin-top: 5px !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .menu-simple .dropdown-content.show {
+        display: block !important;
+    }
+
+    .menu-simple .dropdown-content a {
+        color: white !important;
+        padding: 10px 15px !important;
+        text-decoration: none !important;
+        display: block !important;
+        font-size: 12px !important;
+        transition: background-color 0.3s !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .menu-simple .dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .menu-simple .dropdown-content a:last-child {
+        border-bottom: none !important;
+    }
+
+    .menu-simple .dropdown-content a i {
+        margin-right: 10px !important;
+        width: 16px !important;
+        text-align: center !important;
+        font-size: 11px !important;
+    }
+
+    /* Ocultar botones originales en responsive */
+    .menu-simple .botones {
+        display: none !important;
+    }
+
+    /* Centrar contenido en páginas de soporte */
+    .contenido-pagina {
+        margin-top: 80px !important;
+        padding: 20px 15px !important;
+        max-width: 95% !important;
+    }
+
+    /* Centrar contenido de bienvenida en gestión móvil */
+    .gestion-body .container {
+        padding: 15px 20px !important;
+        margin: 60px 0 0 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+    }
+
+    .gestion-body .welcome-section {
+        text-align: center !important;
+        padding: 20px !important;
+        margin: 0 auto !important;
+        max-width: 90% !important;
+        width: 100% !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
     }
 }

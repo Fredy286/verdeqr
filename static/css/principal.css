@@ -57,7 +57,7 @@ img {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 15px 20px;
   background-color: #1e5631;
   color: white;
   position: sticky;
@@ -67,7 +67,7 @@ img {
   width: 100vw;
   left: 0;
   right: 0;
-  min-height: 70px;
+  min-height: 85px;
 }
 
 /* Contenedor para centrar el contenido en pantallas grandes */
@@ -103,7 +103,7 @@ img {
   padding: 3px 12px;
   width: 100%;
   max-width: 350px;
-  margin: 10px 0;
+  margin: 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -143,7 +143,7 @@ img {
   display: flex;
   list-style: none;
   gap: 15px;
-  margin: 10px 0;
+  margin: 0;
   padding: 0;
   flex-wrap: wrap;
   justify-content: center;
@@ -169,7 +169,7 @@ img {
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .header-principal .usuario img {
@@ -1176,5 +1176,134 @@ img {
 
   .arbol-card .info-arbol .detalles p {
     -webkit-line-clamp: 3;
+  }
+}
+
+/* Para móviles específicos (412px) - Alinear logo y buscador horizontalmente */
+@media (max-width: 412px) {
+  .header-principal {
+    flex-direction: column !important;
+    padding: 8px 15px !important;
+    min-height: auto !important;
+    align-items: stretch !important;
+  }
+
+  .header-container {
+    display: block !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  /* Primera fila: Logo y Buscador en línea horizontal */
+  .header-container::before {
+    content: '';
+    display: block;
+    height: 40px;
+    width: 100%;
+    position: relative;
+  }
+
+  .header-container > .logo {
+    position: absolute !important;
+    top: 5px !important;
+    left: 0 !important;
+    width: 35px !important;
+    height: 35px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 10 !important;
+  }
+
+  .header-container > .logo img {
+    height: 35px !important;
+    width: 35px !important;
+    display: block !important;
+  }
+
+  .header-container > .buscador {
+    position: absolute !important;
+    top: 5px !important;
+    left: 45px !important;
+    right: 0 !important;
+    height: 35px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    background-color: white !important;
+    border-radius: 20px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  }
+
+  .header-container > .buscador form {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 10px !important;
+  }
+
+  .header-container > .buscador input {
+    height: 100% !important;
+    padding: 0 5px !important;
+    font-size: 12px !important;
+    border: none !important;
+    background: transparent !important;
+    flex: 1 !important;
+  }
+
+  .header-container > .buscador button {
+    height: 100% !important;
+    padding: 0 5px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 14px !important;
+  }
+
+  .header-container > .menu-principal,
+  .header-container > .usuario {
+    display: none !important;
+  }
+
+  .header-container > .mobile-menu-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 5px !important;
+    position: relative !important;
+  }
+
+  .mobile-user img {
+    width: 35px !important;
+    height: 35px !important;
+  }
+
+  /* Ajustar estadísticas para que quepan mejor */
+  .estadisticas {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 20px !important;
+    padding: 0 10px !important;
+  }
+
+  .estadistica {
+    padding: 8px 5px !important;
+    border-radius: 8px !important;
+    min-width: 0 !important;
+  }
+
+  .estadistica h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
+  }
+
+  .estadistica p {
+    font-size: 0.7rem !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    word-wrap: break-word !important;
+    hyphens: auto !important;
   }
 }

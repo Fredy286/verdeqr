@@ -7,11 +7,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/common_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu_buttons.css') }}">
+    <!-- Correcciones responsive adicionales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive-fixes.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
+        <!-- Menú desplegable solo para móviles -->
+        <div class="dropdown-menu">
+            <button type="button" class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-bars"></i> Menú
+            </button>
+            <div class="dropdown-content" id="dropdownContent">
+                <a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i>Inicio</a>
+                <a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i>Árboles</a>
+                <a href="{{ url_for('centro') }}"><i class="fas fa-university"></i>Centros</a>
+                <a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i>Especies</a>
+                <a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i>Usos</a>
+                <a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i>Tipos de Bosque</a>
+                <a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i>Curiosidades</a>
+                <a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i>Interacciones Ecológicas</a>
+                <a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i>QR</a>
+                <a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i>Sugerencias</a>
+                <a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i>Usuarios</a>
+            </div>
+        </div>
+
         <div class="logo-container">
             <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
         </div>
@@ -197,6 +219,25 @@
                 setTimeout(() => {
                     document.body.removeChild(modal);
                 }, 300);
+            }
+        }
+
+        // Función para el menú desplegable (solo móviles)
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownContent');
+            dropdown.classList.toggle('show');
+        }
+
+        // Cerrar el dropdown si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-toggle') && !event.target.matches('.dropdown-toggle i')) {
+                const dropdowns = document.getElementsByClassName('dropdown-content');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
             }
         }
     </script>

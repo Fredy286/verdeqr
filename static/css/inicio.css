@@ -1005,3 +1005,36 @@ img {
   }
 }
 
+/* Para móviles específicos (412px) - Arreglar imagen segunda pantalla */
+@media (max-width: 412px) {
+  .segunda-pantalla .imagen {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .segunda-pantalla .imagen img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: var(--sombra);
+  }
+
+  .animated-image {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .animated-image img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: cover;
+  }
+}
+

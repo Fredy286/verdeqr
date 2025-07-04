@@ -14,7 +14,7 @@
 <body class="gestion-body">
     {% include 'flash_messages.html' %}
     <header class="header-principal">
-        <!-- Menú desplegable -->
+        <!-- Menú desplegable solo para móviles -->
         <div class="dropdown-menu">
             <button type="button" class="dropdown-toggle" onclick="toggleDropdown()">
                 <i class="fas fa-bars"></i> Menú
@@ -34,9 +34,26 @@
             </div>
         </div>
 
-        <!-- Perfil de usuario -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo" style="border-radius: 50%; width: 60px; height: 60px; object-fit: cover;">
+        </div>
+        <nav class="menu-principal">
+            <ul id="menu">
+                <li><a href="{{ url_for('gestion') }}"><i class="fas fa-home"></i><span>Inicio</span></a></li>
+                <li><a href="{{ url_for('arbol') }}"><i class="fas fa-tree"></i><span>Árboles</span></a></li>
+                <li><a href="{{ url_for('centro') }}"><i class="fas fa-university"></i><span>Centros</span></a></li>
+                <li><a href="{{ url_for('especie') }}"><i class="fas fa-leaf"></i><span>Especies</span></a></li>
+                <li><a href="{{ url_for('uso_arbol') }}"><i class="fas fa-tags"></i><span>Usos</span></a></li>
+                <li><a href="{{ url_for('tipo_bosque') }}"><i class="fas fa-mountain"></i><span>Tipos de Bosque</span></a></li>
+                <li><a href="{{ url_for('curiosidades') }}"><i class="fas fa-lightbulb"></i><span>Curiosidades</span></a></li>
+                <li><a href="{{ url_for('interacciones') }}"><i class="fas fa-network-wired"></i><span>Interacciones Ecológicas</span></a></li>
+                <li><a href="{{ url_for('qr') }}"><i class="fas fa-qrcode"></i>QR</a></li>
+                <li><a href="{{ url_for('sugerencias') }}"><i class="fas fa-comments"></i><span>Sugerencias</span></a></li>
+                <li><a href="{{ url_for('gestion_usuarios') }}"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            </ul>
+        </nav>
         <div class="user-section">
-            <a href="{{ url_for('perfil') }}" class="user-profile-link" style="display: flex; align-items: center; text-decoration: none;">
+            <a href="{{ url_for('perfil') }}" class="user-profile-link">
                 {% if session['usuario'].get('Imagen') %}
                     <img src="{{ url_for('static', filename=session['usuario']['Imagen']) }}" alt="Usuario" class="user-avatar">
                 {% else %}
@@ -51,11 +68,6 @@
                     <span class="user-email">{{ session['usuario']['Correo'] }}</span>
                 </div>
             </a>
-        </div>
-
-        <!-- Logo en esquina superior derecha -->
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR" class="logo">
         </div>
     </header>
 
@@ -181,7 +193,7 @@
     </main>
 
     <script>
-        // Función para el menú desplegable
+        // Función para el menú desplegable (solo móviles)
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownContent');
             dropdown.classList.toggle('show');
@@ -200,5 +212,6 @@
             }
         }
     </script>
+
 </body>
 </html>
