@@ -65,13 +65,34 @@ def obtener_avatar_predeterminado(nombre):
 app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui_para_desarrollo')
 
 # Configuración de la base de datos usando variables de entorno
-DB_CONFIG = {
-    'host': os.environ.get('DB_HOST', 'localhost'),
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('DB_PASSWORD', ''),
-    'database': os.environ.get('DB_NAME', 'VerdeQR'),
-    'cursorclass': pymysql.cursors.DictCursor
-}
+def get_db_config():
+    # Si tenemos DATABASE_URL (Railway), usarla
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        # Parsear URL: mysql://user:password@host:port/database
+        import re
+        match = re.match(r'mysql://([^:]+):([^@]+)@([^:]+):(\d+)/(.+)', database_url)
+        if match:
+            user, password, host, port, database = match.groups()
+            return {
+                'host': host,
+                'user': user,
+                'password': password,
+                'database': database,
+                'port': int(port),
+                'cursorclass': pymysql.cursors.DictCursor
+            }
+
+    # Si no, usar variables separadas (local)
+    return {
+        'host': os.environ.get('DB_HOST', 'localhost'),
+        'user': os.environ.get('DB_USER', 'root'),
+        'password': os.environ.get('DB_PASSWORD', ''),
+        'database': os.environ.get('DB_NAME', 'VerdeQR'),
+        'cursorclass': pymysql.cursors.DictCursor
+    }
+
+DB_CONFIG = get_db_config()
 
 # Función para obtener la conexión a la base de datos
 def get_db_connection():
