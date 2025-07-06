@@ -62,13 +62,14 @@ def obtener_avatar_predeterminado(nombre):
         return 'css/js/img/avatarf.jpg'
     else:
         return 'css/js/img/avatarm.jpg'
-app.secret_key = 'tu_clave_secreta_aqui'  # Cambia esto por una clave secreta segura
+# Configuración usando variables de entorno (Railway/producción) o valores por defecto (local)
+app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui_para_desarrollo')
 
 # Configuración de la base de datos
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'VerdeQR'
+app.config['MYSQL_HOST'] = os.environ.get('DB_HOST', 'localhost')
+app.config['MYSQL_USER'] = os.environ.get('DB_USER', 'root')
+app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD', '')
+app.config['MYSQL_DB'] = os.environ.get('DB_NAME', 'VerdeQR')
 app.config['MYSQL_CURSORCLASS'] = pymysql.cursors.DictCursor
 
 # Función para obtener la conexión a la base de datos

@@ -48,28 +48,31 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## 🌐 Despliegue en Render.com
+## 🌐 Despliegue en Railway.app
 
-Este proyecto está configurado para desplegarse automáticamente en Render.com:
+Este proyecto está configurado para desplegarse automáticamente en Railway.app:
 
 ### Pasos para el despliegue:
 
 1. **Sube tu código a GitHub**
-2. **Crea cuenta en Render.com** y conecta con GitHub
-3. **Nuevo Web Service** → Selecciona tu repositorio
-4. **Render detectará automáticamente** el archivo `render.yaml`
-5. **Configura las variables de entorno** (ver sección abajo)
-6. **Deploy** → ¡Tu aplicación estará en línea!
+2. **Ve a [railway.app](https://railway.app)** y regístrate con GitHub
+3. **New Project** → **Deploy from GitHub repo** → Selecciona tu repositorio
+4. **Railway detectará automáticamente** Flask y configurará todo
+5. **Agrega una base de datos MySQL** desde el dashboard
+6. **Configura las variables de entorno** (ver sección abajo)
+7. **Deploy** → ¡Tu aplicación estará en línea!
 
-### Variables de entorno requeridas en Render:
+### Variables de entorno en Railway:
 ```
-DB_HOST=tu_host_de_bd
-DB_USER=tu_usuario_bd
-DB_PASSWORD=tu_password_bd
-DB_NAME=verdeqr
+DB_HOST=${{MySQL.MYSQL_HOST}}
+DB_USER=${{MySQL.MYSQL_USER}}
+DB_PASSWORD=${{MySQL.MYSQL_PASSWORD}}
+DB_NAME=${{MySQL.MYSQL_DATABASE}}
 SECRET_KEY=tu_clave_secreta_muy_segura
 FLASK_ENV=production
 ```
+
+**Nota:** Railway auto-genera las variables de MySQL cuando agregas el servicio.
 
 ## 📱 Uso
 
