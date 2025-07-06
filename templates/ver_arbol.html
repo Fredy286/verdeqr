@@ -88,6 +88,95 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Responsive para móviles - Logo y perfil lado a lado */
+    @media (max-width: 768px) {
+        .header-custom {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 8px 15px !important;
+            min-height: 60px !important;
+        }
+
+        .logo-container {
+            flex: 0 0 auto !important;
+            order: 1 !important;
+        }
+
+        .logo-circular {
+            width: 45px !important;
+            height: 45px !important;
+        }
+
+        .user-section {
+            flex: 0 0 auto !important;
+            order: 2 !important;
+            margin-left: auto !important;
+        }
+
+        .user-link {
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .user-avatar {
+            width: 35px !important;
+            height: 35px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+        }
+
+        .user-info {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            font-size: 0.8rem !important;
+        }
+
+        .user-name {
+            font-size: 0.75rem !important;
+            line-height: 1.1 !important;
+            margin-bottom: 2px !important;
+        }
+
+        .user-email {
+            font-size: 0.7rem !important;
+            opacity: 0.8 !important;
+            line-height: 1.1 !important;
+        }
+    }
+
+    /* Para móviles muy pequeños (412px) */
+    @media (max-width: 412px) {
+        .header-custom {
+            padding: 6px 12px !important;
+        }
+
+        .logo-circular {
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        .user-avatar {
+            width: 32px !important;
+            height: 32px !important;
+        }
+
+        .user-info {
+            font-size: 0.75rem !important;
+        }
+
+        .user-name {
+            font-size: 0.7rem !important;
+        }
+
+        .user-email {
+            font-size: 0.65rem !important;
+        }
+    }
+
     .read-more-btn, .read-less-btn {
         display: inline-flex;
         align-items: center;

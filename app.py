@@ -11,7 +11,40 @@ import json
 import random
 import string
 
+# Cargar variables de entorno desde .env si existe
+try:
+    from dotenv import load_dotenv
+    import os
+    # Cargar el .env desde el directorio del script
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(env_path)
+except ImportError:
+    # Si python-dotenv no está instalado, continuar sin él
+    pass
+
 app = Flask(__name__)
+
+# Función para obtener la URL base correcta
+def get_base_url():
+    """
+    Obtiene la URL base correcta basándose en la request actual.
+    Detecta automáticamente desde dónde se está accediendo (localhost, túnel, dominio propio).
+    """
+    # 1. Verificar headers de proxy/túnel comunes primero
+    # X-Forwarded-Host: usado por proxies y túneles
+    forwarded_host = request.headers.get('X-Forwarded-Host')
+    if forwarded_host:
+        # Verificar si también hay X-Forwarded-Proto para el esquema
+        forwarded_proto = request.headers.get('X-Forwarded-Proto', 'https')
+        return f"{forwarded_proto}://{forwarded_host}"
+
+    # X-Original-Host: usado por algunos túneles
+    original_host = request.headers.get('X-Original-Host')
+    if original_host:
+        return f"https://{original_host}"
+
+    # 2. Usar la URL de la request actual (funciona para localhost, túneles y dominios)
+    return request.host_url.rstrip('/')
 
 # Configuración de Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -3193,10 +3226,12 @@ def qr():
                 # Importar PIL directamente
                 from PIL import Image
 
-                # Crear la URL del árbol específico
-                base_url = request.host_url.rstrip('/')
+                # Crear la URL del árbol específico usando la función de detección automática
+                base_url = get_base_url()
                 arbol_url = f"{base_url}/ver_arbol/{arbol_id}"
                 print(f"Generando código QR para URL: {arbol_url}")
+                print(f"URL base detectada: {base_url}")
+                print(f"Headers de request: Host={request.headers.get('Host')}, X-Forwarded-Host={request.headers.get('X-Forwarded-Host')}, X-Original-Host={request.headers.get('X-Original-Host')}")
 
                 # Crear el QR con la URL del árbol
                 qr = qrcode.QRCode(
@@ -3441,8 +3476,8 @@ def eliminar_qr(id):
 
         print(f"Eliminando código QR con ID: {id}, asociado al árbol ID: {qr_info['Arbol']}")
 
-        # Marcar el QR como inactivo en lugar de eliminarlo
-        cursor.execute('UPDATE CodigoQR SET Estado = 0 WHERE IDQR = %s', (id,))
+        # Marcar el QR como inactivo en lugar de eliminarlo (Estado = 2 es "Inactivo")
+        cursor.execute('UPDATE CodigoQR SET Estado = 2 WHERE IDQR = %s', (id,))
         connection.commit()
 
         print(f"Código QR eliminado exitosamente")
