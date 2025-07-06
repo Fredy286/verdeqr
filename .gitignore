@@ -1,0 +1,81 @@
+# Entornos virtuales de Python
+venv/
+env/
+nuevo_venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Variables de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de configuración local
+config.py
+instance/
+
+# Archivos de base de datos local
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de uploads (si contienen datos sensibles)
+# static/uploads/*
+# !static/uploads/.gitkeep
+
+# Archivos de backup
+*.bak
+*.backup
+
+# Archivos específicos de Windows
+desktop.ini
+$RECYCLE.BIN/
+
+# Archivos específicos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride

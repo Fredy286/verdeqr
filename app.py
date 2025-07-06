@@ -278,6 +278,10 @@ def inicio():
 def inicio_redirect():
     return redirect(url_for('inicio'))
 
+@app.route('/index')
+def index():
+    return render_template('index.html')
+
 # Ruta para buscar árboles
 @app.route('/buscar_arbol')
 def buscar_arbol():
@@ -4644,4 +4648,7 @@ def sugerencias_busqueda():
     return jsonify(sugerencias)
 
 if __name__ == '__main__':
-    app.run(debug=True)  # ← Correcto: indentado con 4 espacios
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    app.run(host='0.0.0.0', port=port, debug=debug)
