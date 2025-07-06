@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_file, g
-from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 import pymysql
 import os
@@ -65,32 +64,22 @@ def obtener_avatar_predeterminado(nombre):
 # Configuración usando variables de entorno (Railway/producción) o valores por defecto (local)
 app.secret_key = os.environ.get('SECRET_KEY', 'tu_clave_secreta_aqui_para_desarrollo')
 
-# Configuración de la base de datos
-app.config['MYSQL_HOST'] = os.environ.get('DB_HOST', 'localhost')
-app.config['MYSQL_USER'] = os.environ.get('DB_USER', 'root')
-app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD', '')
-app.config['MYSQL_DB'] = os.environ.get('DB_NAME', 'VerdeQR')
-app.config['MYSQL_CURSORCLASS'] = pymysql.cursors.DictCursor
+# Configuración de la base de datos usando variables de entorno
+DB_CONFIG = {
+    'host': os.environ.get('DB_HOST', 'localhost'),
+    'user': os.environ.get('DB_USER', 'root'),
+    'password': os.environ.get('DB_PASSWORD', ''),
+    'database': os.environ.get('DB_NAME', 'VerdeQR'),
+    'cursorclass': pymysql.cursors.DictCursor
+}
 
 # Función para obtener la conexión a la base de datos
 def get_db_connection():
-    return pymysql.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        db=app.config['MYSQL_DB'],
-        cursorclass=pymysql.cursors.DictCursor
-    )
+    return pymysql.connect(**DB_CONFIG)
 
 def get_db():
     if 'db' not in g:
-        g.db = pymysql.connect(
-            host=app.config['MYSQL_HOST'],
-            user=app.config['MYSQL_USER'],
-            password=app.config['MYSQL_PASSWORD'],
-            db=app.config['MYSQL_DB'],
-            cursorclass=pymysql.cursors.DictCursor
-        )
+        g.db = pymysql.connect(**DB_CONFIG)
     return g.db
 
 @app.teardown_appcontext
