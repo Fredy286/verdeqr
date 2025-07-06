@@ -16,30 +16,47 @@
     /* Estilos para la portada del árbol */
     .arbol-portada-container {
         position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        border-radius: 50%;
         overflow: hidden;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         background-image: url('{{ url_for('static', filename='css/js/img/fver_arbol.png') }}');
         background-size: cover;
         background-position: center;
-        padding: 20px;
+        background-repeat: no-repeat;
         display: flex;
         justify-content: center;
         align-items: center;
+        border: 8px solid rgba(255,255,255,0.9);
     }
 
     .arbol-imagen {
-        max-height: 400px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
         transition: transform 0.3s ease;
     }
 
     .arbol-portada-container:hover .arbol-imagen {
-        transform: scale(1.02);
+        transform: scale(1.05);
+    }
+
+    /* Responsive para la imagen circular */
+    @media (max-width: 768px) {
+        .arbol-portada-container {
+            width: 250px;
+            height: 250px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .arbol-portada-container {
+            width: 200px;
+            height: 200px;
+        }
     }
 
     /* Estilos para textos expandibles */
@@ -115,9 +132,18 @@
     }
 
     .info-box .card-body {
-        border-left: 4px solid #3498db !important;
         padding: 15px;
         transition: all 0.3s ease;
+    }
+
+    /* Solo aplicar borde izquierdo a secciones específicas, no a tipo de bosque */
+    #descripcion .card-body,
+    #caracteristicas .card-body,
+    #uso_arbol .card-body,
+    #servicio_ecosistemico .card-body,
+    #curiosidades .card-body,
+    #interacciones .card-body {
+        border-left: 4px solid #3498db !important;
     }
 
     /* Estilos para las curiosidades */
@@ -214,7 +240,7 @@
             <div class="info-box mb-4">
                 <h5 class="bg-light p-2 rounded text-center">Ubicación</h5>
                 <div class="p-2">
-                    <p><strong>Centro:</strong> {{ arbol.CentroInfo.nombre }}</p>
+                    <p><strong>Centro:</strong> {{ arbol.CentroInfo.siglas }} - {{ arbol.CentroInfo.nombre }}</p>
                     <p><strong>Dirección:</strong> {{ arbol.CentroInfo.direccion }}</p>
                 </div>
                 <div id="map" class="mapa-container"></div>
@@ -314,22 +340,16 @@
                 <div class="collapse" id="tipo_bosque">
                     <div class="card card-body">
                         {% if arbol.TipoBosqueNombre %}
-                            <div class="tipo-bosque-item p-3 border rounded">
+                            <div class="content-item">
                                 <h6 class="text-center mb-3 border-bottom pb-2">{{ arbol.TipoBosqueNombre }}</h6>
-                                <div class="tipo-bosque-descripcion">
-                                    {% if arbol.TipoBosqueDescripcion %}
-                                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.TipoBosqueDescripcion }}</pre>
-                                    {% else %}
-                                        <p class="text-center">No hay descripción disponible para este tipo de bosque.</p>
-                                    {% endif %}
-                                </div>
-
+                                {% if arbol.TipoBosqueDescripcion %}
+                                    <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ arbol.TipoBosqueDescripcion }}</pre>
+                                {% else %}
+                                    <p class="text-center">No hay descripción disponible para este tipo de bosque.</p>
+                                {% endif %}
                             </div>
-
                         {% else %}
-                            <div class="text-full">
-                                <p class="text-center">No hay información sobre el tipo de bosque para este árbol.</p>
-                            </div>
+                            <p class="text-center">No hay información sobre el tipo de bosque para este árbol.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -935,8 +955,28 @@
         border-bottom: 1px solid #e9ecef;
     }
 
-    /* Estilo para el borde izquierdo azul */
-    .tipo-bosque-item, .interaccion-item, .curiosidad-item {
+    /* Estilo para el contenido de las secciones */
+    .content-item {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .content-item h6 {
+        color: #2c3e50;
+        font-weight: 600;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .interaccion-item {
+        border-left: 4px solid #3498db !important;
+        padding-left: 15px;
+    }
+
+    .curiosidad-item {
         border-left: 4px solid #3498db !important;
         padding-left: 15px;
     }

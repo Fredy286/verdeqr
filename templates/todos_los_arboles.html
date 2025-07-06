@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos los Árboles Silvestres - VerdeQR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive_large.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .todos-arboles-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .todos-arboles-container h1 {
+            color: var(--color-primario);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #2c3e50, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-total {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .arboles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .arbol-card {
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .arbol-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .arbol-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .arbol-card:hover .arbol-img {
+            transform: scale(1.05);
+        }
+
+        .arbol-info {
+            padding: 20px;
+        }
+
+        .arbol-info h3 {
+            color: var(--color-primario);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .arbol-info .cientifico {
+            font-style: italic;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .arbol-info .descripcion {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ver-mas {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .ver-mas:hover {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .sin-arboles {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .sin-arboles i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .sin-arboles h3 {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* Paginación */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 45px;
+            height: 45px;
+        }
+
+        .pagination a {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            border: 1px solid #dee2e6;
+        }
+
+        .pagination a:hover {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+            transform: translateY(-2px);
+        }
+
+        .pagination .current {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: 1px solid #2ecc71;
+            box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .pagination .disabled {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .todos-arboles-container {
+                margin: 100px auto 30px;
+                padding: 20px;
+            }
+
+            .todos-arboles-container h1 {
+                font-size: 1.8rem;
+                line-height: 1.2;
+            }
+
+            .info-total p {
+                font-size: 1rem;
+            }
+
+            .arboles-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .arbol-card {
+                border-radius: 12px;
+            }
+
+            .arbol-img {
+                height: 140px;
+            }
+
+            .arbol-info {
+                padding: 12px;
+            }
+
+            .arbol-info h3 {
+                font-size: 0.95rem;
+                line-height: 1.2;
+                margin-bottom: 6px;
+            }
+
+            .arbol-info .cientifico {
+                font-size: 0.8rem;
+                margin-bottom: 8px;
+            }
+
+            .arbol-info .descripcion {
+                font-size: 0.8rem;
+                line-height: 1.3;
+                -webkit-line-clamp: 2;
+                margin-bottom: 10px;
+            }
+
+            .ver-mas {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .pagination a, .pagination span {
+                padding: 8px 12px;
+                min-width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .arboles-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .arbol-img {
+                height: 180px;
+            }
+
+            .pagination {
+                gap: 5px;
+            }
+
+            .pagination a, .pagination span {
+                padding: 6px 10px;
+                min-width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body class="gestion-body">
+    {% include 'flash_messages.html' %}
+    
+    <!-- Menú superior fijo -->
+    <header class="menu-superior">
+        <div class="logo" onclick="window.location.href='{{ url_for('principal') }}'" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename='css/js/img/logo.png') }}" alt="Logo VerdeQR">
+        </div>
+        <div class="buscador">
+            <form id="searchForm" action="{{ url_for('buscar_arbol') }}" method="GET" onsubmit="return validateSearch()">
+                <input type="text" name="q" id="searchInput" placeholder="Buscar árboles silvestres...">
+                <button type="submit" title="Buscar"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <script>
+            function validateSearch() {
+                const searchInput = document.getElementById('searchInput');
+                if (!searchInput.value.trim()) {
+                    return false;
+                }
+                return true;
+            }
+        </script>
+        <div class="botones">
+            {% if 'usuario' in session %}
+                <a href="{{ url_for('inicio') }}" class="btn">Inicio</a>
+                <a href="{{ url_for('principal') }}" class="btn">Principal</a>
+                {% if session['usuario']['Correo'] == 'jhon123@gmail.com' %}
+                    <a href="{{ url_for('gestion') }}" class="btn btn-gestion">Ir a Gestión</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('iniciar_sesion') }}" class="btn">Iniciar Sesión</a>
+                <a href="{{ url_for('registro') }}" class="btn">Registrarse</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="todos-arboles-container">
+        <h1>Todos los Árboles Silvestres Registrados</h1>
+        
+        <div class="info-total">
+            <p>Mostrando {{ pagination.total }} árboles registrados en la plataforma</p>
+        </div>
+
+        {% if arboles|length > 0 %}
+            <div class="arboles-grid">
+                {% for arbol in arboles %}
+                    <div class="arbol-card">
+                        {% if arbol.Imagen %}
+                            <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.EspecieNombreVulgar }}" class="arbol-img">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="{{ arbol.EspecieNombreVulgar }}" class="arbol-img">
+                        {% endif %}
+                        <div class="arbol-info">
+                            <h3>{{ arbol.EspecieNombreVulgar if arbol.EspecieNombreVulgar else arbol.EspecieNombreCientifico }}</h3>
+                            <p class="cientifico">{{ arbol.EspecieNombreCientifico }}</p>
+                            <p class="descripcion">{{ arbol.Descripcion|truncate(120) if arbol.Descripcion else 'Sin descripción disponible' }}</p>
+                            <a href="{{ url_for('ver_arbol', id=arbol.IDArbol) }}" class="ver-mas">Leer más</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Paginación -->
+            {% if pagination.total_pages > 1 %}
+                <div class="pagination">
+                    {% if pagination.has_prev %}
+                        <a href="{{ url_for('todos_los_arboles', page=1) }}" title="Primera página">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="{{ url_for('todos_los_arboles', page=pagination.prev_num) }}" title="Página anterior">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    {% else %}
+                        <span class="disabled">
+                            <i class="fas fa-angle-double-left"></i>
+                        </span>
+                        <span class="disabled">
+                            <i class="fas fa-angle-left"></i>
+                        </span>
+                    {% endif %}
+
+                    {% for page_num in range(1, pagination.total_pages + 1) %}
+                        {% if page_num == pagination.page %}
+                            <span class="current">{{ page_num }}</span>
+                        {% elif page_num <= 3 or page_num > pagination.total_pages - 3 or (page_num >= pagination.page - 1 and page_num <= pagination.page + 1) %}
+                            <a href="{{ url_for('todos_los_arboles', page=page_num) }}">{{ page_num }}</a>
+                        {% elif page_num == 4 and pagination.page > 5 %}
+                            <span class="disabled">...</span>
+                        {% elif page_num == pagination.total_pages - 3 and pagination.page < pagination.total_pages - 4 %}
+                            <span class="disabled">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if pagination.has_next %}
+                        <a href="{{ url_for('todos_los_arboles', page=pagination.next_num) }}" title="Página siguiente">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                        <a href="{{ url_for('todos_los_arboles', page=pagination.total_pages) }}" title="Última página">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    {% else %}
+                        <span class="disabled">
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                        <span class="disabled">
+                            <i class="fas fa-angle-double-right"></i>
+                        </span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="sin-arboles">
+                <i class="fas fa-tree"></i>
+                <h3>No hay árboles registrados</h3>
+                <p>Aún no se han registrado árboles en la plataforma.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

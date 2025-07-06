@@ -944,11 +944,13 @@
             {% if arboles_populares %}
                 {% for arbol in arboles_populares %}
                     <div class="grid-item-arbol">
-                        {% if arbol.Imagen %}
-                            <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.NombreVulgar }}">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="Árbol">
-                        {% endif %}
+                        <div class="imagen-arbol-inicio">
+                            {% if arbol.Imagen %}
+                                <img src="{{ url_for('static', filename=arbol.Imagen) }}" alt="{{ arbol.NombreVulgar }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='css/js/img/arbol-default.jpg') }}" alt="Árbol">
+                            {% endif %}
+                        </div>
                         <h2><strong>{{ arbol.NombreVulgar }} ({{ arbol.NombreCientifico }})</strong></h2>
                         <p>{{ arbol.Descripcion|truncate(100) if arbol.Descripcion else 'Sin descripción disponible...' }}</p>
                         {% if 'usuario' in session %}
@@ -1392,6 +1394,34 @@
             }
         }
 
+        /* Media query específica para pantallas medianas (939px - 1371px) */
+        @media (min-width: 939px) and (max-width: 1371px) {
+            .nature-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+                margin-bottom: 70px;
+            }
+
+            .nature-stat {
+                padding: 30px 20px;
+            }
+
+            .stat-icon {
+                font-size: 3.2rem;
+                margin-bottom: 18px;
+            }
+
+            .stat-number {
+                font-size: 2.4rem;
+                margin-bottom: 6px;
+            }
+
+            .stat-text {
+                font-size: 1rem;
+                letter-spacing: 1.2px;
+            }
+        }
+
         @media (max-width: 768px) {
             .nature-content {
                 padding: 50px 20px;
@@ -1779,5 +1809,7 @@
             }
         });
     </script>
+
+
 </body>
 </html>

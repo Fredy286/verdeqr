@@ -189,7 +189,7 @@ def inicio():
     centros = []
 
     try:
-        # Obtener los 8 árboles más populares (por ahora los más recientes)
+        # Obtener los primeros 8 árboles registrados (en orden de registro)
         cursor.execute('''
             SELECT
                 a.*,
@@ -202,7 +202,7 @@ def inicio():
             LEFT JOIN Centro c ON a.Centro = c.IDCentro
             LEFT JOIN TipoBosque tb ON a.TipoBosque = tb.IDTipoBosque
             WHERE a.Estado = 1
-            ORDER BY a.IDArbol DESC
+            ORDER BY a.IDArbol ASC
             LIMIT 8
         ''')
         arboles_populares = cursor.fetchall()
@@ -412,6 +412,84 @@ def buscar_arbol():
 
     return render_template('resultados_busqueda.html', arboles=arboles, query=query)
 
+# Ruta para mostrar todos los árboles con paginación
+@app.route('/todos_los_arboles')
+def todos_los_arboles():
+    if 'usuario' not in session:
+        flash('Debes iniciar sesión para acceder a esta página', 'error')
+        return redirect(url_for('iniciar_sesion'))
+
+    # Obtener el número de página de la URL (por defecto página 1)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # 5 arriba y 5 abajo = 10 por página
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    try:
+        # Contar el total de árboles activos
+        cursor.execute('SELECT COUNT(*) as total FROM Arbol WHERE Estado = 1')
+        total_arboles = cursor.fetchone()['total']
+
+        # Calcular offset para la paginación
+        offset = (page - 1) * per_page
+
+        # Obtener árboles con paginación
+        cursor.execute('''
+            SELECT
+                a.*,
+                e.NombreCientifico as EspecieNombreCientifico,
+                e.NombreVulgar as EspecieNombreVulgar,
+                c.NombreCentro as CentroNombre
+            FROM Arbol a
+            LEFT JOIN Especie e ON a.Especie = e.IDEspecie
+            LEFT JOIN Centro c ON a.Centro = c.IDCentro
+            WHERE a.Estado = 1
+            ORDER BY a.IDArbol DESC
+            LIMIT %s OFFSET %s
+        ''', (per_page, offset))
+        arboles = cursor.fetchall()
+
+        # Corregir las rutas de las imágenes
+        for arbol in arboles:
+            if arbol.get('Imagen'):
+                arbol['Imagen'] = arbol['Imagen'].replace('\\', '/')
+
+        # Calcular información de paginación
+        total_pages = (total_arboles + per_page - 1) // per_page
+        has_prev = page > 1
+        has_next = page < total_pages
+
+        pagination_info = {
+            'page': page,
+            'per_page': per_page,
+            'total': total_arboles,
+            'total_pages': total_pages,
+            'has_prev': has_prev,
+            'has_next': has_next,
+            'prev_num': page - 1 if has_prev else None,
+            'next_num': page + 1 if has_next else None
+        }
+
+    except Exception as e:
+        print(f"Error al obtener todos los árboles: {str(e)}")
+        arboles = []
+        pagination_info = {
+            'page': 1,
+            'per_page': per_page,
+            'total': 0,
+            'total_pages': 0,
+            'has_prev': False,
+            'has_next': False,
+            'prev_num': None,
+            'next_num': None
+        }
+    finally:
+        cursor.close()
+        connection.close()
+
+    return render_template('todos_los_arboles.html', arboles=arboles, pagination=pagination_info)
+
 # Ruta para la página principal
 @app.route('/principal')
 def principal():
@@ -443,7 +521,7 @@ def principal():
         ''')
         sugerencias = cursor.fetchall()
 
-        # Obtener los árboles activos con sus relaciones para mostrar en la página principal
+        # Obtener máximo 12 árboles destacados para mostrar en la página principal
         cursor.execute('''
             SELECT
                 a.*,
@@ -454,7 +532,7 @@ def principal():
             LEFT JOIN Especie e ON a.Especie = e.IDEspecie
             LEFT JOIN Centro c ON a.Centro = c.IDCentro
             ORDER BY a.IDArbol DESC
-            LIMIT 10
+            LIMIT 12
         ''')
         arboles = cursor.fetchall()
 
@@ -911,11 +989,13 @@ def arbol():
             e.NombreCientifico as EspecieNombreCientifico,
             e.NombreVulgar as EspecieNombreVulgar,
             tb.Nombre as TipoBosqueNombre,
-            c.NombreCentro as CentroNombre
+            c.NombreCentro as CentroNombre,
+            es.NombreEstado as EstadoNombre
         FROM Arbol a
         LEFT JOIN Especie e ON a.Especie = e.IDEspecie
         LEFT JOIN TipoBosque tb ON a.TipoBosque = tb.IDTipoBosque
         LEFT JOIN Centro c ON a.Centro = c.IDCentro
+        LEFT JOIN Estado es ON a.Estado = es.IDEstado
         ORDER BY a.IDArbol DESC
     ''')
     arboles = cursor.fetchall()
@@ -4210,11 +4290,15 @@ def ver_arbol(id):
                 'lng': -73.2532
             }))
 
-            # Usar la dirección precisa si está disponible, o la de la base de datos como respaldo
-            direccion = coordenadas.get('direccion_precisa', centro_db['Direccion']) if centro_db['Direccion'] else 'Dirección no disponible'
+            # Usar siempre la dirección de la base de datos
+            direccion = centro_db['Direccion'] if centro_db['Direccion'] else 'Dirección no disponible'
+
+            # Generar siglas del centro
+            siglas_centro = ''.join([c[0] for c in centro_db['NombreCentro'].split() if c[0].isupper()])
 
             arbol['CentroInfo'] = {
                 'nombre': centro_db['NombreCentro'],  # Usar siempre el nombre de la base de datos
+                'siglas': siglas_centro,  # Agregar siglas
                 'lat': coordenadas['lat'],  # Usar coordenadas precisas
                 'lng': coordenadas['lng'],
                 'direccion': direccion
