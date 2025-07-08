@@ -63,6 +63,42 @@ mail = Mail(app)
 def generar_token(longitud=6):
     return ''.join(random.choices(string.digits, k=longitud))
 
+# Función para limpiar caracteres problemáticos
+def limpiar_texto_utf8(texto):
+    """
+    Limpia caracteres problemáticos que pueden causar errores de codificación
+    """
+    if not texto:
+        return texto
+
+    # Reemplazar caracteres problemáticos comunes
+    replacements = {
+        '₂': '2',  # Subscript 2
+        '₃': '3',  # Subscript 3
+        '₄': '4',  # Subscript 4
+        '₁': '1',  # Subscript 1
+        '²': '2',  # Superscript 2
+        '³': '3',  # Superscript 3
+        '°': 'º',  # Degree symbol
+        '–': '-',  # En dash
+        '—': '-',  # Em dash
+        ''': "'",  # Left single quotation mark
+        ''': "'",  # Right single quotation mark
+        '"': '"',  # Left double quotation mark
+        '"': '"',  # Right double quotation mark
+    }
+
+    for old_char, new_char in replacements.items():
+        texto = texto.replace(old_char, new_char)
+
+    # Codificar y decodificar para eliminar caracteres problemáticos
+    try:
+        texto = texto.encode('utf-8', errors='ignore').decode('utf-8')
+    except:
+        pass
+
+    return texto
+
 # Función para determinar el género probable basado en el nombre
 def determinar_genero(nombre):
     # Lista de terminaciones comunes para nombres femeninos en español
@@ -113,6 +149,7 @@ def get_db_config():
                 'password': password,
                 'database': database,
                 'port': int(port),
+                'charset': 'utf8mb4',
                 'cursorclass': pymysql.cursors.DictCursor
             }
 
@@ -122,6 +159,7 @@ def get_db_config():
         'user': os.environ.get('DB_USER', 'root'),
         'password': os.environ.get('DB_PASSWORD', ''),
         'database': os.environ.get('DB_NAME', 'VerdeQR'),
+        'charset': 'utf8mb4',
         'cursorclass': pymysql.cursors.DictCursor
     }
 
@@ -1064,12 +1102,12 @@ def editar_arbol(id):
     if request.method == 'POST':
         try:
             especie = request.form['especie']
-            caracteristicas = request.form['caracteristicas']
-            servicios_ecosistemicos = request.form['servicios_ecosistemicos']
+            caracteristicas = limpiar_texto_utf8(request.form['caracteristicas'])
+            servicios_ecosistemicos = limpiar_texto_utf8(request.form['servicios_ecosistemicos'])
             tipo_bosque = request.form['tipo_bosque']
             centro = request.form['centro']
             estado = request.form['estado']
-            descripcion = request.form.get('descripcion', '')
+            descripcion = limpiar_texto_utf8(request.form.get('descripcion', ''))
 
             # Obtener la imagen actual del árbol
             connection = get_db_connection()
@@ -4283,14 +4321,6 @@ def ver_arbol(id):
                 WHERE Especie = %s AND Estado = 1
             ''', (arbol['Especie'],))
             interacciones = cursor.fetchall()
-            print(f"Interacciones ecológicas para la especie {arbol['Especie']}: {interacciones}")
-
-            # Mostrar detalles de cada interacción
-            for i, interaccion in enumerate(interacciones):
-                print(f"Interacción {i+1}:")
-                print(f"  - IDInteraccion: {interaccion.get('IDInteraccion', 'No disponible')}")
-                print(f"  - TipoInteraccion: {interaccion.get('TipoInteraccion', 'No disponible')}")
-                print(f"  - Descripcion: {interaccion.get('Descripcion', 'No disponible')}")
             arbol['Interacciones'] = interacciones
         else:
             arbol['Interacciones'] = []

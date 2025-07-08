@@ -1,5 +1,5 @@
 -- Crear base de datos y usarla
-CREATE DATABASE IF NOT EXISTS VerdeQR;
+CREATE DATABASE IF NOT EXISTS VerdeQR CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE VerdeQR;
 
 -- Estado
@@ -281,7 +281,7 @@ CREATE TABLE Arbol (
     FOREIGN KEY (Centro) REFERENCES Centro(IDCentro),
     FOREIGN KEY (TipoBosque) REFERENCES TipoBosque(IDTipoBosque),
     FOREIGN KEY (Estado) REFERENCES Estado(IDEstado)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- CodigoQR
 CREATE TABLE CodigoQR (

@@ -299,7 +299,7 @@
             </div>
 
             <div class="info-box mb-4">
-                <h5 class="bg-light p-2 rounded">Nombre Vulgar</h5>
+                <h5 class="bg-light p-2 rounded">Nombre Común</h5>
                 <p class="bg-info text-white p-2 rounded color-celeste-claro">{{ arbol.EspecieNombreVulgar }}</p>
             </div>
 
@@ -682,30 +682,8 @@
                     <div class="card card-body">
                         {% if arbol.Curiosidades %}
                             {% for curiosidad in arbol.Curiosidades %}
-                                <div class="curiosidad-item mb-3 p-3 border rounded">
-                                    <div class="curiosidad-content">
-                                        {% if curiosidad.Descripcion|length > 300 %}
-                                            <div class="curiosidad-preview" id="curiosidad-preview-{{ loop.index }}">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion[:300] }}...</pre>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
-                                                        onclick="toggleCuriosidad({{ loop.index }})">
-                                                    <i class="fas fa-chevron-down"></i> Leer más
-                                                </button>
-                                            </div>
-                                            <div class="curiosidad-full" id="curiosidad-full-{{ loop.index }}" style="display: none;">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion }}</pre>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
-                                                        onclick="toggleCuriosidad({{ loop.index }})">
-                                                    <i class="fas fa-chevron-up"></i> Leer menos
-                                                </button>
-                                            </div>
-                                        {% else %}
-                                            <div class="curiosidad-full">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion }}</pre>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ curiosidad.Descripcion }}</pre>
+                                {% if not loop.last %}<br><br>{% endif %}
                             {% endfor %}
                         {% else %}
                             <p class="text-center">No hay curiosidades registradas para este árbol.</p>
@@ -730,33 +708,9 @@
                     <div class="card card-body">
                         {% if arbol.Interacciones %}
                             {% for interaccion in arbol.Interacciones %}
-                                <div class="interaccion-item mb-3 p-3 border rounded">
-                                    <h6 class="text-center mb-3 border-bottom pb-2">{{ interaccion.TipoInteraccion }}</h6>
-                                    <div class="interaccion-descripcion">
-                                        {% if interaccion.Descripcion and interaccion.Descripcion|length > 300 %}
-                                            <div class="text-preview" id="interaccion-{{ loop.index }}-preview">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion[:300] }}...</pre>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
-                                                        onclick="toggleInteraccion({{ loop.index }})">
-                                                    <i class="fas fa-chevron-down"></i> Leer más
-                                                </button>
-                                            </div>
-                                            <div class="text-full" id="interaccion-{{ loop.index }}-full" style="display: none;">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion }}</pre>
-                                                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
-                                                        onclick="toggleInteraccion({{ loop.index }})">
-                                                    <i class="fas fa-chevron-up"></i> Leer menos
-                                                </button>
-                                            </div>
-                                        {% elif interaccion.Descripcion %}
-                                            <div class="text-full">
-                                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion }}</pre>
-                                            </div>
-                                        {% else %}
-                                            <p class="text-center">No hay descripción disponible para esta interacción.</p>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                <h6 class="text-center mb-3 border-bottom pb-2">{{ interaccion.TipoInteraccion }}</h6>
+                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.5; font-size: 1rem; color: #212529;">{{ interaccion.Descripcion if interaccion.Descripcion else 'No hay descripción disponible para esta interacción.' }}</pre>
+                                {% if not loop.last %}<br><br>{% endif %}
                             {% endfor %}
                         {% else %}
                             <p class="text-center">No hay interacciones ecológicas registradas para este árbol.</p>
@@ -1091,37 +1045,7 @@
         }
     }
 
-    // Función para alternar la visibilidad de las curiosidades
-    function toggleCuriosidad(index) {
-        const fullElement = document.getElementById(`curiosidad-full-${index}`);
-        const previewElement = document.getElementById(`curiosidad-preview-${index}`);
 
-        if (fullElement.style.display === 'none' || fullElement.style.display === '') {
-            // Mostrar texto completo
-            fullElement.style.display = 'block';
-            previewElement.style.display = 'none';
-        } else {
-            // Mostrar vista previa
-            fullElement.style.display = 'none';
-            previewElement.style.display = 'block';
-        }
-    }
-
-    // Función para alternar la visibilidad de las interacciones ecológicas
-    function toggleInteraccion(index) {
-        const fullElement = document.getElementById(`interaccion-${index}-full`);
-        const previewElement = document.getElementById(`interaccion-${index}-preview`);
-
-        if (fullElement.style.display === 'none' || fullElement.style.display === '') {
-            // Mostrar texto completo
-            fullElement.style.display = 'block';
-            previewElement.style.display = 'none';
-        } else {
-            // Mostrar vista previa
-            fullElement.style.display = 'none';
-            previewElement.style.display = 'block';
-        }
-    }
 
 
 </script>
